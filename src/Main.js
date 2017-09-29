@@ -1,8 +1,10 @@
 import React from 'react';
 import App from './App';
 import Home from './Home';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
-class Main extends React.Component {
+
+export default class Main extends React.Component {
 
   constructor(props) {
     super(props)
@@ -22,3 +24,4 @@ class Main extends React.Component {
     )
   }
 }
+

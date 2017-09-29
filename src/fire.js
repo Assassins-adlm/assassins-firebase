@@ -1,4 +1,6 @@
 import firebase from 'firebase'
+import * as firebaseui from 'firebaseui';
+
 var config = {
   apiKey: "AIzaSyAFYb47n-YcDhRxHivbFM9f66VT5p6X46g",
   authDomain: "assassins-aldm.firebaseapp.com",
@@ -8,4 +10,5 @@ var config = {
   messagingSenderId: "510113560850"
 };
 var fire = firebase.initializeApp(config);
-export default fire;
+export const ui = new firebaseui.auth.AuthUI(firebase.auth());
+export default firebase;
