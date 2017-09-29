@@ -1,0 +1,33 @@
+
+/* body {
+  background-image: url('http://content.pulse.ea.com/content/legacy/battlefield-portal/en_US/news/battlefield-1/battlefield-1-weather/_jcr_content/featuredImage/renditions/rendition1.img.jpg');
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+} */
+html {
+  background: url("https://i.ytimg.com/vi/iAgHeqxpXVk/maxresdefault.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+ .Login {
+  /* border: 3px solid #000000; */
+  padding: 0;
+  margin: 10%;
+  /* background-color: #F0E0E0; */
+   background: rgba(98, 98, 112, 0.29);
+   text-align: center;
+   color:#fff
+ }
+
+ .titlefont {
+  color: #BBB0B0;
+  font-size: 7vw;
+  font-size: 8vh;
+  font-weight: bold;
+  font-family: fantasy;
+  text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
+}
