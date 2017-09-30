@@ -5,6 +5,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import App from './App';
 import '../profile.css';
 
+
 class PlayerProfile extends React.Component {
 
   constructor(props) {

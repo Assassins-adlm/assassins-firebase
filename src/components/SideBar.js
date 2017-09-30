@@ -2,6 +2,7 @@ import React from 'react';
 import firebase from '../fire';
 import { slide as Menu } from 'react-burger-menu';
 import { Link } from 'react-router-dom';
+import GetLocation from './LocationTracker.jsx'
 
 class SideBar extends React.Component {
 
@@ -41,6 +42,7 @@ class SideBar extends React.Component {
         <hr/>
         <Link onClick={ this.showSettings } className="menu-item--small" to="#"><i className="fa fa-cog" aria-hidden="true"></i><span>Settings</span></Link>
         <Link id="logout" className="menu-item" to="#"><i className="fa fa-sign-out" aria-hidden="true"></i><span>Logout</span></Link>
+          <GetLocation />
       </Menu>
     );
   }
