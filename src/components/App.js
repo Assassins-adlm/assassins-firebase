@@ -5,8 +5,6 @@ import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
 import MapBox from './MapBox';
 import '../index.css';
-import MapBox from './MapBox';
-
 
 class App extends Component {
 	state = {
