@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from '../fire';
 import SideBar from './SideBar';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import App from './App';
 import '../profile.css';
 
@@ -10,19 +10,25 @@ class PlayerProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: firebase.auth().currentUser
+      user: null
     }
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+			this.setState({loading: false, user});
+		});
   }
 
   render() {
     return (
-      this.state.user &&
+      this.state.user ?
       <div>
         <SideBar />
         <div className="container">
           <div className="profile">
             <img align="left" className="profile-background-image" src="./images/profile-background.jpg" alt="Profile image background"/>
-            <img align="left" className="image-profile thumbnail" src="./images/avatars/default_avatar.png" alt="Profile image avatar"/>
+            <img align="left" className="image-profile thumbnail" src={this.state.user.photoURL} alt="Profile image avatar"/>
             <div className="profile-text">
               {
                 this.state.user && <h1>{this.state.user.displayName}</h1>
@@ -37,6 +43,9 @@ class PlayerProfile extends React.Component {
             <div className="col-xs-4 profile-title">Death<p>2</p></div>
           </div>
         </div>
+      </div> :
+      <div>
+        <Link to="/home"><button className="btn btn-primary">Login</button></Link>
       </div>
     )
   }

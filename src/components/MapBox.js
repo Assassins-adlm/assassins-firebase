@@ -6,14 +6,69 @@ let randCoords = [
     [-74.01316889999998, 40.7130082],
     [-74.0445004, 40.6892494]
 ]
-
+let long, lat
 export default class MapBox extends Component {
 
     constructor(){
         super();
-        // this.getLocationUpdate = this.getLocationUpdate.bind(this);
+        // this.state = {
+        //     long: 0,
+        //     lat: 0
+        // }
+        this.getLocationUpdate = this.getLocationUpdate.bind(this);
     }
 
+    getLocationUpdate(){
+
+         var watchID;
+         var geoLoc;
+        //  var longitude;
+        //  var latitude;
+
+        //  long = longitude;
+        //  lat = latitude;
+        //  console.log('boopbeep',this.state)
+        // this.setState({
+        //         long: longitude,
+        //         lat: latitude
+        // })
+        
+         function showLocation(position) {
+             var latitude = position.coords.latitude;
+             var longitude = position.coords.longitude;
+
+            long = longitude,
+            lat = latitude
+            
+            console.log("LONG LAT:", long, lat)
+            
+            var accuracy = position.coords.accuracy;
+            alert("Latitude : " + latitude + " Longitude: " + longitude + " accuracy: " + accuracy);
+   
+         }
+          console.log("LONG LAT OUTSIDE:", long, lat)
+
+         function errorHandler(err) {
+            if(err.code == 1) {
+               alert("Error: Access is denied!");
+            }
+            
+            else if( err.code == 2) {
+               alert("Error: Position is unavailable!");
+            }
+         }
+
+        if(navigator.geolocation){
+            // timeout at 60000 milliseconds (60 seconds)
+            var options = {timeout:6000};
+            geoLoc = navigator.geolocation;
+            watchID = geoLoc.watchPosition(showLocation, errorHandler, options);
+        }
+
+        else{
+            alert("Sorry, browser does not support geolocation!");
+        }
+    }
 
 
     render(){
@@ -21,17 +76,17 @@ export default class MapBox extends Component {
             accessToken: "pk.eyJ1IjoiY2Fzc2lvemVuIiwiYSI6ImNqNjZydGl5dDJmOWUzM3A4dGQyNnN1ZnAifQ.0ZIRDup0jnyUFVzUa_5d1g"
         });
 
+        console.log('please work!!', long, lat)
 
         return(
         
         <div>
+        {/*this.getLocationUpdate()*/}
         <Map
             style="mapbox://styles/mapbox/dark-v9"
             containerStyle={{
-                height: "75vh",
-                width: "100vw",
-                position: 'absolute',
-                bottom: 0
+                height: "100vh",
+                width: "100vw"
             }}
             center={[-74.0, 40.731]}>  
             {
@@ -40,6 +95,7 @@ export default class MapBox extends Component {
                 <Layer
                     key={ind}
                     type="symbol"
+                    // id={ind}
                     layout={{ "icon-image": "marker-15" }}>
                     <Feature coordinates={coord}/>
                 </Layer>
@@ -57,47 +113,3 @@ export default class MapBox extends Component {
 
 
  
-
-
-
-
-
-
-
-    // getLocationUpdate(){
-
-    //      var watchID;
-    //      var geoLoc;
-
-        
-    //      function showLocation(position) {
-    //          var latitude = position.coords.latitude;
-    //          var longitude = position.coords.longitude;
-
-            
-    //         var accuracy = position.coords.accuracy;
-    //         alert("Latitude : " + latitude + " Longitude: " + longitude + " accuracy: " + accuracy);
-   
-    //      }
-
-    //      function errorHandler(err) {
-    //         if(err.code == 1) {
-    //            alert("Error: Access is denied!");
-    //         }
-            
-    //         else if( err.code == 2) {
-    //            alert("Error: Position is unavailable!");
-    //         }
-    //      }
-
-    //     if(navigator.geolocation){
-    //         // timeout at 60000 milliseconds (60 seconds)
-    //         var options = {timeout:6000};
-    //         geoLoc = navigator.geolocation;
-    //         watchID = geoLoc.watchPosition(showLocation, errorHandler, options);
-    //     }
-
-    //     else{
-    //         alert("Sorry, browser does not support geolocation!");
-    //     }
-    // }
