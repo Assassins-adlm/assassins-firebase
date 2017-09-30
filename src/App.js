@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import fire from  './fire.js';
-import FirebaseUIAuth from './FirebaseUIAuth';
+import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from './fire'
 
 
