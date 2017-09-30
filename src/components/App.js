@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD:src/App.js
 import logo from './logo.svg';
 import fire from  './fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from './fire'
 
+=======
+import fire from  '../fire.js';
+import FirebaseUIAuth from './firebaseUIAuth';
+import firebase, { ui } from '../fire'
+import SideBar from './SideBar';
+import '../index.css';
+>>>>>>> master:src/components/App.js
 
 class App extends Component {
 	state = {
@@ -74,24 +82,25 @@ class App extends Component {
 	render() {
 		return (
             <div className="App">
-
-              <h3>FirebaseUI </h3>
 				{this.state.loading ? (
                     <div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
                         <div>
-                          <div id="user-info">
-                            <div id="photo-container">
-                              <img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
-                            </div>
-                            <div>{this.state.user.displayName}</div>
-                            <div>{this.state.user.email}</div>
-                          </div>
-                          <p>
-                            <button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
-                            <button onClick={this.deleteAccount}>Delete account</button>
-                          </p>
+													<SideBar />
+													<div>Home page!!
+														<div id="user-info">
+															<div id="photo-container">
+																<img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
+															</div>
+															<div>{this.state.user.displayName}</div>
+															<div>{this.state.user.email}</div>
+														</div>
+														<p>
+															<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
+															<button onClick={this.deleteAccount}>Delete account</button>
+														</p>
+													</div>
                         </div>
 					) : (
                         <div>

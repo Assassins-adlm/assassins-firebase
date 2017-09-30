@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../node_modules/firebaseui/dist/firebaseui.css';
+import '../../node_modules/firebaseui/dist/firebaseui.css';
 
 class FirebaseUIAuth extends Component {
 	componentDidMount() {
