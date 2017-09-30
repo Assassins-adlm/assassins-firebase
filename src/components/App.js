@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import fire from  '../fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
-<<<<<<< HEAD
-=======
+import MapBox from './MapBox';
 import SideBar from './SideBar';
->>>>>>> master
-import Home from './Home';
 import '../index.css';
 
 
@@ -88,13 +85,10 @@ class App extends Component {
                     <div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
-<<<<<<< HEAD
-                    <Home props = {this.state.user} />
-=======
-                        <div>
-															<Home props = {this.state.user}/>
-                        </div>
->>>>>>> master
+										<div>
+										<SideBar />
+										<MapBox props = {this.state.user} />
+										</div>
 					) : (
                         <div style ={{"marginTop":"auto", "marginBottom":"auto"}} >
                           <h4 className = "space">You are signed out.</h4>

@@ -17,6 +17,8 @@ export default class MapBox extends Component {
 
 
     render(){
+        console.log(this.props.props, "PROPS")
+        let user = this.props.props
         const Map = ReactMapboxGl({
             accessToken: "pk.eyJ1IjoiY2Fzc2lvemVuIiwiYSI6ImNqNjZydGl5dDJmOWUzM3A4dGQyNnN1ZnAifQ.0ZIRDup0jnyUFVzUa_5d1g"
         });
@@ -25,7 +27,7 @@ export default class MapBox extends Component {
         return(
 
         <div>
-        <Map
+          <Map
             style="mapbox://styles/mapbox/dark-v9"
             containerStyle={{
                 height: "100vh",
@@ -45,10 +47,15 @@ export default class MapBox extends Component {
                 </Layer>
 
                 )
-            })
+             })
             }
-        </Map>
 
+
+          </Map>
+          <span className="space">
+            <h1> WELCOME </h1>
+            <h3>{user.displayName}</h3>
+           </span>
         </div>
         )
     }
