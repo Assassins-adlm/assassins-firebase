@@ -5,18 +5,12 @@
   "dependencies": {
     "firebase": "^4.4.0",
     "firebaseui": "^2.3.0",
-<<<<<<< HEAD
     "mapbox-gl": "^0.40.1",
-=======
->>>>>>> master
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.3",
     "react-burger-menu": "^2.1.6",
     "react-dom": "^16.0.0",
-<<<<<<< HEAD
     "react-mapbox-gl": "^2.5.2",
-=======
->>>>>>> master
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.14",
