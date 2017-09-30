@@ -3,8 +3,9 @@ import fire from  '../fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
+import Home from './Home';
 import '../index.css';
-import MapBox from './MapBox';
+
 
 
 class App extends Component {
@@ -85,8 +86,7 @@ class App extends Component {
 				) : (
 					this.state.user ? (
                         <div>
-							<SideBar />
-							<MapBox />
+															<Home props = {this.state.user}/>
                         </div>
 					) : (
                         <div>

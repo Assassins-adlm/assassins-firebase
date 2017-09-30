@@ -23,17 +23,17 @@ export default class MapBox extends Component {
 
 
         return(
-        
+
         <div>
         <Map
             style="mapbox://styles/mapbox/dark-v9"
             containerStyle={{
-                height: "75vh",
+                height: "100vh",
                 width: "100vw",
                 position: 'absolute',
                 bottom: 0
             }}
-            center={[-74.0, 40.731]}>  
+            center={[-74.0, 40.731]}>
             {
             randCoords.map((coord, ind) => {
                 return(
@@ -56,7 +56,7 @@ export default class MapBox extends Component {
 
 
 
- 
+
 
 
 
@@ -69,22 +69,22 @@ export default class MapBox extends Component {
     //      var watchID;
     //      var geoLoc;
 
-        
+
     //      function showLocation(position) {
     //          var latitude = position.coords.latitude;
     //          var longitude = position.coords.longitude;
 
-            
+
     //         var accuracy = position.coords.accuracy;
     //         alert("Latitude : " + latitude + " Longitude: " + longitude + " accuracy: " + accuracy);
-   
+
     //      }
 
     //      function errorHandler(err) {
     //         if(err.code == 1) {
     //            alert("Error: Access is denied!");
     //         }
-            
+
     //         else if( err.code == 2) {
     //            alert("Error: Position is unavailable!");
     //         }
