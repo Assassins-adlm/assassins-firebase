@@ -76,7 +76,7 @@ export default class MapBox extends Component {
         return(
         
         <div>
-        {this.getLocationUpdate()}
+        {/*this.getLocationUpdate()*/}
         <Map
             style="mapbox://styles/mapbox/dark-v9"
             containerStyle={{
