@@ -4,6 +4,13 @@ import { Link } from 'react-router-dom';
 
 class SideBar extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      menuOpen: false
+    }
+  }
+
   showSettings (event) {
     event.preventDefault();
   }
@@ -13,7 +20,7 @@ class SideBar extends React.Component {
       width: 100
     }
     return (
-      <Menu>
+      <Menu isOpen={this.state.menuOpen}>
         <Link id="profile" className="menu-item" to="/player">
         <img style={avatarStyle} src="./images/avatars/default_avatar.png" alt="avatar"/>
         <span>Nameless</span></Link>
