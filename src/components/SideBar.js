@@ -1,5 +1,6 @@
 import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
+import { Link } from 'react-router-dom';
 
 class SideBar extends React.Component {
 
@@ -12,12 +13,24 @@ class SideBar extends React.Component {
   }
 
   render () {
+    const avatarStyle = {
+      width: 100
+    }
     return (
       <Menu>
-        <a id="home" className="menu-item" href="/home">Home</a>
-        <a id="about" className="menu-item" href="#">About</a>
-        <a id="contact" className="menu-item" href="#">Contact</a>
-        <a onClick={ this.showSettings } className="menu-item--small" href="#">Settings</a>
+        <Link id="profile" className="menu-item" to="/user">
+        <img style={avatarStyle} src="https://apollo2.dl.playstation.net/cdn/EP1563/CUSA04811_00/s43pXGobw83imLJSPmyutqWRjbU11jcD.png"/>
+        <span>Nameless</span></Link>
+        <hr/>
+        <Link id="targets" className="menu-item" to="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span>Find Targets</span></Link>
+        <Link id="chat" className="menu-item" to="#"><i class="fa fa-comments" aria-hidden="true"></i><span>Chat</span></Link>
+        <Link id="lists" className="menu-item" to="#"><i class="fa fa-list" aria-hidden="true"></i><span>Target Lists</span></Link>
+        <Link id="about" className="menu-item" to="#"><i class="fa fa-info-circle" aria-hidden="true"></i><span>About</span></Link>
+        <hr/>
+        <Link id="shop" className="menu-item" to="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>Shop</span></Link>
+        <hr/>
+        <Link onClick={ this.showSettings } className="menu-item--small" to="#"><i class="fa fa-cog" aria-hidden="true"></i><span>Settings</span></Link>
+        <Link id="logout" className="menu-item" to="#"><i class="fa fa-sign-out" aria-hidden="true"></i><span>Logout</span></Link>
       </Menu>
     );
   }
