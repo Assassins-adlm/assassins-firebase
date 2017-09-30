@@ -1,4 +1,5 @@
 import React from 'react';
+import firebase from '../fire';
 import { slide as Menu } from 'react-burger-menu';
 import { Link } from 'react-router-dom';
 
@@ -7,8 +8,10 @@ class SideBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      user: firebase.auth().currentUser
     }
+    console.log('user-->', this.state.user)
   }
 
   showSettings (event) {
@@ -22,8 +25,12 @@ class SideBar extends React.Component {
     return (
       <Menu isOpen={this.state.menuOpen}>
         <Link id="profile" className="menu-item" to="/player">
-        <img style={avatarStyle} src="./images/avatars/default_avatar.png" alt="avatar"/>
-        <span>Nameless</span></Link>
+        {
+          this.state.user && <img style={avatarStyle} src={this.state.user.photoURL} alt="avatar"/>
+        }
+        {
+          this.state.user && <span>{this.state.user.displayName}</span>
+        }</Link>
         <hr/>
         <Link id="targets" className="menu-item" to="home"><i className="fa fa-map-marker" aria-hidden="true"></i><span>Find Targets</span></Link>
         <Link id="chat" className="menu-item" to="#"><i className="fa fa-comments" aria-hidden="true"></i><span>Chat</span></Link>
