@@ -9,9 +9,15 @@ class SideBar extends React.Component {
     super(props);
     this.state = {
       menuOpen: false,
-      user: firebase.auth().currentUser
+      user: null
     }
-    console.log('user-->', this.state.user)
+    // console.log('user-->', this.state.user)
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+			this.setState({loading: false, user});
+		});
   }
 
   showSettings (event) {
@@ -23,14 +29,12 @@ class SideBar extends React.Component {
       width: 100
     }
     return (
+      this.state.user &&
       <Menu isOpen={this.state.menuOpen}>
-        <Link id="profile" className="menu-item" to="/player">
-        {
-          this.state.user && <img style={avatarStyle} src={this.state.user.photoURL} alt="avatar"/>
-        }
-        {
-          this.state.user && <span>{this.state.user.displayName}</span>
-        }</Link>
+        <Link id="profile" className="menu-item" to="/profile">
+        <img style={avatarStyle} src={this.state.user.photoURL} alt="avatar"/>
+        <span>{this.state.user.displayName}</span>
+        </Link>
         <hr/>
         <Link id="targets" className="menu-item" to="home"><i className="fa fa-map-marker" aria-hidden="true"></i><span>Find Targets</span></Link>
         <Link id="chat" className="menu-item" to="#"><i className="fa fa-comments" aria-hidden="true"></i><span>Chat</span></Link>
