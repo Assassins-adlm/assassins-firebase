@@ -2,8 +2,14 @@ import React, { Component } from 'react';
 import fire from  '../fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
+<<<<<<< HEAD
+=======
+import SideBar from './SideBar';
+>>>>>>> master
 import Home from './Home';
 import '../index.css';
+
+
 
 class App extends Component {
 	state = {
@@ -72,13 +78,23 @@ class App extends Component {
 	}
 
 	render() {
+		let styles={
+			width: '30px',
+			height: '50px'
+		}
 		return (
             <div>
 				{this.state.loading ? (
                     <div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
+<<<<<<< HEAD
                     <Home props = {this.state.user} />
+=======
+                        <div>
+															<Home props = {this.state.user}/>
+                        </div>
+>>>>>>> master
 					) : (
                         <div style ={{"marginTop":"auto", "marginBottom":"auto"}} >
                           <h4 className = "space">You are signed out.</h4>
@@ -92,3 +108,20 @@ class App extends Component {
 }
 
 export default App;
+
+
+
+
+	// {/*												<div>Home page!!
+	// 													<div id="user-info">
+	// 														<div id="photo-container">
+	// 															<img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
+	// 														</div>
+	// 														<div>{this.state.user.displayName}</div>
+	// 														<div>{this.state.user.email}</div>
+	// 													</div>
+	// 													<p>
+	// 														<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
+	// 														<button onClick={this.deleteAccount}>Delete account</button>
+	// 													</p>
+	// 												</div>*/}

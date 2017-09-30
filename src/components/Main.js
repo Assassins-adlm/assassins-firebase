@@ -5,6 +5,7 @@ import SideBar from './SideBar';
 import PlayerProfile from './PlayerProfile';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
+
 export default class Main extends React.Component {
 
 
