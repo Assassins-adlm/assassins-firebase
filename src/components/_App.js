@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-
-
-import fire from  './fire.js';
+import logo from '../logo.svg';
+import fire from  '../fire.js';
 
 class App extends Component {
 

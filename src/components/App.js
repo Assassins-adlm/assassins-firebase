@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import fire from  './fire.js';
-import FirebaseUIAuth from './FirebaseUIAuth';
-import firebase, { ui } from './fire'
-
+import fire from  '../fire.js';
+import FirebaseUIAuth from './firebaseUIAuth';
+import firebase, { ui } from '../fire'
+import '../index.css';
 
 class App extends Component {
 	state = {
