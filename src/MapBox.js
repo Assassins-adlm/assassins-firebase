@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl";
 
+let randCoords = [
+    [-73.9445475,40.6740157],
+    [-74.01316889999998, 40.7130082],
+    [-74.0445004, 40.6892494]
+]
 let long, lat
 export default class MapBox extends Component {
 
@@ -84,12 +89,20 @@ export default class MapBox extends Component {
                 width: "100vw"
             }}
             center={[-74.0, 40.731]}>  
-            <Layer
-                type="symbol"
-                id="marker"
-                layout={{ "icon-image": "marker-15" }}>
-                <Feature coordinates={[-74.0088847, 40.7051076]}/>
-            </Layer>
+            {
+            randCoords.map((coord, ind) => {
+                return(
+                <Layer
+                    key={ind}
+                    type="symbol"
+                    // id={ind}
+                    layout={{ "icon-image": "marker-15" }}>
+                    <Feature coordinates={coord}/>
+                </Layer>
+
+                )
+            })
+            }
         </Map>
 
         </div>
