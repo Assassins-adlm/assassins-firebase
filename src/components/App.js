@@ -53,7 +53,9 @@ class App extends Component {
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged((user) => {
 			this.setState({loading: false, user});
+			console.log('user id--->', this.state.user.uid)
 		});
+
 	}
 
 	deleteAccount = () => {
