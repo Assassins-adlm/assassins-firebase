@@ -3,6 +3,7 @@ import fire from  '../fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
+import MapBox from './MapBox';
 import '../index.css';
 
 class App extends Component {
@@ -82,7 +83,7 @@ class App extends Component {
 					this.state.user ? (
                         <div>
 													<SideBar />
-													<div>Home page!!
+													{/* <div>Home page!!
 														<div id="user-info">
 															<div id="photo-container">
 																<img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
@@ -94,7 +95,8 @@ class App extends Component {
 															<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
 															<button onClick={this.deleteAccount}>Delete account</button>
 														</p>
-													</div>
+													</div> */}
+													<MapBox />
                         </div>
 					) : (
                         <div>
