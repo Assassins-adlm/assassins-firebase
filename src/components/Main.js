@@ -16,7 +16,6 @@ export default class Main extends React.Component {
       <div>
         <main>
           <Switch>
-            {/* <Route path="/home" component={Home} /> */}
             <Route path="/home" component={App} />
             <Route path="/profile" component={PlayerProfile}/>
             <Redirect to="/home" component={App} />
