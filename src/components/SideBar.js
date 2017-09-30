@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom';
 
 class SideBar extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   showSettings (event) {
     event.preventDefault();
   }
@@ -19,7 +15,7 @@ class SideBar extends React.Component {
     return (
       <Menu>
         <Link id="profile" className="menu-item" to="/user">
-        <img style={avatarStyle} src="https://apollo2.dl.playstation.net/cdn/EP1563/CUSA04811_00/s43pXGobw83imLJSPmyutqWRjbU11jcD.png"/>
+        <img style={avatarStyle} src="https://apollo2.dl.playstation.net/cdn/EP1563/CUSA04811_00/s43pXGobw83imLJSPmyutqWRjbU11jcD.png" alt="avatar"/>
         <span>Nameless</span></Link>
         <hr/>
         <Link id="targets" className="menu-item" to="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span>Find Targets</span></Link>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import fire from  '../fire.js';
-import FirebaseUIAuth from './FirebaseUIAuth';
+import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import '../index.css';
 
