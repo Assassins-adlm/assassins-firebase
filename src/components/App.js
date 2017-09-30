@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import fire from  '../fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
-import SideBar from './SideBar';
+import Home from './Home';
 import '../index.css';
 
 class App extends Component {
@@ -73,30 +73,15 @@ class App extends Component {
 
 	render() {
 		return (
-            <div className="App">
+            <div>
 				{this.state.loading ? (
                     <div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
-                        <div>
-													<SideBar />
-													<div>Home page!!
-														<div id="user-info">
-															<div id="photo-container">
-																<img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
-															</div>
-															<div>{this.state.user.displayName}</div>
-															<div>{this.state.user.email}</div>
-														</div>
-														<p>
-															<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
-															<button onClick={this.deleteAccount}>Delete account</button>
-														</p>
-													</div>
-                        </div>
+                    <Home props = {this.state.user} />
 					) : (
-                        <div>
-                          <h4>You are signed out.</h4>
+                        <div style ={{"marginTop":"auto", "marginBottom":"auto"}} >
+                          <h4 className = "space">You are signed out.</h4>
                           <FirebaseUIAuth ui={ui} {...this.uiConfig} />
                         </div>
 					)
