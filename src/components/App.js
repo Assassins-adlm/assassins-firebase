@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD:src/App.js
+import logo from './logo.svg';
+import fire from  './fire.js';
+import FirebaseUIAuth from './firebaseUIAuth';
+import firebase, { ui } from './fire'
+
+=======
 import fire from  '../fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
 import '../index.css';
+>>>>>>> master:src/components/App.js
 
 class App extends Component {
 	state = {
