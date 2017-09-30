@@ -3,10 +3,8 @@ import fire from  '../fire.js';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
-import Home from './Home';
+import MapBox from './MapBox';
 import '../index.css';
-
-
 
 class App extends Component {
 	state = {
@@ -56,6 +54,7 @@ class App extends Component {
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged((user) => {
 			this.setState({loading: false, user});
+			// console.log('user id--->', this.state.user.uid)
 		});
 	}
 
@@ -86,7 +85,8 @@ class App extends Component {
 				) : (
 					this.state.user ? (
                         <div>
-															<Home props = {this.state.user}/>
+													<SideBar />
+													<MapBox />
                         </div>
 					) : (
                         <div>
