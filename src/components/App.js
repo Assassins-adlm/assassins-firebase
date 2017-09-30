@@ -4,6 +4,8 @@ import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
 import '../index.css';
+import MapBox from './MapBox';
+
 
 class App extends Component {
 	state = {
@@ -72,6 +74,10 @@ class App extends Component {
 	}
 
 	render() {
+		let styles={
+			width: '30px',
+			height: '50px'
+		}
 		return (
             <div className="App">
 				{this.state.loading ? (
@@ -79,20 +85,8 @@ class App extends Component {
 				) : (
 					this.state.user ? (
                         <div>
-													<SideBar />
-													<div>Home page!!
-														<div id="user-info">
-															<div id="photo-container">
-																<img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
-															</div>
-															<div>{this.state.user.displayName}</div>
-															<div>{this.state.user.email}</div>
-														</div>
-														<p>
-															<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
-															<button onClick={this.deleteAccount}>Delete account</button>
-														</p>
-													</div>
+							<SideBar />
+							<MapBox />
                         </div>
 					) : (
                         <div>
@@ -107,3 +101,20 @@ class App extends Component {
 }
 
 export default App;
+
+
+
+
+	// {/*												<div>Home page!!
+	// 													<div id="user-info">
+	// 														<div id="photo-container">
+	// 															<img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
+	// 														</div>
+	// 														<div>{this.state.user.displayName}</div>
+	// 														<div>{this.state.user.email}</div>
+	// 													</div>
+	// 													<p>
+	// 														<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
+	// 														<button onClick={this.deleteAccount}>Delete account</button>
+	// 													</p>
+	// 												</div>*/}
