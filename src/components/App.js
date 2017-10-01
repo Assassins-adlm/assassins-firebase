@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
 import FirebaseUIAuth from './firebaseUIAuth'
 import firebase, { ui } from '../fire'
-import SideBar from './SideBar'
-import MapBox from './MapBox'
-import '../index.css'
-import { connect } from 'react-redux'
-import { currentPlayer } from '../store/index'
+import MapBox from './MapBox';
+import SideBar from './SideBar';
+import CharacterCreator from './charactercreator'
+import '../index.css';
 
 class App extends Component {
+
 
 	constructor() {
 		super()
 		this.state = {
 			loading: true,
-			user   : null
+			user   : null,
+			newPlayer: true
 		}
 		this.uiConfig = {
 			// Called when the user has been successfully signed in.
@@ -49,16 +50,34 @@ class App extends Component {
 			],
 			// Terms of service url.
 			tosUrl: 'https://www.google.com'
-		}
-		this.getPlayer = this.getPlayer.bind(this)
+		};
+		this.doesUserExist= this.doesUserExist.bind(this)
 	}
 
 	componentDidMount() {
+		firebase.auth().onAuthStateChanged((user) => {
+			this.setState({loading: false, user});
+			// console.log('user id--->', this.state.user.uid)
+			if(this.state.user){
+				this.doesUserExist();
+			}
+		});
+	}
 
-		firebase.auth().onAuthStateChanged(( user ) => {
-			this.setState({ loading: false, user })
+	doesUserExist() {
+		let playerRef = firebase.database().ref("players");
+		playerRef.on('value', (snapshot) => {
+			let players = snapshot.val();
+			for (let player in players) {
+				if(players[player].id==this.state.user.uid){
+					console.log("Match")
+					this.setState({
+						newPlayer: false
+					})
+
+				}
+			}
 		})
-		this.state.user ? this.props.getPlayer(this.state.user.email) : null
 	}
 
 	deleteAccount() {
@@ -80,25 +99,31 @@ class App extends Component {
 	}
 
 	render() {
-		let styles = {
-			width: '30px',
-			height: '50px'
-		}
+		// let styles = {
+		// 	width: '30px',
+		// 	height: '50px'
+		// }
 		return (
-			<div className="App">
+            <div>
 				{this.state.loading ? (
 					<div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
-						<div>
-							<SideBar />
-							<MapBox />
-						</div>
+												this.state.newPlayer
+												? (<div>
+														<SideBar />
+														<CharacterCreator props = {this.state.user} />
+													</div> )
+										:(
+												<div>
+													<SideBar />
+													<MapBox props = {this.state.user} />
+										  	</div>)
 					) : (
-						<div>
-							<h4>You are signed out.</h4>
-							<FirebaseUIAuth ui={ui} {...this.uiConfig} />
-						</div>
+                    <div >
+                       <h4 className = "space">You are signed out.</h4>
+                       <FirebaseUIAuth ui={ui} {...this.uiConfig} />
+                   </div>
 					)
 				)}
 			</div>
@@ -107,22 +132,20 @@ class App extends Component {
 }
 
 
-const mapDispatchToProps = ( dispatch ) => {
-	return {
-		getPlayer( evt ) {
-			console.log(evt)
-			dispatch(currentPlayer(evt))
-		}
-	}
-}
+// const mapDispatchToProps = ( dispatch ) => {
+// 	return {
+// 		getPlayer( evt ) {
+// 			console.log(evt)
+// 			dispatch(currentPlayer(evt))
+// 		}
+// 	}
+// }
 
-export default connect(state => state, mapDispatchToProps)(App)
-
-
+// export default connect(state => state, mapDispatchToProps)(App)
 
 
-// export default App;
 
+export default App
 
 
 
