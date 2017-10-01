@@ -15,5 +15,6 @@ const reducer = combineReducers({player})
 const middleware = applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
 const store = createStore(reducer)
 
+
 export default store
 export * from './player'

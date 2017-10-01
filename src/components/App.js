@@ -7,6 +7,13 @@ import '../index.css';
 import {connect, Provider} from 'react-redux'
 import currentPlayer from '../store/player.js'
 
+const mapDispatchToProps = ( dispatch ) => {
+	return {
+		playerData:  function(evt){
+			dispatch(currentPlayer(evt))
+		}
+	}
+}
 
 class App extends Component {
 	state = {
@@ -107,13 +114,7 @@ class App extends Component {
 		);
 	}
 }
-const mapDispatchToProps = ( dispatch ) => {
-	return {
-		playerData:  function(evt){
-			dispatch(currentPlayer(evt))
-		}
-	}
-}
+
 export default connect(state => state, mapDispatchToProps)(App)
 
 

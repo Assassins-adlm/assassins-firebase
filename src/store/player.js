@@ -14,7 +14,7 @@ const playerState = {
  * ACTION CREATORS
  */
 
-export const currentPlayer = (player) => {return {type: CURRENT_PLAYER, player}}
+export function currentPlayer  (player) {return {type: CURRENT_PLAYER, player}}
 
 /**
  * REDUCER
