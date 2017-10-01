@@ -45,7 +45,7 @@ export default class SideBar extends React.Component {
         <hr/>
         <Link onClick={ this.showSettings } className="menu-item--small" to="#"><i className="fa fa-cog" aria-hidden="true"></i><span>Settings</span></Link>
 
-        <Link id="logout" className="menu-item" to="/home"><button onClick={() => {firebase.auth().signOut()}}><i className="fa fa-sign-out" aria-hidden="true"></i><span>Logout</span></button></Link>
+        <Link id="logout" className="menu-item" to="/home" onClick={() => {firebase.auth().signOut()}}><i className="fa fa-sign-out" aria-hidden="true"></i><span>Logout</span></Link>
       </Menu>
     );
   }
