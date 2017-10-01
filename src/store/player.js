@@ -6,9 +6,7 @@ const CURRENT_PLAYER = 'CURRENT_PLAYER'
  * INITIAL STATE
  */
 
-const playerState = {
-	player: '',
-}
+const playerState = {}
 
 /**
  * ACTION CREATORS
