@@ -1,5 +1,7 @@
 import React from 'react';
 import firebase from '../fire';
+import {Link} from 'react-router-dom';
+import '../chatRoom.css';
 
 export default class ChatRoom extends React.Component {
   constructor(props) {
@@ -41,18 +43,29 @@ export default class ChatRoom extends React.Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.addMessage.bind(this)}>
-          {/* <label for="" name="name" value={} /> */}
-          <input name="body" type="text" ref={ el => this.inputEl = el }/>
-          <input type="submit"/>
-        </form>
-        <ul>
-          {
-            this.state.messages.map( message => <li key={message.id}>{message.text.name}: {message.text.body}</li> )
-          }
-        </ul>
-      </div>
+      this.state.user ?
+      <div id="wrapper" className="row">
+        <div className="col-xs-12">
+          <div id="menu">
+              <p className="welcome">Welcome, <b>{this.state.user.displayName}</b></p>
+              <p className="logout"><Link id="exit" to="/home">Exit Chat</Link></p>
+              <div style={{clear:"both"}}></div>
+          </div>
+
+          <div id="chatbox">
+            <ul>
+                {
+                  this.state.messages.map( message => <li key={message.id}>{message.text.name}: {message.text.body}</li> )
+                }
+            </ul>
+          </div>
+
+          <form name="message" onSubmit={this.addMessage.bind(this)}>
+              <input name="usermsg" type="text" id="usermsg" size="63" ref={ el => this.inputEl = el }/>
+              <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+          </form>
+        </div>
+      </div> : <Link to="/home">Please Login!</Link>
     )
   }
 }
