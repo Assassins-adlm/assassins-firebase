@@ -9,6 +9,7 @@ import history from '../history'
 
 export default class Main extends React.Component {
 
+
 	constructor(props) {
 		super(props)
 	}
@@ -29,5 +30,6 @@ export default class Main extends React.Component {
 			</Router>
 		)
 	}
+
 }
 

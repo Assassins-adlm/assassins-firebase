@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
+import MapBox from './MapBox';
 import '../index.css';
 import { connect } from 'react-redux'
 import { currentPlayer } from '../store/index'
@@ -53,6 +54,7 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+
 		firebase.auth().onAuthStateChanged(( user ) => {
 			this.setState({ loading: false, user });
 		});
@@ -78,6 +80,10 @@ class App extends Component {
 	}
 
 	render() {
+		let styles={
+			width: '30px',
+			height: '50px'
+		}
 		return (
 			<div className="App">
 				{this.state.loading ? (
@@ -101,6 +107,12 @@ class App extends Component {
 								</p>
 							</div>
 						</div>
+
+                        <div>
+													<SideBar />
+													<MapBox />
+                        </div>
+
 					) : (
 						<div>
 							<h4>You are signed out.</h4>
@@ -113,6 +125,7 @@ class App extends Component {
 	}
 }
 
+
 const mapDispatchToProps = ( dispatch ) => {
 	return {
 		getPlayer( evt ) {
@@ -123,6 +136,12 @@ const mapDispatchToProps = ( dispatch ) => {
 }
 
 export default connect(state => state, mapDispatchToProps)(App)
+
+
+
+
+export default App;
+
 
 
 

@@ -9,7 +9,8 @@ import currentPlayer from '../store/player.js'
 
 
 
-class SideBar extends React.Component {
+export default class SideBar extends React.Component {
+
 
 	constructor(props) {
 		super(props)
@@ -57,3 +58,4 @@ class SideBar extends React.Component {
 
 
 export default SideBar
+
