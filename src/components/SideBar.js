@@ -36,8 +36,8 @@ export default class SideBar extends React.Component {
         <span>{this.state.user.displayName}</span>
         </Link>
         <hr/>
-        <Link id="targets" className="menu-item" to="home"><i className="fa fa-map-marker" aria-hidden="true"></i><span>Find Targets</span></Link>
-        <Link id="chat" className="menu-item" to="#"><i className="fa fa-comments" aria-hidden="true"></i><span>Chat</span></Link>
+        <Link id="targets" className="menu-item" to="/home"><i className="fa fa-map-marker" aria-hidden="true"></i><span>Find Targets</span></Link>
+        <Link id="chat" className="menu-item" to="/chat"><i className="fa fa-comments" aria-hidden="true"></i><span>Chat</span></Link>
         <Link id="lists" className="menu-item" to="#"><i className="fa fa-list" aria-hidden="true"></i><span>Target Lists</span></Link>
         <Link id="about" className="menu-item" to="#"><i className="fa fa-info-circle" aria-hidden="true"></i><span>About</span></Link>
         <hr/>

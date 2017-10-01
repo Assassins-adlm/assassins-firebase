@@ -3,6 +3,7 @@ import App from './App';
 // import Home from './Home';
 import SideBar from './SideBar';
 import PlayerProfile from './PlayerProfile';
+import ChatRoom from './ChatRoom';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 export default class Main extends React.Component {
@@ -15,6 +16,7 @@ export default class Main extends React.Component {
           <Switch>
             <Route path="/home" component={App} />
             <Route path="/profile" component={PlayerProfile}/>
+            <Route path="/chat" component={ChatRoom}/>
             <Redirect to="/home" component={App} />
           </Switch>
         </main>
