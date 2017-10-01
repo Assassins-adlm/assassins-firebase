@@ -10,9 +10,6 @@ export default class ChatRoom extends React.Component {
   }
 
   componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-			this.setState({loading: false, user});
-		});
     let messagesRef = firebase.database().ref('messages').orderByKey().limitToLast(100);
     messagesRef.on('child_added', snapshot => {
       let message = {
@@ -25,6 +22,9 @@ export default class ChatRoom extends React.Component {
       console.log('message--->', message)
       this.setState({ messages: [message].concat(this.state.messages) });
     })
+    firebase.auth().onAuthStateChanged((user) => {
+			this.setState({loading: false, user});
+		});
   }
 
   addMessage(e) {
