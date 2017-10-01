@@ -4,6 +4,9 @@ import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
 import '../index.css';
+import {connect, Provider} from 'react-redux'
+import currentPlayer from '../store/player.js'
+
 
 class App extends Component {
 	state = {
@@ -55,7 +58,6 @@ class App extends Component {
 			this.setState({loading: false, user});
 		});
 	}
-
 	deleteAccount = () => {
 		firebase.auth().currentUser.delete().catch((error) => {
 			if (error.code === 'auth/requires-recent-login') {
@@ -105,5 +107,14 @@ class App extends Component {
 		);
 	}
 }
+const mapDispatchToProps = ( dispatch ) => {
+	return {
+		playerData:  function(evt){
+			dispatch(currentPlayer(evt))
+		}
+	}
+}
+export default connect(state => state, mapDispatchToProps)(App)
 
-export default App;
+
+

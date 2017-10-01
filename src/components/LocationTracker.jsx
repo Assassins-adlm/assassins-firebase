@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-// import {connect} from 'react-redux'
-// import {Col, Row, Button} from 'react-bootstrap'
 import Geolocation from 'react-geolocation'
 
 export default class GetLocation extends Component {
@@ -15,6 +13,7 @@ export default class GetLocation extends Component {
 	render() {
 		return (
 			<div>
+				<div> {navigator.geolocation.getCurrentPosition(pos => pos.toString())}</div>
 				<Geolocation
 					render={( {
 						fetchingPosition,
@@ -37,3 +36,13 @@ export default class GetLocation extends Component {
 		)
 	}
 }
+
+//
+// const mapState = (state) => {
+// 	return {
+// 		player: state.user.email
+// 	}
+// }
+
+// export default connect(mapState)(UserHome)
+
