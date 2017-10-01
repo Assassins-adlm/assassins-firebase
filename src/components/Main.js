@@ -3,6 +3,7 @@ import App from './App';
 // import Home from './Home';
 import SideBar from './SideBar';
 import PlayerProfile from './PlayerProfile';
+import Charactercreator from './charactercreator'
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 export default class Main extends React.Component {
@@ -14,8 +15,8 @@ export default class Main extends React.Component {
         <main>
           <Switch>
             <Route path="/home" component={App} />
-            <Route path="/profile" component={PlayerProfile}/>
             <Redirect to="/home" component={App} />
+            <Redirect to = "/creator" component={Charactercreator} />
           </Switch>
         </main>
       </div>

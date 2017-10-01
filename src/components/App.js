@@ -4,12 +4,14 @@ import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import MapBox from './MapBox';
 import SideBar from './SideBar';
+import CharacterCreator from './charactercreator';
 import '../index.css';
 
 class App extends Component {
 	state = {
 		loading: true,
-		user: null
+		user: null,
+		newPlayer: true
 	}
 
 	constructor() {
@@ -49,12 +51,32 @@ class App extends Component {
 			// Terms of service url.
 			tosUrl: 'https://www.google.com'
 		};
+		this.doesUserExist= this.doesUserExist.bind(this)
 	}
 
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged((user) => {
 			this.setState({loading: false, user});
 			// console.log('user id--->', this.state.user.uid)
+			if(this.state.user){
+				this.doesUserExist();
+			}
+		});
+	}
+
+	doesUserExist() {
+		let playerRef = firebase.database().ref("players");
+		playerRef.on('value', (snapshot) => {
+			let players = snapshot.val();
+			for (let player in players) {
+				if(players[player].id==this.state.user.uid){
+					console.log("Match")
+					this.setState({
+						newPlayer: false
+					})
+
+				}
+			}
 		});
 	}
 
@@ -84,15 +106,21 @@ class App extends Component {
                     <div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
-										<div>
-										<SideBar />
-										<MapBox props = {this.state.user} />
-										</div>
+												this.state.newPlayer
+												? (<div>
+														<SideBar />
+														<CharacterCreator props = {this.state.user} />
+													</div> )
+										:(
+												<div>
+													<SideBar />
+													<MapBox props = {this.state.user} />
+										  	</div>)
 					) : (
-                        <div style ={{"marginTop":"auto", "marginBottom":"auto"}} >
-                          <h4 className = "space">You are signed out.</h4>
-                          <FirebaseUIAuth ui={ui} {...this.uiConfig} />
-                        </div>
+                    <div >
+                       <h4 className = "space">You are signed out.</h4>
+                       <FirebaseUIAuth ui={ui} {...this.uiConfig} />
+                   </div>
 					)
 				)}
             </div>
@@ -104,17 +132,3 @@ export default App;
 
 
 
-
-	// {/*												<div>Home page!!
-	// 													<div id="user-info">
-	// 														<div id="photo-container">
-	// 															<img id="photo" src={this.state.user.photoURL} alt={this.state.user.displayName} />
-	// 														</div>
-	// 														<div>{this.state.user.displayName}</div>
-	// 														<div>{this.state.user.email}</div>
-	// 													</div>
-	// 													<p>
-	// 														<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
-	// 														<button onClick={this.deleteAccount}>Delete account</button>
-	// 													</p>
-	// 												</div>*/}
