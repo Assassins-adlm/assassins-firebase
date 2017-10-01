@@ -4,17 +4,15 @@ import FirebaseUIAuth from './firebaseUIAuth';
 import firebase, { ui } from '../fire'
 import SideBar from './SideBar';
 import '../index.css';
-import {connect, Provider} from 'react-redux'
-import currentPlayer from '../store/player.js'
+import {connect} from 'react-redux'
+import {currentPlayer} from '../store/index'
 
-const mapDispatchToProps = ( dispatch ) => {
+
+const mapStateToProps = function ( state ) {
 	return {
-		playerData:  function(evt){
-			dispatch(currentPlayer(evt))
-		}
+		player: state.player
 	}
 }
-
 class App extends Component {
 	state = {
 		loading: true,
@@ -81,6 +79,7 @@ class App extends Component {
 	}
 
 	render() {
+		this.props.getPlayer('HI THERE') // Store TEST
 		return (
             <div className="App">
 				{this.state.loading ? (
@@ -115,7 +114,15 @@ class App extends Component {
 	}
 }
 
-export default connect(state => state, mapDispatchToProps)(App)
+const mapDispatchToProps = ( dispatch ) => {
+	return	{
+		getPlayer(evt) {
+			dispatch(currentPlayer(evt))
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
 
 
 

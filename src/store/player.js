@@ -21,6 +21,7 @@ export function currentPlayer  (player) {return {type: CURRENT_PLAYER, player}}
  */
 
 export default function (state = playerState, action) {
+	console.log(action , '!!!!')
 	switch (action.type) {
 	case CURRENT_PLAYER:
 		return Object.assign({}, state, { player: action.player})
