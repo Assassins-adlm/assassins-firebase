@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import FirebaseUIAuth from './firebaseUIAuth';
+import React, { Component } from 'react'
+import FirebaseUIAuth from './firebaseUIAuth'
 import firebase, { ui } from '../fire'
-import SideBar from './SideBar';
-import MapBox from './MapBox';
-import '../index.css';
+import SideBar from './SideBar'
+import MapBox from './MapBox'
+import '../index.css'
 import { connect } from 'react-redux'
 import { currentPlayer } from '../store/index'
 
 class App extends Component {
-	state = {
-		loading: true,
-		user   : null
-	}
 
 	constructor() {
-		super();
+		super()
+		this.state = {
+			loading: true,
+			user   : null
+		}
 		this.uiConfig = {
 			// Called when the user has been successfully signed in.
 			callbacks    : {
 				signInSuccess: ( currentUser, credential, redirectUrl ) => {
 					// Do not redirect.
-					return false;
+					return false
 				}
 			},
 			// Opens IDP Providers sign-in flow in a popup.
@@ -48,20 +48,20 @@ class App extends Component {
 				}
 			],
 			// Terms of service url.
-			tosUrl       : 'https://www.google.com'
-		};
+			tosUrl: 'https://www.google.com'
+		}
 		this.getPlayer = this.getPlayer.bind(this)
 	}
 
 	componentDidMount() {
 
 		firebase.auth().onAuthStateChanged(( user ) => {
-			this.setState({ loading: false, user });
-		});
+			this.setState({ loading: false, user })
+		})
 		this.state.user ? this.props.getPlayer(this.state.user.email) : null
 	}
 
-	deleteAccount = () => {
+	deleteAccount() {
 		firebase.auth().currentUser.delete().catch(( error ) => {
 			if (error.code === 'auth/requires-recent-login') {
 				// The user's credential is too old. She needs to sign in again.
@@ -69,18 +69,18 @@ class App extends Component {
 					// The timeout allows the message to be displayed after the UI has
 					// changed to the signed out state.
 					setTimeout(() => {
-						alert('Please sign in again to delete your account.');
-					}, 1);
-				});
+						alert('Please sign in again to delete your account.')
+					}, 1)
+				})
 			}
-		});
+		})
 	}
-	getPlayer = ( data ) => {
+	getPlayer( data ) {
 		this.props.getPlayer(data)
 	}
 
 	render() {
-		let styles={
+		let styles = {
 			width: '30px',
 			height: '50px'
 		}
@@ -91,28 +91,9 @@ class App extends Component {
 				) : (
 					this.state.user ? (
 						<div>
-							<SideBar/>
-							<div>Home page!!
-								<div id="user-info">
-									<div id="photo-container">
-										<img id="photo" src={this.state.user.photoURL}
-										     alt={this.state.user.displayName}/>
-									</div>
-									<div>{this.state.user.displayName}</div>
-									<div>{this.state.user.email}</div>
-								</div>
-								<p>
-									<button onClick={() => {firebase.auth().signOut()}}>Sign Out</button>
-									<button onClick={this.deleteAccount}>Delete account</button>
-								</p>
-							</div>
+							<SideBar />
+							<MapBox />
 						</div>
-
-                        <div>
-													<SideBar />
-													<MapBox />
-                        </div>
-
 					) : (
 						<div>
 							<h4>You are signed out.</h4>
@@ -121,7 +102,7 @@ class App extends Component {
 					)
 				)}
 			</div>
-		);
+		)
 	}
 }
 
@@ -140,7 +121,7 @@ export default connect(state => state, mapDispatchToProps)(App)
 
 
 
-export default App;
+// export default App;
 
 
 
