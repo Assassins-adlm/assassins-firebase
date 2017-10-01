@@ -1,10 +1,20 @@
 import React, { Component } from 'react'
 import FirebaseUIAuth from './firebaseUIAuth'
 import firebase, { ui } from '../fire'
-import MapBox from './MapBox';
-import SideBar from './SideBar';
+import MapBox from './MapBox'
+import SideBar from './SideBar'
 import CharacterCreator from './charactercreator'
-import '../index.css';
+import '../index.css'
+import {connect} from 'react-redux'
+import { compose } from 'redux'
+import {currentPlayer} from '../store'
+import {
+	firebaseConnect,
+	isLoaded,
+	isEmpty,
+	dataToJS,
+	pathToJS
+} from 'react-redux-firebase'
 
 class App extends Component {
 
@@ -20,8 +30,9 @@ class App extends Component {
 			// Called when the user has been successfully signed in.
 			callbacks    : {
 				signInSuccess: ( currentUser, credential, redirectUrl ) => {
-					// Do not redirect.
+					console.log(currentUser, credential, redirectUrl)
 					return false
+
 				}
 			},
 			// Opens IDP Providers sign-in flow in a popup.
@@ -50,27 +61,27 @@ class App extends Component {
 			],
 			// Terms of service url.
 			tosUrl: 'https://www.google.com'
-		};
+		}
 		this.doesUserExist= this.doesUserExist.bind(this)
 	}
 
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged((user) => {
-			this.setState({loading: false, user});
+			this.setState({loading: false, user})
 			// console.log('user id--->', this.state.user.uid)
 			if(this.state.user){
-				this.doesUserExist();
+				this.doesUserExist()
 			}
-		});
+		})
 	}
 
 	doesUserExist() {
-		let playerRef = firebase.database().ref("players");
+		let playerRef = firebase.database().ref('players')
 		playerRef.on('value', (snapshot) => {
-			let players = snapshot.val();
+			let players = snapshot.val()
 			for (let player in players) {
 				if(players[player].id==this.state.user.uid){
-					console.log("Match")
+					console.log('Match')
 					this.setState({
 						newPlayer: false
 					})
@@ -99,31 +110,28 @@ class App extends Component {
 	}
 
 	render() {
-		// let styles = {
-		// 	width: '30px',
-		// 	height: '50px'
-		// }
+		console.log(this.props, this.state, '!!---')
 		return (
-            <div>
+			<div>
 				{this.state.loading ? (
 					<div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
-												this.state.newPlayer
-												? (<div>
-														<SideBar />
-														<CharacterCreator props = {this.state.user} />
-													</div> )
-										:(
-												<div>
-													<SideBar />
-													<MapBox props = {this.state.user} />
+						this.state.newPlayer
+							? (<div>
+								<SideBar />
+								<CharacterCreator props = {this.state.user} />
+							</div> )
+							:(
+								<div>
+									<SideBar />
+									<MapBox props = {this.state.user} />
 										  	</div>)
 					) : (
-                    <div >
-                       <h4 className = "space">You are signed out.</h4>
-                       <FirebaseUIAuth ui={ui} {...this.uiConfig} />
-                   </div>
+						<div >
+							<h4 className = "space">You are signed out.</h4>
+							<FirebaseUIAuth ui={ui} {...this.uiConfig} />
+						</div>
 					)
 				)}
 			</div>
@@ -132,20 +140,30 @@ class App extends Component {
 }
 
 
-// const mapDispatchToProps = ( dispatch ) => {
-// 	return {
-// 		getPlayer( evt ) {
-// 			console.log(evt)
-// 			dispatch(currentPlayer(evt))
-// 		}
-// 	}
-// }
+const mapDispatchToProps = ( dispatch ) => {
+	return {
+		getPlayer( evt ) {
+			console.log(evt)
+			dispatch(currentPlayer(evt))
+		}
+	}
+}
 
 // export default connect(state => state, mapDispatchToProps)(App)
 
 
+export default compose(
+	firebaseConnect([
+	]),
+	connect(
+		(state) => ({
+			auth: pathToJS(state.firebase, 'auth') // in v2 todos: state.firebase.
+		}), mapDispatchToProps
+	)
+)(App)
 
-export default App
+
+// export default App
 
 
 
