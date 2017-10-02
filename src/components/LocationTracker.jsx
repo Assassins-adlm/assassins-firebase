@@ -11,7 +11,7 @@ export default class GetLocation extends Component {
 	}
 
 	render() {
-		console.log(this.state.currentLocation)
+		// console.log(this.state.currentLocation)
 		return (
 			<div>
 				<div> {navigator.geolocation.getCurrentPosition(pos => pos.toString())}</div>
