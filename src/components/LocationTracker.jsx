@@ -35,7 +35,7 @@ class GetLocation extends Component {
 								{error.message}
 							</div>}
 						<pre>
-                                latitude: {latitude}
+                 latitude: {latitude}
 								longitude: {longitude}
 					      </pre>
 					</div>}
