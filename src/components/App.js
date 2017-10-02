@@ -26,6 +26,7 @@ class App extends Component {
 			user   : null,
 			newPlayer: true
 		}
+
 		this.uiConfig = {
 			// Called when the user has been successfully signed in.
 			callbacks    : {
@@ -109,7 +110,7 @@ class App extends Component {
 	}
 
 	render() {
-		console.log(this.props, this.state, '!!---')
+		console.log(this.props, '!!!!', this.state, '!!')
 		return (
 			<div>
 				{this.state.loading ? (
@@ -155,17 +156,14 @@ const mapDispatchToProps = ( dispatch ) => {
 }
 
 // export default connect(state => state, mapDispatchToProps)(App)
+const mapStateToProps = (state) => {
+	return {
+		auth: pathToJS(state.firebase, 'auth'),
+		myProfile: dataToJS(state.firebase, 'players'),
+	}
+}
 
-
-export default compose(
-	firebaseConnect([{path: 'players'}]),
-	connect(
-		(state) => ({
-			auth: pathToJS(state.firebase, 'auth'),
-			myProfile: dataToJS(state.firebase, 'players')
-		}), mapDispatchToProps
-	)
-)(App)
+export default compose(firebaseConnect([{path: 'players' }, {path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(App)
 
 
 
