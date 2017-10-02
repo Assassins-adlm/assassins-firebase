@@ -8,15 +8,11 @@ const CURRENT_TARGETS= 'CURRENT_TARGETS'
  * INITIAL STATE
  */
 
-<<<<<<< HEAD
-const playerState = {}
-=======
 const playerState = {
 	player: '',
 	location: {latitude: '' , longitude: ''},
 	targets: [],
 }
->>>>>>> master
 
 /**
  * ACTION CREATORS

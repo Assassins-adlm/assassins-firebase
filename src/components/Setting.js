@@ -4,6 +4,10 @@ import firebase from '../fire'
 
 class Setting extends React.Component {
 
+	componentDidMount() {
+
+	}
+
 	render() {
 		return (
 			<form>
