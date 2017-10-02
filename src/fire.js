@@ -9,6 +9,7 @@ var config = {
   storageBucket: "assassins-aldm.appspot.com",
   messagingSenderId: "510113560850"
 };
+
 var fire = firebase.initializeApp(config);
 export const ui = new firebaseui.auth.AuthUI(firebase.auth());
 export default firebase;
