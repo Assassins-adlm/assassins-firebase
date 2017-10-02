@@ -7,7 +7,6 @@ import player from './player.js'
 
 
 
-
 var firebaseConfig = {
 	apiKey: "AIzaSyAFYb47n-YcDhRxHivbFM9f66VT5p6X46g",
 	authDomain: "assassins-aldm.firebaseapp.com",
@@ -18,7 +17,6 @@ var firebaseConfig = {
 }
 
 const reduxFirebaseConfig = { userProfile: 'users' }
-
 
 
 const createStoreWithFirebase = compose(reactReduxFirebase(firebaseConfig, reduxFirebaseConfig))(createStore)
