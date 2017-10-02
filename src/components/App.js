@@ -74,8 +74,6 @@ class App extends Component {
 				this.doesUserExist()
 			}
 		})
-
-
 	}
 
 	doesUserExist() {
@@ -88,7 +86,6 @@ class App extends Component {
 					this.setState({
 						newPlayer: false
 					})
-
 				}
 			}
 		})
@@ -159,14 +156,12 @@ const mapDispatchToProps = ( dispatch ) => {
 
 // export default connect(state => state, mapDispatchToProps)(App)
 const mapStateToProps = (state) => {
+	console.log('state-->', state)
 	return {
 		auth: pathToJS(state.firebase, 'auth'),
 		myProfile: dataToJS(state.firebase, 'players'),
 	}
 }
-
-
-
 
 export default compose(firebaseConnect([{path: 'players' }, {path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(App)
 

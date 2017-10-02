@@ -22,6 +22,9 @@ export function currentPlayer  (player) {return {type: CURRENT_PLAYER, player}}
 export function currentLocation (location) {return {type: CURRENT_LOCATION, location}}
 export function currentTargets (targets) {return {type: CURRENT_TARGETS, targets}}
 
+// thunk
+
+
 /**
  * REDUCER
  */

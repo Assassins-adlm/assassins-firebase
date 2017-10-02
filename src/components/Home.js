@@ -1,27 +1,27 @@
-import React from 'react';
-import SideBar from './SideBar';
-import MapBox from './MapBox';
+import React from 'react'
+import SideBar from './SideBar'
+import MapBox from './MapBox'
 
 
 export default class Home extends React.Component {
 
-  constructor(props){
-    super(props);
-  }
+	constructor(props){
+		super(props)
+	}
 
-  render() {
+	render() {
 
-    console.log(this.props.props, "PROPS")
-    let user = this.props.props
+		console.log(this.props.props, 'PROPS')
+		let user = this.props.props
 
-    return (
-      <div>
-      <SideBar />
+		return (
+			<div>
+				<SideBar />
 
-         <div>
+				<div>
 
-         </div>
-      </div>
-    )
-  }
+				</div>
+			</div>
+		)
+	}
 }

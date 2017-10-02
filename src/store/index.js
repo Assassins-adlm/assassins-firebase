@@ -8,12 +8,12 @@ import player from './player.js'
 
 
 var firebaseConfig = {
-	apiKey: "AIzaSyAFYb47n-YcDhRxHivbFM9f66VT5p6X46g",
-	authDomain: "assassins-aldm.firebaseapp.com",
-	databaseURL: "https://assassins-aldm.firebaseio.com",
-	projectId: "assassins-aldm",
-	storageBucket: "assassins-aldm.appspot.com",
-	messagingSenderId: "510113560850"
+	apiKey: 'AIzaSyAFYb47n-YcDhRxHivbFM9f66VT5p6X46g',
+	authDomain: 'assassins-aldm.firebaseapp.com',
+	databaseURL: 'https://assassins-aldm.firebaseio.com',
+	projectId: 'assassins-aldm',
+	storageBucket: 'assassins-aldm.appspot.com',
+	messagingSenderId: '510113560850'
 }
 
 const reduxFirebaseConfig = { userProfile: 'users' }
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
 })
 
 const store = createStoreWithFirebase(rootReducer, initialState)
-// const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)))
+// const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 
 export default store
 
