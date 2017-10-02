@@ -113,7 +113,6 @@ class App extends Component {
 	}
 
 	render() {
-		console.log(this.props, '!!!!', this.state, '!!')
 		return (
 			<div>
 				{this.state.loading ? (

@@ -20,7 +20,6 @@ var firebaseConfig = {
 const reduxFirebaseConfig = { userProfile: 'users' }
 
 
-
 const createStoreWithFirebase = compose(reactReduxFirebase(firebaseConfig, reduxFirebaseConfig))(createStore)
 
 const initialState = {}
