@@ -6,6 +6,8 @@ import SideBar from './SideBar'
 import CharacterCreator from './charactercreator'
 import '../index.css'
 
+// window.location.reload(true)
+
 class App extends Component {
 
 
@@ -62,6 +64,8 @@ class App extends Component {
 				this.doesUserExist()
 			}
 		})
+
+		// window.location.reload(true)
 	}
 
 	doesUserExist() {

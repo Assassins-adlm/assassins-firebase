@@ -12,6 +12,7 @@ export default class Main extends React.Component {
 
 
 	render() {
+		// location.reload(true)
 		return (
 			<Router history={history}>
 				<div>

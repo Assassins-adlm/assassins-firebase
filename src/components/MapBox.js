@@ -54,7 +54,6 @@ export default class MapBox extends Component {
 			var options = {timeout:6000}
 			geoLoc = navigator.geolocation
 			watchID = geoLoc.watchPosition(showLocation, errorHandler, options)
-			// console.log('poop',watchID)
 		}
 
 		else{
@@ -68,7 +67,6 @@ export default class MapBox extends Component {
 		const Map = ReactMapboxGl({
 			accessToken: 'pk.eyJ1IjoiY2Fzc2lvemVuIiwiYSI6ImNqNjZydGl5dDJmOWUzM3A4dGQyNnN1ZnAifQ.0ZIRDup0jnyUFVzUa_5d1g'
 		})
-		console.log('asdfasdfaf',this.getLocationUpdate())
 		return(
 
 			<div>
