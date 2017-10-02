@@ -17,15 +17,10 @@ export default class Home extends React.Component {
     return (
       <div>
       <SideBar />
-      <MapBox />
-       <div>
-              <div className = "space" >
-              <h2> Welcome </h2>
-              <div>{user.displayName}</div>
-              </div>
 
-       </div>
+         <div>
 
+         </div>
       </div>
     )
   }
