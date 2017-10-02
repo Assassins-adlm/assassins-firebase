@@ -1,26 +1,30 @@
 import React, { Component } from 'react'
 import Geolocation from 'react-geolocation'
+import firebase from '../fire'
 
 export default class GetLocation extends Component {
 	constructor( props ) {
 		super()
-		this.state = {
-			currentLocation: {}
-		}
+		// this.state = {
+		// 	// currentLocation: {}
+		// 	longitude: 0,
+		// 	latitude:0
+		// }
 
 	}
 
 	render() {
-		console.log(this.state.currentLocation)
+		const playerRef = firebase.database().ref()
+		const position = playerRef.child('position')
 		return (
 			<div>
-				<div> {navigator.geolocation.getCurrentPosition(pos => pos.toString())}</div>
+				<div> {navigator.geolocation.getCurrentPosition(pos => position.push({latitude: pos.coords.latitude, longitude: pos.coords.longitude}))}</div>
 				<Geolocation render={({
 					fetchingPosition,
 					position: { coords: { latitude, longitude } = {} } = {},
 					error,
 					getCurrentPosition
-				}) =>
+				}) =>(
 					<div>
 						<button onClick={()=>{getCurrentPosition()}}>Get Position</button>
 						{error &&
@@ -28,10 +32,12 @@ export default class GetLocation extends Component {
 								{error.message}
 							</div>}
 						<pre>
-                                latitude: {latitude}
-								longitude: {longitude}
-					      </pre>
-					</div>}
+							latitude: {latitude}
+							longitude: {longitude}
+					    </pre>
+					</div>
+				)
+				}
 				/>
 			</div>
 		)

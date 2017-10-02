@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import FirebaseUIAuth from './firebaseUIAuth'
 import firebase, { ui } from '../fire'
-import MapBox from './MapBox';
-import SideBar from './SideBar';
+import MapBox from './MapBox'
+import SideBar from './SideBar'
 import CharacterCreator from './charactercreator'
-import '../index.css';
+import '../index.css'
 
 class App extends Component {
 
@@ -50,27 +50,27 @@ class App extends Component {
 			],
 			// Terms of service url.
 			tosUrl: 'https://www.google.com'
-		};
+		}
 		this.doesUserExist= this.doesUserExist.bind(this)
 	}
 
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged((user) => {
-			this.setState({loading: false, user});
+			this.setState({loading: false, user})
 			// console.log('user id--->', this.state.user.uid)
 			if(this.state.user){
-				this.doesUserExist();
+				this.doesUserExist()
 			}
-		});
+		})
 	}
 
 	doesUserExist() {
-		let playerRef = firebase.database().ref("players");
+		let playerRef = firebase.database().ref('players')
 		playerRef.on('value', (snapshot) => {
-			let players = snapshot.val();
+			let players = snapshot.val()
 			for (let player in players) {
 				if(players[player].id==this.state.user.uid){
-					console.log("Match")
+					console.log('Match')
 					this.setState({
 						newPlayer: false
 					})
@@ -104,26 +104,26 @@ class App extends Component {
 		// 	height: '50px'
 		// }
 		return (
-            <div>
+			<div>
 				{this.state.loading ? (
 					<div id="loading">Loading...</div>
 				) : (
 					this.state.user ? (
-												this.state.newPlayer
-												? (<div>
-														<SideBar />
-														<CharacterCreator props = {this.state.user} />
-													</div> )
-										:(
-												<div>
-													<SideBar />
-													<MapBox props = {this.state.user} />
+						this.state.newPlayer
+							? (<div>
+								<SideBar />
+								<CharacterCreator props = {this.state.user} />
+							</div> )
+							:(
+								<div>
+									<SideBar />
+									<MapBox props = {this.state.user} />
 										  	</div>)
 					) : (
-                    <div >
-                       <h4 className = "space">You are signed out.</h4>
-                       <FirebaseUIAuth ui={ui} {...this.uiConfig} />
-                   </div>
+						<div >
+							<h4 className = "space">You are signed out.</h4>
+							<FirebaseUIAuth ui={ui} {...this.uiConfig} />
+						</div>
 					)
 				)}
 			</div>
