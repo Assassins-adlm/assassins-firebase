@@ -15,7 +15,8 @@ var firebaseConfig = {
 	projectId: "assassins-aldm",
 	storageBucket: "assassins-aldm.appspot.com",
 	messagingSenderId: "510113560850"
-};
+}
+
 const reduxFirebaseConfig = { userProfile: 'users' }
 
 

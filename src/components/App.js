@@ -7,7 +7,7 @@ import CharacterCreator from './charactercreator'
 import '../index.css'
 import {connect} from 'react-redux'
 import { compose } from 'redux'
-import {currentPlayer} from '../store'
+import {currentPlayer, currentLocation, currentTargets} from '../store'
 import {
 	firebaseConnect,
 	isLoaded,
@@ -73,6 +73,8 @@ class App extends Component {
 				this.doesUserExist()
 			}
 		})
+
+
 	}
 
 	doesUserExist() {
@@ -139,12 +141,18 @@ class App extends Component {
 	}
 }
 
-
 const mapDispatchToProps = ( dispatch ) => {
 	return {
 		getPlayer( evt ) {
-			console.log(evt)
 			dispatch(currentPlayer(evt))
+		}
+		,
+		getLocation( evt ) {
+			dispatch(currentLocation(evt))
+		}
+		,
+		getTargets( evt ) {
+			dispatch(currentTargets(evt))
 		}
 	}
 }
@@ -157,13 +165,12 @@ export default compose(
 	]),
 	connect(
 		(state) => ({
-			auth: pathToJS(state.firebase, 'auth') // in v2 todos: state.firebase.
+			auth: pathToJS(state.firebase, 'auth'),
 		}), mapDispatchToProps
 	)
 )(App)
 
 
-// export default App
 
 
 
