@@ -7,6 +7,9 @@ import Setting from './Setting'
 import ChatRoom from './ChatRoom'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import {Router} from 'react-router'
+import { compose } from 'redux'
+import {connect} from 'react-redux'
+
 import history from '../history'
 
 export default class Main extends React.Component {
