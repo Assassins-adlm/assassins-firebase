@@ -76,6 +76,7 @@ export default class Target extends React.Component {
 		return(
 			<div>
 		  	{
+					//if user has a target already
 			   	this.state.hasTarget ? (
 						<h1 className = "space" >Your target is {this.state.user.target.name}</h1>
 						 ) :
