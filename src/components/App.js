@@ -5,8 +5,6 @@ import MapBox from './MapBox'
 import SideBar from './SideBar'
 import CharacterCreator from './charactercreator'
 import '../index.css'
-<<<<<<< HEAD
-=======
 import {connect} from 'react-redux'
 import { compose } from 'redux'
 import {currentPlayer, currentLocation, currentTargets} from '../store'
@@ -17,7 +15,6 @@ import {
 	dataToJS,
 	pathToJS
 } from 'react-redux-firebase'
->>>>>>> ac840c8ff6a247c7363afd25d54924538564ebd2
 
 class App extends Component {
 
@@ -77,11 +74,6 @@ class App extends Component {
 				this.doesUserExist()
 			}
 		})
-<<<<<<< HEAD
-=======
-
-
->>>>>>> ac840c8ff6a247c7363afd25d54924538564ebd2
 	}
 
 	doesUserExist() {
