@@ -40,13 +40,11 @@ export default class MapBox extends Component {
 			long = longitude,
 			lat = latitude
 
-			console.log('LONG LAT:', long, lat)
 
 			var accuracy = position.coords.accuracy
 			alert('Latitude : ' + latitude + ' Longitude: ' + longitude + ' accuracy: ' + accuracy)
 
 		}
-		console.log('LONG LAT OUTSIDE:', long, lat)
 
 		function errorHandler(err) {
 			if(err.code == 1) {
@@ -78,7 +76,6 @@ export default class MapBox extends Component {
 			accessToken: 'pk.eyJ1IjoiY2Fzc2lvemVuIiwiYSI6ImNqNjZydGl5dDJmOWUzM3A4dGQyNnN1ZnAifQ.0ZIRDup0jnyUFVzUa_5d1g'
 		})
 
-		console.log('please work!!', long, lat)
 
 		return(
 
@@ -107,10 +104,6 @@ export default class MapBox extends Component {
 
 
 				</Map>
-				<span className="space">
-					<h1> WELCOME </h1>
-					<h3>{user.displayName}</h3>
-				</span>
 			</div>
 		)
 	}
