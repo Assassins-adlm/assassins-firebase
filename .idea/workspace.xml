@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8bf72dca-9420-4d8c-a397-e53a476ff25b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App.js" afterPath="$PROJECT_DIR$/src/components/App.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,8 +25,8 @@
       <file leaf-file-name="App.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="163" column="12" lean-forward="false" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
+            <state relative-caret-position="301">
+              <caret line="164" column="55" lean-forward="true" selection-start-line="164" selection-start-column="55" selection-end-line="164" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -332,7 +331,7 @@
       <workItem from="1506877370437" duration="1129000" />
       <workItem from="1506880372022" duration="9778000" />
       <workItem from="1506955632533" duration="610000" />
-      <workItem from="1506956695251" duration="3558000" />
+      <workItem from="1506956695251" duration="3697000" />
     </task>
     <task id="LOCAL-00001" summary="Store config complete.&#10;&#10;TODO: &#10;- add firebase-react-redux">
       <created>1506886227162</created>
@@ -355,11 +354,18 @@
       <option name="project" value="LOCAL" />
       <updated>1506956791484</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="- firebase state set">
+      <created>1506962528651</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1506962528651</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28327000" />
+    <option name="totallyTimeSpent" value="28466000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-402" y="-1080" width="1920" height="1080" extended-state="6" />
@@ -396,7 +402,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Store config complete.&#10;&#10;TODO: &#10;- add firebase-react-redux" />
     <MESSAGE value="- firebase-react-redux config setup&#10;&#10;- refactor login to use props of firebase redux store" />
-    <option name="LAST_COMMIT_MESSAGE" value="- firebase-react-redux config setup&#10;&#10;- refactor login to use props of firebase redux store" />
+    <MESSAGE value="- firebase state set" />
+    <option name="LAST_COMMIT_MESSAGE" value="- firebase state set" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -781,8 +788,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="163" column="12" lean-forward="false" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
+        <state relative-caret-position="301">
+          <caret line="164" column="55" lean-forward="true" selection-start-line="164" selection-start-column="55" selection-end-line="164" selection-end-column="55" />
           <folding />
         </state>
       </provider>
