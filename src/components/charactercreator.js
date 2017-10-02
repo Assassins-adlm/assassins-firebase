@@ -12,15 +12,13 @@ class CharacterCreator extends React.Component {
 	}
 
 	handlesubmit(e){
-		const playerRef = firebase.database().ref('players')
 		const player = {
 			id: this.props.props.uid,
 			name: e.target.tagName.value,
 			gender: e.target.gender.value,
 			image: e.target.image.value
 		}
-		playerRef.push(player)
-
+		firebase.database().ref('players/' + this.props.props.uid).set(player)
 	}
 
 
