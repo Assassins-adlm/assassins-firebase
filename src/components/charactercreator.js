@@ -24,6 +24,10 @@ class CharacterCreator extends React.Component {
 	}
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 	render(){
 		let user = this.props.props
 		console.log('id', this.props.props.uid)

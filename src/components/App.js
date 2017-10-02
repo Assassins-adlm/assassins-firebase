@@ -5,6 +5,19 @@ import MapBox from './MapBox'
 import SideBar from './SideBar'
 import CharacterCreator from './charactercreator'
 import '../index.css'
+<<<<<<< HEAD
+=======
+import {connect} from 'react-redux'
+import { compose } from 'redux'
+import {currentPlayer, currentLocation, currentTargets} from '../store'
+import {
+	firebaseConnect,
+	isLoaded,
+	isEmpty,
+	dataToJS,
+	pathToJS
+} from 'react-redux-firebase'
+>>>>>>> ac840c8ff6a247c7363afd25d54924538564ebd2
 
 class App extends Component {
 
@@ -20,8 +33,9 @@ class App extends Component {
 			// Called when the user has been successfully signed in.
 			callbacks    : {
 				signInSuccess: ( currentUser, credential, redirectUrl ) => {
-					// Do not redirect.
+					console.log(currentUser, credential, redirectUrl)
 					return false
+
 				}
 			},
 			// Opens IDP Providers sign-in flow in a popup.
@@ -62,6 +76,11 @@ class App extends Component {
 				this.doesUserExist()
 			}
 		})
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ac840c8ff6a247c7363afd25d54924538564ebd2
 	}
 
 	doesUserExist() {
@@ -98,10 +117,7 @@ class App extends Component {
 	}
 
 	render() {
-		// let styles = {
-		// 	width: '30px',
-		// 	height: '50px'
-		// }
+		console.log(this.props, this.state, '!!---')
 		return (
 			<div>
 				{this.state.loading ? (
@@ -130,21 +146,36 @@ class App extends Component {
 	}
 }
 
-
-// const mapDispatchToProps = ( dispatch ) => {
-// 	return {
-// 		getPlayer( evt ) {
-// 			console.log(evt)
-// 			dispatch(currentPlayer(evt))
-// 		}
-// 	}
-// }
+const mapDispatchToProps = ( dispatch ) => {
+	return {
+		getPlayer( evt ) {
+			dispatch(currentPlayer(evt))
+		}
+		,
+		getLocation( evt ) {
+			dispatch(currentLocation(evt))
+		}
+		,
+		getTargets( evt ) {
+			dispatch(currentTargets(evt))
+		}
+	}
+}
 
 // export default connect(state => state, mapDispatchToProps)(App)
 
 
+export default compose(
+	firebaseConnect([
+	]),
+	connect(
+		(state) => ({
+			auth: pathToJS(state.firebase, 'auth'),
+		}), mapDispatchToProps
+	)
+)(App)
 
-export default App
+
 
 
 
