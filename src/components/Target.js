@@ -19,7 +19,6 @@ export default class Target extends React.Component {
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged((user) => {
 			this.setState({loading: false, user})
-			console.log(this.state.user.target, "Target")
 			if(this.state.user.target===undefined){
 				 this.loadAllPlayers()
 			}
@@ -58,7 +57,6 @@ export default class Target extends React.Component {
 
 				for(var player in players){
 					if(players[player].id===currentUser.uid){
-						console.log(players[player], player)
 						return assassinId = player
 					}
 				}
