@@ -1,6 +1,12 @@
 import React from 'react'
 import firebase from '../fire'
 
+//firebase only handle three types of values: boolean, strings, and numbers
+// in order to have images we would need to use firebase.storage()
+// firebase.storage().ref() points to storage root
+
+// import GetLocation from './LocationTracker.jsx'
+
 class CharacterCreator extends React.Component {
 
 	constructor(){
@@ -12,6 +18,7 @@ class CharacterCreator extends React.Component {
 	}
 
 	handlesubmit(e){
+		const playerRef = firebase.database().ref('players')
 		const player = {
 			id: this.props.props.uid,
 			name: e.target.tagName.value,
