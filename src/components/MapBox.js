@@ -1,137 +1,91 @@
-import React, {Component} from 'react'
-import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl'
+import fetch from "isomorphic-fetch";
+import firebase from '../fire'
+import React from 'react'
+import { compose, withProps } from "recompose";
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker,
+} from "react-google-maps";
+import {
+	firebaseConnect,
+	isLoaded,
+	isEmpty,
+	dataToJS,
+	populateDataToJS,
+	pathToJS
+} from 'react-redux-firebase'
 
-// let randCoords = [
-// 	[-73.9445475,40.6740157],
-// 	[-74.01316889999998, 40.7130082],
-// 	[-74.0445004, 40.6892494]
-// ]
-// let long, lat
-export default class MapBox extends Component {
+
+
+import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
+
+const MapWithAMarkerClusterer = compose(
+  withProps({
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div style={{ height: '100vh' }} />,
+    mapElement: <div style={{ height: `100%` }} />,
+  }),
+  withScriptjs,
+  withGoogleMap
+)(props =>
+  <GoogleMap
+    defaultZoom={15}
+    defaultCenter={{ lat: 40.704, lng: -74.009}}
+  >
+    <MarkerClusterer
+      averageCenter
+      enableRetinaIcons
+      gridSize={60}
+    >
+      {props.markers.map(marker => (
+        <Marker
+          key={marker.photo_id}
+          position={{ lat: marker[0], lng: marker[1] }}
+        />
+      ))}
+    </MarkerClusterer>
+  </GoogleMap>
+);
+
+export default class MapBox extends React.PureComponent {
 
 	constructor(){
 		super()
-		this.state = {
-			 players:[],
-			 positions: []
-		}
-		this.getLocationUpdate = this.getLocationUpdate.bind(this)
-	}
-
-	getLocationUpdate(){
-
-		var watchID
-		var geoLoc
-		//  var longitude;
-		//  var latitude;
-
-		//  long = longitude;
-		//  lat = latitude;
-		//  console.log('boopbeep',this.state)
-		// this.setState({
-		//         long: longitude,
-		//         lat: latitude
-		// })
-
-		function showLocation(position) {
-			var latitude = position.coords.latitude
-			var longitude = position.coords.longitude
-
-			long = longitude,
-			lat = latitude
-
-
-			var accuracy = position.coords.accuracy
-			alert('Latitude : ' + latitude + ' Longitude: ' + longitude + ' accuracy: ' + accuracy)
-
-		}
-
-		function errorHandler(err) {
-			if(err.code == 1) {
-				alert('Error: Access is denied!')
-			}
-
-			else if( err.code == 2) {
-				alert('Error: Position is unavailable!')
-			}
-		}
-
-		if(navigator.geolocation){
-			// timeout at 60000 milliseconds (60 seconds)
-			var options = {timeout:6000}
-			geoLoc = navigator.geolocation
-			watchID = geoLoc.watchPosition(showLocation, errorHandler, options)
-		}
-
-		else{
-			alert('Sorry, browser does not support geolocation!')
+		this.state={
+			players:[],
+	  	markers: []
 		}
 	}
 
-	componendDidMount(){
+  componentWillMount() {
 		const playersRef = firebase.database().ref('players')
-		playersRef.on('value', (snapshot) => {
-			let players = snapshot.val()
-			let playersList = []
-			for(var player in players){
-				playersList.push(players[player])
-			}
-			this.setState ({
-				players: playersList
+			playersRef.on('value', (snapshot) => {
+				let players = snapshot.val()
+				let newlocations = []
+				for(var player in players){
+					console.log(players[player].location, "for loop")
+					newlocations.push(players[player].location)
+
+				}
+				console.log(newlocations, "!!!!")
+				this.setState({
+					markers: newlocations
+				})
 			})
-		})
-		// const locationsRef = firebase.database().ref('position')
-		// locationsRef.on('value', (snapshot) => {
-		// 	let location = snapshot.val()
-		// 	let locationList = []
-		// 	for(var location in locations){
-		// 		locationList.push(locations[location])
-		// 	}
-		// 	this.setState ({
-		// 		position: locationList
-		// 	})
-		// })
-	}
+  }
 
 
-	render(){
+  render() {
 
-		let user = this.props.props
-		const Map = ReactMapboxGl({
-			accessToken: 'pk.eyJ1IjoiY2Fzc2lvemVuIiwiYSI6ImNqNjZydGl5dDJmOWUzM3A4dGQyNnN1ZnAifQ.0ZIRDup0jnyUFVzUa_5d1g'
-		})
-		let listOfPlayers = this.state.players
-		console.log(listOfPlayers, "PlayerList")
+		let user = this.state.players
 
-		return(
-
-			<div>
-				<Map
-					style="mapbox://styles/mapbox/dark-v9"
-					containerStyle={{
-						height: '100vh',
-						width: '100vw'
-					}}
-					center={[-74.0, 40.731]}>
-					{
-						listOfPlayers.map((player, ind) => {
-					   		return(
-										<Layer
-											key={ind}
-											type="symbol"
-											// id={ind}
-											layout={{ 'icon-image': 'marker-15' }}>
-											<Feature coordinates={}/>
-										</Layer>
-							)
-						})
-					}
-				</Map>
-			</div>
-		)
-	}
+ //markers={this.state.markers}
+    return (
+      <MapWithAMarkerClusterer markers={this.state.markers}/>
+    )
+  }
 }
-
-
-
 
