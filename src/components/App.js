@@ -82,7 +82,7 @@ class App extends Component {
 			let players = snapshot.val()
 			for (let player in players) {
 				if(players[player].id==this.state.user.uid){
-					console.log('Match')
+
 					this.setState({
 						newPlayer: false
 					})
