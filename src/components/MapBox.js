@@ -27,13 +27,14 @@ export default class MapBox extends Component {
 			const playerRef = firebase.database().ref()
 			const watchPosition = playerRef.child('watchPosition')
 		
-			var coords = Promise.all([longitude, latitude])
+			var coords = Promise.all([longitude, latitude, accuracy])
 				.then(res => {
 					// console.log('long ', res[0])
 					// console.log('latitude', res[1])
-					watchPosition.push({longitude: res[0], latitude: res[1]})
+					// console.log('accurary', res[2])
+					watchPosition.push({longitude: res[0], latitude: res[1], accuracy: res[2]})
 				})
-			// console.log(coords)
+			// console.log('coordinates ', coords)
 			//   watchPosition.push({})
 			// alert('Latitude : ' + latitude + ' Longitude: ' + longitude + ' accuracy: ' + accuracy)
 
@@ -51,7 +52,7 @@ export default class MapBox extends Component {
 
 		if(navigator.geolocation){
 			// timeout at 60000 milliseconds (60 seconds)
-			var options = {timeout:6000}
+			var options = {enableHighAccuracy: true, timeout:6000}
 			geoLoc = navigator.geolocation
 			watchID = geoLoc.watchPosition(showLocation, errorHandler, options)
 		}
@@ -67,6 +68,8 @@ export default class MapBox extends Component {
 		const Map = ReactMapboxGl({
 			accessToken: 'pk.eyJ1IjoiY2Fzc2lvemVuIiwiYSI6ImNqNjZydGl5dDJmOWUzM3A4dGQyNnN1ZnAifQ.0ZIRDup0jnyUFVzUa_5d1g'
 		})
+	
+		this.getLocationUpdate()
 		return(
 
 			<div>
