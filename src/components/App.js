@@ -5,8 +5,16 @@ import MapBox from './MapBox'
 import SideBar from './SideBar'
 import CharacterCreator from './charactercreator'
 import '../index.css'
-
-// window.location.reload(true)
+import {connect} from 'react-redux'
+import { compose } from 'redux'
+import {currentPlayer, currentLocation, currentTargets} from '../store'
+import {
+	firebaseConnect,
+	isLoaded,
+	isEmpty,
+	dataToJS,
+	pathToJS
+} from 'react-redux-firebase'
 
 class App extends Component {
 
@@ -18,12 +26,14 @@ class App extends Component {
 			user   : null,
 			newPlayer: true
 		}
+
 		this.uiConfig = {
 			// Called when the user has been successfully signed in.
 			callbacks    : {
 				signInSuccess: ( currentUser, credential, redirectUrl ) => {
-					// Do not redirect.
+					console.log(currentUser, credential, redirectUrl)
 					return false
+
 				}
 			},
 			// Opens IDP Providers sign-in flow in a popup.
@@ -64,8 +74,6 @@ class App extends Component {
 				this.doesUserExist()
 			}
 		})
-
-		// window.location.reload(true)
 	}
 
 	doesUserExist() {
@@ -78,7 +86,6 @@ class App extends Component {
 					this.setState({
 						newPlayer: false
 					})
-
 				}
 			}
 		})
@@ -103,10 +110,6 @@ class App extends Component {
 	}
 
 	render() {
-		// let styles = {
-		// 	width: '30px',
-		// 	height: '50px'
-		// }
 		return (
 			<div>
 				{this.state.loading ? (
@@ -135,21 +138,34 @@ class App extends Component {
 	}
 }
 
-
-// const mapDispatchToProps = ( dispatch ) => {
-// 	return {
-// 		getPlayer( evt ) {
-// 			console.log(evt)
-// 			dispatch(currentPlayer(evt))
-// 		}
-// 	}
-// }
+const mapDispatchToProps = ( dispatch ) => {
+	return {
+		getPlayer( evt ) {
+			dispatch(currentPlayer(evt))
+		}
+		,
+		getLocation( evt ) {
+			dispatch(currentLocation(evt))
+		}
+		,
+		getTargets( evt ) {
+			dispatch(currentTargets(evt))
+		}
+	}
+}
 
 // export default connect(state => state, mapDispatchToProps)(App)
+const mapStateToProps = (state) => {
+	console.log('state-->', state)
+	return {
+		auth: pathToJS(state.firebase, 'auth'),
+		myProfile: dataToJS(state.firebase, 'players'),
+	}
+}
+
+export default compose(firebaseConnect([{path: 'players' }, {path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(App)
 
 
-
-export default App
 
 
 

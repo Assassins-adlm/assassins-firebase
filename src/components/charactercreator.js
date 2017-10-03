@@ -23,15 +23,15 @@ class CharacterCreator extends React.Component {
 			id: this.props.props.uid,
 			name: e.target.tagName.value,
 			gender: e.target.gender.value,
-			image: e.target.image.value,
+			image: e.target.image.value
 		}
-		playerRef.push(player)
-
+		firebase.database().ref('players/' + this.props.props.uid).set(player)
 	}
+
 
 	render(){
 		let user = this.props.props
-		// console.log('id', this.props.props.uid)
+		console.log('id', this.props.props.uid)
 		return (
 			<div className = "space">
 				<h1> CharacterCreator</h1>

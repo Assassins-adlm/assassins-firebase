@@ -86,6 +86,7 @@ export default class MapBox extends Component {
 								<Layer
 									key={ind}
 									type="symbol"
+									// id={ind}
 									layout={{ 'icon-image': 'marker-15' }}>
 									<Feature coordinates={coord}/>
 								</Layer>
