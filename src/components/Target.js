@@ -42,7 +42,8 @@ export default class Target extends React.Component {
 				return this.state.user.uid!==player.id
 			})
 			this.setState ({
-				players: newList
+				players: newList,
+				hasTarget: true
 			})
 		 })
 	}
@@ -63,7 +64,7 @@ export default class Target extends React.Component {
 			})
 			const selectRef = firebase.database().ref(`/players/${assassinId}`)
 			selectRef.update({
-				target: player
+				target: player.id
 			})
 		}
 	}
