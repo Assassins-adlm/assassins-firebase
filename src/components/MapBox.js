@@ -1,20 +1,20 @@
 import React, {Component} from 'react'
 import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl'
 
-let randCoords = [
-	[-73.9445475,40.6740157],
-	[-74.01316889999998, 40.7130082],
-	[-74.0445004, 40.6892494]
-]
-let long, lat
+// let randCoords = [
+// 	[-73.9445475,40.6740157],
+// 	[-74.01316889999998, 40.7130082],
+// 	[-74.0445004, 40.6892494]
+// ]
+// let long, lat
 export default class MapBox extends Component {
 
 	constructor(){
 		super()
-		// this.state = {
-		//     long: 0,
-		//     lat: 0
-		// }
+		this.state = {
+			 players:[],
+			 positions: []
+		}
 		this.getLocationUpdate = this.getLocationUpdate.bind(this)
 	}
 
@@ -68,14 +68,40 @@ export default class MapBox extends Component {
 		}
 	}
 
+	componendDidMount(){
+		const playersRef = firebase.database().ref('players')
+		playersRef.on('value', (snapshot) => {
+			let players = snapshot.val()
+			let playersList = []
+			for(var player in players){
+				playersList.push(players[player])
+			}
+			this.setState ({
+				players: playersList
+			})
+		})
+		// const locationsRef = firebase.database().ref('position')
+		// locationsRef.on('value', (snapshot) => {
+		// 	let location = snapshot.val()
+		// 	let locationList = []
+		// 	for(var location in locations){
+		// 		locationList.push(locations[location])
+		// 	}
+		// 	this.setState ({
+		// 		position: locationList
+		// 	})
+		// })
+	}
+
 
 	render(){
-		console.log(this.props.props, 'PROPS')
+
 		let user = this.props.props
 		const Map = ReactMapboxGl({
 			accessToken: 'pk.eyJ1IjoiY2Fzc2lvemVuIiwiYSI6ImNqNjZydGl5dDJmOWUzM3A4dGQyNnN1ZnAifQ.0ZIRDup0jnyUFVzUa_5d1g'
 		})
-
+		let listOfPlayers = this.state.players
+		console.log(listOfPlayers, "PlayerList")
 
 		return(
 
@@ -88,21 +114,18 @@ export default class MapBox extends Component {
 					}}
 					center={[-74.0, 40.731]}>
 					{
-						randCoords.map((coord, ind) => {
-							return(
-								<Layer
-									key={ind}
-									type="symbol"
-									// id={ind}
-									layout={{ 'icon-image': 'marker-15' }}>
-									<Feature coordinates={coord}/>
-								</Layer>
-
+						listOfPlayers.map((player, ind) => {
+					   		return(
+										<Layer
+											key={ind}
+											type="symbol"
+											// id={ind}
+											layout={{ 'icon-image': 'marker-15' }}>
+											<Feature coordinates={}/>
+										</Layer>
 							)
 						})
 					}
-
-
 				</Map>
 			</div>
 		)
