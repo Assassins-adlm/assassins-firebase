@@ -1,5 +1,6 @@
 import firebase from '../fire'
 import React from 'react'
+import MyTarget from './TargetInfo'
 // import FaAnchor from 'react-icons/lib/fa/ancho'
 import {
 	withScriptjs,
@@ -18,12 +19,6 @@ import {
 // } from 'react-redux-firebase'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
 
-const MyMarker = () => {
-	return (
-		<h1>wow</h1>
-	)
-}
-
 const MapWithAMarkerClusterer = withScriptjs(withGoogleMap(props =>
 	<GoogleMap
 		defaultZoom={15}
@@ -35,19 +30,25 @@ const MapWithAMarkerClusterer = withScriptjs(withGoogleMap(props =>
 			enableRetinaIcons
 			gridSize={60}
 		>
-			{props.markers.map((marker, idx) => (
-				<Marker
-					key={idx}
-					position={{ lat: marker[0], lng: marker[1] }}
-					onClick={props.onToggleOpen}
-				>
-					{
-						props.isOpen && <InfoWindow onCloseClick={props.onToggleOpen}>
-							<MyMarker />
-						</InfoWindow>
-					}
-				</Marker>
-			))}
+			{props.markers.map((marker, idx) => {
+				{/* console.log('marker -->', marker) */}
+				{/* let ma = marker */}
+				return (
+					<Marker
+						key={idx}
+						position={{ lat: marker.location[0], lng: marker.location[1] }}
+						onClick={()=> {
+							props.onToggleOpen(marker)
+						}}
+					>
+						{
+							marker.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(marker)}}>
+								<MyTarget target={marker}/>
+							</InfoWindow>
+						}
+					</Marker>
+				)
+			})}
 		</MarkerClusterer>
 	</GoogleMap>
 ))
@@ -64,30 +65,38 @@ export default class MapBox extends React.PureComponent {
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 	}
 
-	onToggleOpen() {
-		console.log('toggle')
-		this.setState({isOpen: !this.state.isOpen})
+	onToggleOpen(newMarker) {
+		// console.log('toggle')
+		// console.log(newMarker.id)
+		// this.setState({isOpen: !this.state.isOpen})
+		newMarker.openInfo = !newMarker.openInfo
+		this.setState({markers: this.state.markers.map(marker=>marker.id===newMarker.id ? newMarker : marker)})
 	}
 
 	componentWillMount() {
 		const playersRef = firebase.database().ref('players')
 		playersRef.on('value', (snapshot) => {
 			let players = snapshot.val()
-			let newlocations = []
-			for(var player in players){
-				console.log(players[player].location, 'for loop')
-				newlocations.push(players[player].location)
+			let allPlayers = []
+			for(let key in players){
+				// console.log('location-->', players[key].location)
+				let player = {}
+				player.location = players[key].location
+				player.openInfo = false
+				player.id = key
+				allPlayers.push(player)
 			}
-			console.log(newlocations, '!!!!')
+			// console.log('all players-->', allPlayers)
 			this.setState({
-				markers: newlocations
+				markers: allPlayers
 			})
 		})
 	}
 
 	render() {
 		let user = this.state.players
-		//markers={this.state.markers}
+		// markers={this.state.markers}
+		// console.log('marker-->', this.state.markers)
 		return (
 			<MapWithAMarkerClusterer
 				googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
