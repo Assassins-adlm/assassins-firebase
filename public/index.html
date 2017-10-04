@@ -22,6 +22,17 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
+    <script>
+      function initMap() {
+        // Create a map object and specify the DOM element for display.
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8
+        });
+      }
 
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkkI9E3bm8HH86F5sm7RENXIJ9_ah254o&callback=initMap"
+    ></script>>
   </body>
 </html>
