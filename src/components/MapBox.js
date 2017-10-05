@@ -23,7 +23,7 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
-	console.log('props-->', props)
+	// console.log('props-->', props)
 	let myLocation = props.currPlayer.location
 	// let targetLocation = props.currTarget.location
 	let fakeLocation = props.fakeLocation
@@ -35,7 +35,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			options={{ styles: props.mapStyles, mapTypeControl: false }}
 		>
 			{
-				fakeLocation && <Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
+				fakeLocation.length && <Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
 					radius={1000}
 				/>
 			}
@@ -49,6 +49,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			>
 				{props.markers.map((marker, idx) => {
 					return (
+						marker.location &&
 						<Marker
 							key={idx}
 							icon={{
@@ -82,7 +83,7 @@ class MapBox extends React.PureComponent {
 			markers: [],
 			currPlayer: null,
 			currTarget: null,
-
+			fakeLocation: [],
 			directions: null,
 			fightMode: false
 
@@ -142,7 +143,7 @@ class MapBox extends React.PureComponent {
 				this.updateDirection(currPlayer, fakeLocation)
 				this.nearBy()
 			} else {
-				this.setState({directions: null})
+				this.setState({directions: null, fakeLocation:[]})
 			}
 		})
 	}
@@ -240,6 +241,10 @@ class MapBox extends React.PureComponent {
 				if (myLocation && targetLocation) {
 					let distance = Geofire.distance(myLocation, targetLocation)
 					console.log('distance ---> ', distance)
+					if (distance < 0.008) {
+						// this.setState({fightMode: true})
+						console.log('fight!!')
+					}
 				}
 				// console.log('distance ---> ', distance)
 			})
