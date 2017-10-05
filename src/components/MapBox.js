@@ -24,17 +24,21 @@ import Geofire from 'geofire'
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	// console.log('props-->', props)
 	let myLocation = props.currPlayer.location
-	let targetLocation = props.currTarget.location
+	// let targetLocation = props.currTarget.location
 	let fakeLocation = props.fakeLocation
+	// console.log('fake location-->', fakeLocation)
 	return (
 		<GoogleMap
 			zoom={15}
 			defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
 			options={{ styles: props.mapStyles, mapTypeControl: false }}
 		>
-			<Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
-				radius={1000}
-			/>
+			{
+				fakeLocation.length && <Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
+					radius={1000}
+				/>
+			}
+
 			{props.directions && <DirectionsRenderer options={{preserveViewport: true, suppressMarkers: true}} directions={props.directions}
 			/>}
 			<MarkerClusterer
@@ -81,42 +85,15 @@ class MapBox extends React.PureComponent {
 			fakeLocation: []
 		}
 		this.onToggleOpen = this.onToggleOpen.bind(this)
-    this.updateDirection = this.updateDirection.bind(this)
-    this.nearBy = this.nearBy.bind(this)
+		this.updateDirection = this.updateDirection.bind(this)
+		this.nearBy = this.nearBy.bind(this)
 	}
 
-	onToggleOpen() {
-		console.log('toggle')
-		this.setState({isOpen: !this.state.isOpen})
-		this.nearBy= this.nearBy.bind(this)
-	}
-
-	nearBy(){
-		firebase.auth().onAuthStateChanged((user) => {
-			this.setState({loading: false, user})
-			var firebaseRef = firebase.database().ref('players')
-			var geoFire = new Geofire(firebaseRef)
-			var Assassin = firebaseRef.child(`${user.uid}`)
-			//.orderByChild('tst').limitToLast(1)
-			Assassin.on('value', snapshot => {
-				let targetId = snapshot.val().target
-				let assassinLocation = snapshot.val().location
-				var victim = firebaseRef.child(`${targetId}/target`)
-				victim.on('value', snapshot => {
-					// let info = Object.values(snapshot.val())
-					let victimId = snapshot.val()
-					var target = firebaseRef.child(`${victimId}/location`)//.orderByChild('tst').limitToLast(1)
-					target.on('value', snap=>{
-						let info2 = snap.val()
-						let distance = Geofire.distance(assassinLocation, info2)
-            console.log(distance)
-            distance<10 ? console.log("KILL EM!!") : console.log("GET CLOSER!!!")
-						// })
-					})
-        })
-      })
-    })
-  }
+	// onToggleOpen() {
+	// 	console.log('toggle')
+	// 	this.setState({isOpen: !this.state.isOpen})
+	// 	this.nearBy= this.nearBy.bind(this)
+	// }
 
 	onToggleOpen(newMarker) {
 		newMarker.openInfo = !newMarker.openInfo
@@ -151,9 +128,9 @@ class MapBox extends React.PureComponent {
 				currPlayer,
 				currTarget
 			})
-			let fakeLocation = this.generateFakeLocation(currTarget.location)
-			this.setState({fakeLocation})
-			if (currPlayer.target) {
+			if (currPlayer.target && currTarget) {
+				let fakeLocation = this.generateFakeLocation(currTarget.location)
+				this.setState({fakeLocation})
 				this.updateDirection(currPlayer, fakeLocation)
 			} else {
 				this.setState({directions: null})
@@ -225,17 +202,36 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
-    this.nearBy()
 		let myTarget = this.state.currPlayer.target
 		const currPlayer = this.state.currPlayer
 		const currTarget = this.state.currTarget
-		if (myTarget) {
+		if (myTarget.length) {
 			// console.log('test!!')
 			let fakeLocation = this.generateFakeLocation(currTarget.location)
 			this.setState({fakeLocation})
 			this.updateDirection(currPlayer, fakeLocation)
+			this.nearBy()
 		}
 		this.getLocation(currPlayer)
+	}
+
+	nearBy(){
+		let myId = this.props.auth.uid
+		let playersRef = firebase.database().ref('players')
+		let myRef = firebase.database().ref(`/players/${myId}`)
+		myRef.on('value', snapshot => {
+			let targetId = snapshot.val().target
+			let myLocation = snapshot.val().location
+			console.log('my location-->', myLocation)
+			let targetRef = firebase.database().ref(`/players/${targetId}`)
+			targetRef.on('value', snapshot => {
+				let targetLocation = snapshot.val().location
+				console.log('target location -->', targetLocation)
+				let distance = Geofire.distance(myLocation, targetLocation)
+				console.log('distance ---> ', distance)
+
+			})
+		})
 	}
 
 	render() {
