@@ -82,9 +82,8 @@ class MapBox extends React.PureComponent {
 			markers: [],
 			currPlayer: null,
 			currTarget: null,
-
-      directions: null,
-      fightMode: false
+			directions: null,
+			fightMode: false
 
 		}
 		this.onToggleOpen = this.onToggleOpen.bind(this)
@@ -111,15 +110,15 @@ class MapBox extends React.PureComponent {
 					target.on('value', snap=>{
 						let info2 = snap.val()
 						let distance = Geofire.distance(assassinLocation, info2)
-            console.log(distance)
-            distance<10 ? this.setState({fightMode: true}): console.log("GET CLOSER!!!")
-            // })
-            console.log(this.state.fightMode, "FIGHT MODE")
+						console.log(distance)
+						distance<1 ? this.setState({fightMode: true}): console.log('GET CLOSER!!!')
+						// })
+						console.log(this.state.fightMode, 'FIGHT MODE')
 					})
-        })
-      })
-    })
-  }
+				})
+			})
+		})
+	}
 
 	onToggleOpen(newMarker) {
 		newMarker.openInfo = !newMarker.openInfo
@@ -255,7 +254,7 @@ class MapBox extends React.PureComponent {
 				console.log('target location -->', targetLocation)
 				let distance = Geofire.distance(myLocation, targetLocation)
 				console.log('distance ---> ', distance)
-
+        distance < 1 ? this.setState({fightMode: true}) : console.log("get closer")
 			})
 		})
 	}
@@ -263,20 +262,20 @@ class MapBox extends React.PureComponent {
 	render() {
 
 		return (
-      this.state.fightMode ?
-      <FightScene /> :
-			<MapWithAMarkerClusterer
-				googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-				loadingElement={<div style={{ height: '100%' }} />}
-				containerElement={<div style={{ height: '100vh' }} />}
-				mapElement={<div style={{ height: '100%' }} />}
-				markers={this.state.markers}
-				onToggleOpen={this.onToggleOpen}
-				currPlayer={this.state.currPlayer}
-				currTarget={this.state.currTarget}
-				fakeLocation={this.state.fakeLocation}
-				directions={this.state.directions}
-				mapStyles={[{'featureType':'all','elementType':'labels.text.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'all','elementType':'labels.text.stroke','stylers':[{'color':'#000000'},{'lightness':13}]},{'featureType':'administrative','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'administrative','elementType':'geometry.stroke','stylers':[{'color':'#144b53'},{'lightness':14},{'weight':1.4}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#08304b'}]},{'featureType':'poi','elementType':'geometry','stylers':[{'color':'#0c4152'},{'lightness':5}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.highway','elementType':'geometry.stroke','stylers':[{'color':'#0b434f'},{'lightness':25}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.arterial','elementType':'geometry.stroke','stylers':[{'color':'#0b3d51'},{'lightness':16}]},{'featureType':'road.local','elementType':'geometry','stylers':[{'color':'#000000'}]},{'featureType':'transit','elementType':'all','stylers':[{'color':'#146474'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#021019'}]}]}
+			this.state.fightMode ?
+				<FightScene /> :
+				<MapWithAMarkerClusterer
+					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+					loadingElement={<div style={{ height: '100%' }} />}
+					containerElement={<div style={{ height: '100vh' }} />}
+					mapElement={<div style={{ height: '100%' }} />}
+					markers={this.state.markers}
+					onToggleOpen={this.onToggleOpen}
+					currPlayer={this.state.currPlayer}
+					currTarget={this.state.currTarget}
+					fakeLocation={this.state.fakeLocation}
+					directions={this.state.directions}
+					mapStyles={[{'featureType':'all','elementType':'labels.text.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'all','elementType':'labels.text.stroke','stylers':[{'color':'#000000'},{'lightness':13}]},{'featureType':'administrative','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'administrative','elementType':'geometry.stroke','stylers':[{'color':'#144b53'},{'lightness':14},{'weight':1.4}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#08304b'}]},{'featureType':'poi','elementType':'geometry','stylers':[{'color':'#0c4152'},{'lightness':5}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.highway','elementType':'geometry.stroke','stylers':[{'color':'#0b434f'},{'lightness':25}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.arterial','elementType':'geometry.stroke','stylers':[{'color':'#0b3d51'},{'lightness':16}]},{'featureType':'road.local','elementType':'geometry','stylers':[{'color':'#000000'}]},{'featureType':'transit','elementType':'all','stylers':[{'color':'#146474'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#021019'}]}]}
 		    	/>
 		)
 	}
