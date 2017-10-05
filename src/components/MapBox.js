@@ -24,13 +24,14 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	// console.log('props-->', props)
 	let myLocation = props.currPlayer.location
 	let targetLocation = props.currTarget.location
+	let fakeLocation = props.fakeLocation
 	return (
 		<GoogleMap
 			zoom={15}
 			defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
 			options={{ styles: props.mapStyles, mapTypeControl: false }}
 		>
-			<Circle center={{ lat: targetLocation[0], lng: targetLocation[1]}}
+			<Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
 				radius={1000}
 			/>
 			{props.directions && <DirectionsRenderer options={{preserveViewport: true, suppressMarkers: true}} directions={props.directions}
@@ -75,7 +76,8 @@ class MapBox extends React.PureComponent {
 			markers: [],
 			currPlayer: null,
 			currTarget: null,
-			directions: null
+			directions: null,
+			fakeLocation: []
 		}
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		this.updateDirection = this.updateDirection.bind(this)
@@ -108,26 +110,44 @@ class MapBox extends React.PureComponent {
 					currTarget = players[key]
 				}
 			}
-			// console.log(currPlayer, currTarget)
+			// console.log('curr target', currTarget)
 			this.setState({
 				markers: allPlayers,
 				currPlayer,
 				currTarget
 			})
+			let fakeLocation = this.generateFakeLocation(currTarget.location)
+			this.setState({fakeLocation})
 			if (currPlayer.target) {
-				this.updateDirection(currPlayer, currTarget)
+				this.updateDirection(currPlayer, fakeLocation)
 			} else {
 				this.setState({directions: null})
 			}
 		})
 	}
 
-	updateDirection(currPlayer, currTarget) {
-		// console.log(currPlayer)
+	generateFakeLocation(location) {
+		let latOffset = Math.random()*0.005, lonOffset = Math.random()*0.005
+		let fakeLocation = []
+		if (Math.random() > 0.5) {
+			fakeLocation[0] = location[0] + latOffset
+		} else {
+			fakeLocation[0] = location[0] - latOffset
+		}
+		if (Math.random() > 0.5) {
+			fakeLocation[1] = location[1] + lonOffset
+		} else {
+			fakeLocation[1] = location[1] - lonOffset
+		}
+		return fakeLocation
+	}
+
+	updateDirection(currPlayer, fakeLocation) {
+		// console.log('curr target', currTarget)
 		const DirectionsService = new google.maps.DirectionsService()
 		DirectionsService.route({
 			origin: new google.maps.LatLng(currPlayer.location[0], currPlayer.location[1]),
-			destination: new google.maps.LatLng(currTarget.location[0], currTarget.location[1]),
+			destination: new google.maps.LatLng(fakeLocation[0], fakeLocation[1]),
 			travelMode: google.maps.TravelMode.WALKING
 		}, (result, status) => {
 			if (status === google.maps.DirectionsStatus.OK) {
@@ -144,7 +164,7 @@ class MapBox extends React.PureComponent {
 		var id, target, options
 		function success(pos) {
 			let crd = pos.coords
-			console.log('pos-->', crd)
+			// console.log('pos-->', crd)
 			let myId = currPlayer.id
 			let myRef = firebase.database().ref(`/players/${myId}`)
 			myRef.update({location: [crd.latitude, crd.longitude]})
@@ -173,8 +193,10 @@ class MapBox extends React.PureComponent {
 		const currPlayer = this.state.currPlayer
 		const currTarget = this.state.currTarget
 		if (myTarget) {
-			console.log('test!!')
-			this.updateDirection(currPlayer, currTarget)
+			// console.log('test!!')
+			let fakeLocation = this.generateFakeLocation(currTarget.location)
+			this.setState({fakeLocation})
+			this.updateDirection(currPlayer, fakeLocation)
 		}
 		this.getLocation(currPlayer)
 	}
@@ -192,6 +214,7 @@ class MapBox extends React.PureComponent {
 				onToggleOpen={this.onToggleOpen}
 				currPlayer={this.state.currPlayer}
 				currTarget={this.state.currTarget}
+				fakeLocation={this.state.fakeLocation}
 				directions={this.state.directions}
 				mapStyles={[{'featureType':'all','elementType':'labels.text.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'all','elementType':'labels.text.stroke','stylers':[{'color':'#000000'},{'lightness':13}]},{'featureType':'administrative','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'administrative','elementType':'geometry.stroke','stylers':[{'color':'#144b53'},{'lightness':14},{'weight':1.4}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#08304b'}]},{'featureType':'poi','elementType':'geometry','stylers':[{'color':'#0c4152'},{'lightness':5}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.highway','elementType':'geometry.stroke','stylers':[{'color':'#0b434f'},{'lightness':25}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.arterial','elementType':'geometry.stroke','stylers':[{'color':'#0b3d51'},{'lightness':16}]},{'featureType':'road.local','elementType':'geometry','stylers':[{'color':'#000000'}]},{'featureType':'transit','elementType':'all','stylers':[{'color':'#146474'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#021019'}]}]}
 			/>
