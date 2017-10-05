@@ -49,6 +49,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			>
 				{props.markers.map((marker, idx) => {
 					return (
+						marker.location &&
 						<Marker
 							key={idx}
 							icon={{
@@ -62,7 +63,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 							{
 								marker.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(marker)}}>
 									{
-										marker.id === props.currPlayer.id ? <MyInfo currPlayer={props.currPlayer}/> : <MyTarget target={marker}/>
+										marker.id === props.currPlayer.id ? <MyInfo currPlayer={props.currPlayer}/> : <MyTarget submitTarget={props.submitTarget} target={marker}/>
 									}
 								</InfoWindow>
 							}
@@ -82,44 +83,26 @@ class MapBox extends React.PureComponent {
 			markers: [],
 			currPlayer: null,
 			currTarget: null,
-
-      directions: null,
-      fightMode: false
+			fakeLocation: [],
+			directions: null,
+			fightMode: false
 
 		}
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		this.updateDirection = this.updateDirection.bind(this)
 		this.nearBy = this.nearBy.bind(this)
+		this.submitTarget = this.submitTarget.bind(this)
 	}
 
-
-	nearBy(){
-		firebase.auth().onAuthStateChanged((user) => {
-			this.setState({loading: false, user})
-			var firebaseRef = firebase.database().ref('players')
-			var geoFire = new Geofire(firebaseRef)
-			var Assassin = firebaseRef.child(`${user.uid}`)
-			//.orderByChild('tst').limitToLast(1)
-			Assassin.on('value', snapshot => {
-				let targetId = snapshot.val().target
-				let assassinLocation = snapshot.val().location
-				var victim = firebaseRef.child(`${targetId}/target`)
-				victim.on('value', snapshot => {
-					// let info = Object.values(snapshot.val())
-					let victimId = snapshot.val()
-					var target = firebaseRef.child(`${victimId}/location`)//.orderByChild('tst').limitToLast(1)
-					target.on('value', snap=>{
-						let info2 = snap.val()
-						let distance = Geofire.distance(assassinLocation, info2)
-            console.log(distance)
-            distance<1 ? this.setState({fightMode: true}): console.log("GET CLOSER!!!")
-            // })
-            console.log(this.state.fightMode, "FIGHT MODE")
-					})
-        })
-      })
-    })
-  }
+	// onToggleOpen() {
+	// 	console.log('toggle')
+	// 	this.setState({isOpen: !this.state.isOpen})
+	// 	this.nearBy= this.nearBy.bind(this)
+	// }
+	submitTarget(myRef, target) {
+		myRef.update({target: target.id})
+		this.setState({currTarget: target})
+	}
 
 	onToggleOpen(newMarker) {
 		newMarker.openInfo = !newMarker.openInfo
@@ -158,8 +141,9 @@ class MapBox extends React.PureComponent {
 				let fakeLocation = this.generateFakeLocation(currTarget.location)
 				this.setState({fakeLocation})
 				this.updateDirection(currPlayer, fakeLocation)
+				this.nearBy()
 			} else {
-				this.setState({directions: null})
+				this.setState({directions: null, fakeLocation:[]})
 			}
 		})
 	}
@@ -228,16 +212,17 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		let myTarget = this.state.currPlayer.target
+		// let myTarget = this.state.currPlayer.target
 		const currPlayer = this.state.currPlayer
-		const currTarget = this.state.currTarget
-		if (myTarget.length) {
-			// console.log('test!!')
-			let fakeLocation = this.generateFakeLocation(currTarget.location)
-			this.setState({fakeLocation})
-			this.updateDirection(currPlayer, fakeLocation)
-			this.nearBy()
-		}
+		// const currTarget = this.state.currTarget
+		// console.log('curr player-->', currPlayer)
+		// if (myTarget.length) {
+		// 	// console.log('test!!')
+		// 	let fakeLocation = this.generateFakeLocation(currTarget.location)
+		// 	this.setState({fakeLocation})
+		// 	this.updateDirection(currPlayer, fakeLocation)
+		// 	this.nearBy()
+		// }
 		this.getLocation(currPlayer)
 	}
 
@@ -248,14 +233,20 @@ class MapBox extends React.PureComponent {
 		myRef.on('value', snapshot => {
 			let targetId = snapshot.val().target
 			let myLocation = snapshot.val().location
-			console.log('my location-->', myLocation)
+			// console.log('my location-->', myLocation)
 			let targetRef = firebase.database().ref(`/players/${targetId}`)
 			targetRef.on('value', snapshot => {
 				let targetLocation = snapshot.val().location
-				console.log('target location -->', targetLocation)
-				let distance = Geofire.distance(myLocation, targetLocation)
-				console.log('distance ---> ', distance)
-
+				// console.log('target location -->', targetLocation)
+				if (myLocation && targetLocation) {
+					let distance = Geofire.distance(myLocation, targetLocation)
+					console.log('distance ---> ', distance)
+					if (distance < 0.008) {
+						// this.setState({fightMode: true})
+						console.log('fight!!')
+					}
+				}
+				// console.log('distance ---> ', distance)
 			})
 		})
 	}
@@ -263,20 +254,21 @@ class MapBox extends React.PureComponent {
 	render() {
 
 		return (
-      this.state.fightMode ?
-      <FightScene /> :
-			<MapWithAMarkerClusterer
-				googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-				loadingElement={<div style={{ height: '100%' }} />}
-				containerElement={<div style={{ height: '100vh' }} />}
-				mapElement={<div style={{ height: '100%' }} />}
-				markers={this.state.markers}
-				onToggleOpen={this.onToggleOpen}
-				currPlayer={this.state.currPlayer}
-				currTarget={this.state.currTarget}
-				fakeLocation={this.state.fakeLocation}
-				directions={this.state.directions}
-				mapStyles={[{'featureType':'all','elementType':'labels.text.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'all','elementType':'labels.text.stroke','stylers':[{'color':'#000000'},{'lightness':13}]},{'featureType':'administrative','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'administrative','elementType':'geometry.stroke','stylers':[{'color':'#144b53'},{'lightness':14},{'weight':1.4}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#08304b'}]},{'featureType':'poi','elementType':'geometry','stylers':[{'color':'#0c4152'},{'lightness':5}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.highway','elementType':'geometry.stroke','stylers':[{'color':'#0b434f'},{'lightness':25}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.arterial','elementType':'geometry.stroke','stylers':[{'color':'#0b3d51'},{'lightness':16}]},{'featureType':'road.local','elementType':'geometry','stylers':[{'color':'#000000'}]},{'featureType':'transit','elementType':'all','stylers':[{'color':'#146474'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#021019'}]}]}
+			this.state.fightMode ?
+				<FightScene /> :
+				<MapWithAMarkerClusterer
+					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+					loadingElement={<div style={{ height: '100%' }} />}
+					containerElement={<div style={{ height: '100vh' }} />}
+					mapElement={<div style={{ height: '100%' }} />}
+					markers={this.state.markers}
+					onToggleOpen={this.onToggleOpen}
+					submitTarget={this.submitTarget}
+					currPlayer={this.state.currPlayer}
+					currTarget={this.state.currTarget}
+					fakeLocation={this.state.fakeLocation}
+					directions={this.state.directions}
+					mapStyles={[{'featureType':'all','elementType':'labels.text.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'all','elementType':'labels.text.stroke','stylers':[{'color':'#000000'},{'lightness':13}]},{'featureType':'administrative','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'administrative','elementType':'geometry.stroke','stylers':[{'color':'#144b53'},{'lightness':14},{'weight':1.4}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#08304b'}]},{'featureType':'poi','elementType':'geometry','stylers':[{'color':'#0c4152'},{'lightness':5}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.highway','elementType':'geometry.stroke','stylers':[{'color':'#0b434f'},{'lightness':25}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.arterial','elementType':'geometry.stroke','stylers':[{'color':'#0b3d51'},{'lightness':16}]},{'featureType':'road.local','elementType':'geometry','stylers':[{'color':'#000000'}]},{'featureType':'transit','elementType':'all','stylers':[{'color':'#146474'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#021019'}]}]}
 		    	/>
 		)
 	}
