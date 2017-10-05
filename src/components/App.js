@@ -19,12 +19,11 @@ import {
 
 class App extends Component {
 
-
 	constructor() {
 		super()
 		this.state = {
 			loading: true,
-			user   : null,
+			user : null,
 			newPlayer: true
 		}
 
@@ -49,12 +48,8 @@ class App extends Component {
 					scopes  : [
 						'public_profile',
 						'email',
-						'user_likes',
-						'user_friends'
 					]
 				},
-				firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-				firebase.auth.GithubAuthProvider.PROVIDER_ID,
 				{
 					provider          : firebase.auth.EmailAuthProvider.PROVIDER_ID,
 					// Whether the display name should be displayed in Sign Up page.
