@@ -20,6 +20,7 @@ import {connect} from 'react-redux'
 import { compose } from 'redux'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
 import Geofire from 'geofire'
+import FightScene from './fightScene'
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	// console.log('props-->', props)
@@ -81,19 +82,44 @@ class MapBox extends React.PureComponent {
 			markers: [],
 			currPlayer: null,
 			currTarget: null,
-			directions: null,
-			fakeLocation: []
+
+      directions: null,
+      fightMode: false
+
 		}
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		this.updateDirection = this.updateDirection.bind(this)
 		this.nearBy = this.nearBy.bind(this)
 	}
 
-	// onToggleOpen() {
-	// 	console.log('toggle')
-	// 	this.setState({isOpen: !this.state.isOpen})
-	// 	this.nearBy= this.nearBy.bind(this)
-	// }
+
+	nearBy(){
+		firebase.auth().onAuthStateChanged((user) => {
+			this.setState({loading: false, user})
+			var firebaseRef = firebase.database().ref('players')
+			var geoFire = new Geofire(firebaseRef)
+			var Assassin = firebaseRef.child(`${user.uid}`)
+			//.orderByChild('tst').limitToLast(1)
+			Assassin.on('value', snapshot => {
+				let targetId = snapshot.val().target
+				let assassinLocation = snapshot.val().location
+				var victim = firebaseRef.child(`${targetId}/target`)
+				victim.on('value', snapshot => {
+					// let info = Object.values(snapshot.val())
+					let victimId = snapshot.val()
+					var target = firebaseRef.child(`${victimId}/location`)//.orderByChild('tst').limitToLast(1)
+					target.on('value', snap=>{
+						let info2 = snap.val()
+						let distance = Geofire.distance(assassinLocation, info2)
+            console.log(distance)
+            distance<10 ? this.setState({fightMode: true}): console.log("GET CLOSER!!!")
+            // })
+            console.log(this.state.fightMode, "FIGHT MODE")
+					})
+        })
+      })
+    })
+  }
 
 	onToggleOpen(newMarker) {
 		newMarker.openInfo = !newMarker.openInfo
@@ -235,8 +261,10 @@ class MapBox extends React.PureComponent {
 	}
 
 	render() {
-		// console.log('direction-->', this.state.directions)
+
 		return (
+      this.state.fightMode ?
+      <FightScene /> :
 			<MapWithAMarkerClusterer
 				googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
 				loadingElement={<div style={{ height: '100%' }} />}
@@ -249,7 +277,7 @@ class MapBox extends React.PureComponent {
 				fakeLocation={this.state.fakeLocation}
 				directions={this.state.directions}
 				mapStyles={[{'featureType':'all','elementType':'labels.text.fill','stylers':[{'color':'#ffffff'}]},{'featureType':'all','elementType':'labels.text.stroke','stylers':[{'color':'#000000'},{'lightness':13}]},{'featureType':'administrative','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'administrative','elementType':'geometry.stroke','stylers':[{'color':'#144b53'},{'lightness':14},{'weight':1.4}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#08304b'}]},{'featureType':'poi','elementType':'geometry','stylers':[{'color':'#0c4152'},{'lightness':5}]},{'featureType':'road.highway','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.highway','elementType':'geometry.stroke','stylers':[{'color':'#0b434f'},{'lightness':25}]},{'featureType':'road.arterial','elementType':'geometry.fill','stylers':[{'color':'#000000'}]},{'featureType':'road.arterial','elementType':'geometry.stroke','stylers':[{'color':'#0b3d51'},{'lightness':16}]},{'featureType':'road.local','elementType':'geometry','stylers':[{'color':'#000000'}]},{'featureType':'transit','elementType':'all','stylers':[{'color':'#146474'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#021019'}]}]}
-			/>
+		    	/>
 		)
 	}
 }
