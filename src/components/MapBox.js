@@ -61,7 +61,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 							{
 								marker.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(marker)}}>
 									{
-										marker.id === props.currPlayer.id ? <MyInfo currPlayer={props.currPlayer}/> : <MyTarget target={marker}/>
+										marker.id === props.currPlayer.id ? <MyInfo currPlayer={props.currPlayer}/> : <MyTarget submitTarget={props.submitTarget} target={marker}/>
 									}
 								</InfoWindow>
 							}
@@ -87,6 +87,7 @@ class MapBox extends React.PureComponent {
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		this.updateDirection = this.updateDirection.bind(this)
 		this.nearBy = this.nearBy.bind(this)
+		this.submitTarget = this.submitTarget.bind(this)
 	}
 
 	// onToggleOpen() {
@@ -94,6 +95,10 @@ class MapBox extends React.PureComponent {
 	// 	this.setState({isOpen: !this.state.isOpen})
 	// 	this.nearBy= this.nearBy.bind(this)
 	// }
+	submitTarget(myRef, target) {
+		myRef.update({target: target.id})
+		this.setState({currTarget: target})
+	}
 
 	onToggleOpen(newMarker) {
 		newMarker.openInfo = !newMarker.openInfo
@@ -132,6 +137,7 @@ class MapBox extends React.PureComponent {
 				let fakeLocation = this.generateFakeLocation(currTarget.location)
 				this.setState({fakeLocation})
 				this.updateDirection(currPlayer, fakeLocation)
+				this.nearBy()
 			} else {
 				this.setState({directions: null})
 			}
@@ -202,16 +208,17 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		let myTarget = this.state.currPlayer.target
+		// let myTarget = this.state.currPlayer.target
 		const currPlayer = this.state.currPlayer
-		const currTarget = this.state.currTarget
-		if (myTarget.length) {
-			// console.log('test!!')
-			let fakeLocation = this.generateFakeLocation(currTarget.location)
-			this.setState({fakeLocation})
-			this.updateDirection(currPlayer, fakeLocation)
-			this.nearBy()
-		}
+		// const currTarget = this.state.currTarget
+		// console.log('curr player-->', currPlayer)
+		// if (myTarget.length) {
+		// 	// console.log('test!!')
+		// 	let fakeLocation = this.generateFakeLocation(currTarget.location)
+		// 	this.setState({fakeLocation})
+		// 	this.updateDirection(currPlayer, fakeLocation)
+		// 	this.nearBy()
+		// }
 		this.getLocation(currPlayer)
 	}
 
@@ -222,14 +229,16 @@ class MapBox extends React.PureComponent {
 		myRef.on('value', snapshot => {
 			let targetId = snapshot.val().target
 			let myLocation = snapshot.val().location
-			console.log('my location-->', myLocation)
+			// console.log('my location-->', myLocation)
 			let targetRef = firebase.database().ref(`/players/${targetId}`)
 			targetRef.on('value', snapshot => {
 				let targetLocation = snapshot.val().location
-				console.log('target location -->', targetLocation)
-				let distance = Geofire.distance(myLocation, targetLocation)
-				console.log('distance ---> ', distance)
-
+				// console.log('target location -->', targetLocation)
+				if (myLocation && targetLocation) {
+					let distance = Geofire.distance(myLocation, targetLocation)
+					console.log('distance ---> ', distance)
+				}
+				// console.log('distance ---> ', distance)
 			})
 		})
 	}
@@ -244,6 +253,7 @@ class MapBox extends React.PureComponent {
 				mapElement={<div style={{ height: '100%' }} />}
 				markers={this.state.markers}
 				onToggleOpen={this.onToggleOpen}
+				submitTarget={this.submitTarget}
 				currPlayer={this.state.currPlayer}
 				currTarget={this.state.currTarget}
 				fakeLocation={this.state.fakeLocation}
