@@ -136,15 +136,18 @@ class MapBox extends React.PureComponent {
 		})
 	}
 
-	getLocation() {
+	getLocation(currPlayer) {
 		var id, target, options
 		function success(pos) {
-			var crd = pos.coords
+			let crd = pos.coords
 			console.log('pos-->', crd)
-			if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
-				console.log('Congratulations, you reached the target')
-				navigator.geolocation.clearWatch(id)
-			}
+			let myId = currPlayer.id
+			let myRef = firebase.database().ref(`/players/${myId}`)
+			myRef.update({location: [crd.latitude, crd.longitude]})
+			// if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+			// 	console.log('Congratulations, you reached the target')
+			// 	navigator.geolocation.clearWatch(id)
+			// }
 		}
 		function error(err) {
 			console.warn('ERROR(' + err.code + '): ' + err.message)
@@ -169,7 +172,7 @@ class MapBox extends React.PureComponent {
 			console.log('test!!')
 			this.updateDirection(currPlayer, currTarget)
 		}
-		this.getLocation()
+		this.getLocation(currPlayer)
 	}
 	// }
 
