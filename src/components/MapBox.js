@@ -17,6 +17,7 @@ import {
 // 	pathToJS
 // } from 'react-redux-firebase'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
+import Geofire from 'geofire'
 
 const MyMarker = () => {
 	return (
@@ -28,7 +29,7 @@ const MapWithAMarkerClusterer = withScriptjs(withGoogleMap(props =>
 	<GoogleMap
 		defaultZoom={15}
 		defaultCenter={{ lat: 40.704, lng: -74.009}}
-		defaultOptions={{ styles: props.mapStyles }}
+		defaultOptions={{ styles: props.mapStyles, mapTypeControl: false }}
 	>
 		<MarkerClusterer
 			averageCenter
@@ -67,23 +68,57 @@ export default class MapBox extends React.PureComponent {
 	onToggleOpen() {
 		console.log('toggle')
 		this.setState({isOpen: !this.state.isOpen})
+		this.nearBy= this.nearBy.bind(this)
 	}
 
-	componentWillMount() {
-		const playersRef = firebase.database().ref('players')
-		playersRef.on('value', (snapshot) => {
-			let players = snapshot.val()
-			let newlocations = []
-			for(var player in players){
-				console.log(players[player].location, 'for loop')
-				newlocations.push(players[player].location)
-			}
-			console.log(newlocations, '!!!!')
-			this.setState({
-				markers: newlocations
+	componentDidMount(){
+		this.nearBy()
+	}
+
+	nearBy(){
+		firebase.auth().onAuthStateChanged((user) => {
+			this.setState({loading: false, user})
+			var firebaseRef = firebase.database().ref('players')
+			var geoFire = new Geofire(firebaseRef)
+			var Assassin = firebaseRef.child(`${user.uid}`)
+			//.orderByChild('tst').limitToLast(1)
+			Assassin.on('value', snapshot => {
+				let targetId = snapshot.val().target
+				let assassinLocation = snapshot.val().location
+				var victim = firebaseRef.child(`${targetId}/target`)
+				victim.on('value', snapshot => {
+					// let info = Object.values(snapshot.val())
+					let victimId = snapshot.val()
+					var target = firebaseRef.child(`${victimId}/location`)//.orderByChild('tst').limitToLast(1)
+					target.on('value', snap=>{
+						let info2 = snap.val()
+						let distance = Geofire.distance(assassinLocation, info2)
+            console.log(distance)
+            distance<10 ? console.log("KILL EM!!") : console.log("GET CLOSER!!!")
+						// })
+					})
+				})
 			})
 		})
+		// })
 	}
+
+
+	// componentWillMount() {
+	// 	const playersRef = firebase.database().ref('players')
+	// 	playersRef.on('value', (snapshot) => {
+	// 		let players = snapshot.val()
+	// 		let newlocations = []
+	// 		for(var player in players){
+	// 			console.log(players[player].location, 'for loop')
+	// 			newlocations.push(players[player].location)
+	// 		}
+	// 		console.log(newlocations, '!!!!')
+	// 		this.setState({
+	// 			markers: newlocations
+	// 		})
+	// 	})
+	// }
 
 	render() {
 		let user = this.state.players
