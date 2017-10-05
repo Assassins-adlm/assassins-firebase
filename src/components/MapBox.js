@@ -19,6 +19,7 @@ import {
 import {connect} from 'react-redux'
 import { compose } from 'redux'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
+import Geofire from 'geofire'
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	// console.log('props-->', props)
@@ -80,8 +81,42 @@ class MapBox extends React.PureComponent {
 			fakeLocation: []
 		}
 		this.onToggleOpen = this.onToggleOpen.bind(this)
-		this.updateDirection = this.updateDirection.bind(this)
+    this.updateDirection = this.updateDirection.bind(this)
+    this.nearBy = this.nearBy.bind(this)
 	}
+
+	onToggleOpen() {
+		console.log('toggle')
+		this.setState({isOpen: !this.state.isOpen})
+		this.nearBy= this.nearBy.bind(this)
+	}
+
+	nearBy(){
+		firebase.auth().onAuthStateChanged((user) => {
+			this.setState({loading: false, user})
+			var firebaseRef = firebase.database().ref('players')
+			var geoFire = new Geofire(firebaseRef)
+			var Assassin = firebaseRef.child(`${user.uid}`)
+			//.orderByChild('tst').limitToLast(1)
+			Assassin.on('value', snapshot => {
+				let targetId = snapshot.val().target
+				let assassinLocation = snapshot.val().location
+				var victim = firebaseRef.child(`${targetId}/target`)
+				victim.on('value', snapshot => {
+					// let info = Object.values(snapshot.val())
+					let victimId = snapshot.val()
+					var target = firebaseRef.child(`${victimId}/location`)//.orderByChild('tst').limitToLast(1)
+					target.on('value', snap=>{
+						let info2 = snap.val()
+						let distance = Geofire.distance(assassinLocation, info2)
+            console.log(distance)
+            distance<10 ? console.log("KILL EM!!") : console.log("GET CLOSER!!!")
+						// })
+					})
+        })
+      })
+    })
+  }
 
 	onToggleOpen(newMarker) {
 		newMarker.openInfo = !newMarker.openInfo
@@ -158,6 +193,7 @@ class MapBox extends React.PureComponent {
 				console.error(`error fetching directions ${result}`)
 			}
 		})
+		// })
 	}
 
 	getLocation(currPlayer) {
@@ -189,6 +225,7 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
+    this.nearBy()
 		let myTarget = this.state.currPlayer.target
 		const currPlayer = this.state.currPlayer
 		const currTarget = this.state.currTarget
@@ -200,7 +237,6 @@ class MapBox extends React.PureComponent {
 		}
 		this.getLocation(currPlayer)
 	}
-	// }
 
 	render() {
 		// console.log('direction-->', this.state.directions)
