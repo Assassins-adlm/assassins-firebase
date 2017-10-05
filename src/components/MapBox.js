@@ -23,7 +23,7 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
-	// console.log('props-->', props)
+	console.log('props-->', props)
 	let myLocation = props.currPlayer.location
 	// let targetLocation = props.currTarget.location
 	let fakeLocation = props.fakeLocation
@@ -35,7 +35,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			options={{ styles: props.mapStyles, mapTypeControl: false }}
 		>
 			{
-				fakeLocation.length && <Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
+				fakeLocation && <Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
 					radius={1000}
 				/>
 			}
