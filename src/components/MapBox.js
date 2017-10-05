@@ -111,7 +111,7 @@ class MapBox extends React.PureComponent {
 						let info2 = snap.val()
 						let distance = Geofire.distance(assassinLocation, info2)
 						console.log(distance)
-						distance<1 ? this.setState({fightMode: true}): console.log('GET CLOSER!!!')
+						distance<.008 ? this.setState({fightMode: true}): console.log('GET CLOSER!!!')
 						// })
 						console.log(this.state.fightMode, 'FIGHT MODE')
 					})
@@ -254,7 +254,7 @@ class MapBox extends React.PureComponent {
 				console.log('target location -->', targetLocation)
 				let distance = Geofire.distance(myLocation, targetLocation)
 				console.log('distance ---> ', distance)
-        distance < 1 ? this.setState({fightMode: true}) : console.log("get closer")
+       distance < 1 ? this.setState({fightMode: true}) : console.log("get closer")
 			})
 		})
 	}
