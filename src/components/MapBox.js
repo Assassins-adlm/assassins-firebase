@@ -14,7 +14,7 @@ import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
-	let myLocation = props.currPlayer.location
+	let myLocation = props.currPlayer.location //need to change this
 	let fakeLocation = props.fakeLocation
 	return (
 		<GoogleMap
@@ -33,11 +33,12 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			<MarkerClusterer
 				averageCenter
 				enableRetinaIcons
-				gridSize={60}
+				gridSize={10}
 			>
 				{props.markers.map((marker, idx) => {
+					console.log('marker location-->', marker.location) //need to change this
 					return (
-						marker.location &&
+						marker.location &&   //need to change this
 						<Marker
 							key={idx}
 							icon={{
@@ -69,6 +70,7 @@ class MapBox extends React.PureComponent {
 		this.state={
 			markers: [],
 			currPlayer: null,
+			currLocation: [],
 			currTarget: null,
 			fakeLocation: [],
 			directions: null,
@@ -99,7 +101,7 @@ class MapBox extends React.PureComponent {
 				let allPlayers = [], currPlayer,currTarget
 				for(let key in players){
 					let player = {}
-					player.location = players[key].location
+					player.location = players[key].location //need to change this
 					player.openInfo = false
 					player.id = key
 					allPlayers.push(player)
@@ -118,9 +120,9 @@ class MapBox extends React.PureComponent {
 					currTarget
 				})
 				if (currTarget) {
-					let fakeLocation = generateFakeLocation(currTarget.location)
+					let fakeLocation = generateFakeLocation(currTarget.location) //need to change this
 					this.setState({fakeLocation})
-					this.updateDirection(currPlayer, fakeLocation)
+					this.updateDirection(currPlayer, fakeLocation) //need to change this
 					this.nearBy()
 				} else {
 					this.setState({directions: null, fakeLocation:[]})
@@ -128,7 +130,7 @@ class MapBox extends React.PureComponent {
 			})
 	}
 
-	updateDirection(currPlayer, fakeLocation) {
+	updateDirection(currPlayer, fakeLocation) { //need to change this
 		const DirectionsService = new google.maps.DirectionsService()
 		DirectionsService.route({
 			origin: new google.maps.LatLng(currPlayer.location[0], currPlayer.location[1]),
@@ -148,7 +150,7 @@ class MapBox extends React.PureComponent {
 	componentDidMount() {
 		const currPlayer = this.state.currPlayer
 		const {firebase} = this.props
-		getLocation(currPlayer, firebase)
+		getLocation(currPlayer, firebase)  //need to change this
 	}
 
 	nearBy(){
@@ -156,11 +158,11 @@ class MapBox extends React.PureComponent {
 		let myRef = firebase.database().ref(`/players/${myId}`)
 		myRef.on('value', snapshot => {
 			let targetId = snapshot.val().target
-			let myLocation = snapshot.val().location
+			let myLocation = snapshot.val().location  // need to change this
 			// console.log('my location-->', myLocation)
 			let targetRef = firebase.database().ref(`/players/${targetId}`)
 			targetRef.on('value', snapshot => {
-				let targetLocation = snapshot.val().location
+				let targetLocation = snapshot.val().location // need to change this
 				// console.log('target location -->', targetLocation)
 				if (myLocation && targetLocation) {
 					let distance = Geofire.distance(myLocation, targetLocation)
