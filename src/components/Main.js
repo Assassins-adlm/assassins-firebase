@@ -5,6 +5,7 @@ import SideBar from './SideBar'
 
 import PlayerProfile from './PlayerProfile'
 import CharCreate from './CharCreate'
+import modal from './CharCreateModal'
 import Setting from './Setting'
 import ChatRoom from './ChatRoom'
 import Target from './Target'
@@ -28,6 +29,7 @@ export default class Main extends React.Component {
 						<main>
 							<Switch>
 								<Route path="/createchar" component={CharCreate}/>
+								<Route path="/modaltest" component={modal}/>
 								<Route path="/home" component={App}/>
 								<Route path="/profile" component={PlayerProfile}/>
 								<Route path="/chat" component={ChatRoom}/>
