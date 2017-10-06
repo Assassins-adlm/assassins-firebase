@@ -15,6 +15,7 @@ import MapStyle from './MapStyle.json'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
+	console.log('props--->', props)
 	let myLocation = props.currPlayer.location
 	let fakeLocation = props.fakeLocation
 	return (
@@ -33,7 +34,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			<MarkerClusterer
 				averageCenter
 				enableRetinaIcons
-				gridSize={60}
+				gridSize={10}
 			>
 				{props.markers.map((marker, idx) => {
 					return (
