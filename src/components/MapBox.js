@@ -80,6 +80,7 @@ class MapBox extends React.PureComponent {
 		this.submitTarget = this.submitTarget.bind(this)
 	}
 
+
 	submitTarget(myRef, target) {
 		myRef.update({target: target.id})
 		this.setState({currTarget: target})
