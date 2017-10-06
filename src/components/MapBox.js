@@ -28,7 +28,6 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 					radius={1000}
 				/>
 			}
-
 			{props.directions && <DirectionsRenderer options={{preserveViewport: true, suppressMarkers: true}} directions={props.directions}
 			/>}
 			<MarkerClusterer
@@ -107,6 +106,7 @@ class MapBox extends React.PureComponent {
 
 	componentWillMount() {
 		const playerId = this.props.auth.uid
+		// console.log('state--->', this.state)
 		firebase.database().ref('players')
 			.on('value', (snapshot) => {
 				let players = snapshot.val()
@@ -126,17 +126,20 @@ class MapBox extends React.PureComponent {
 						currTarget = players[key]
 					}
 				}
-				this.setState({
-					markers: allPlayers,
-					currPlayer,
-					currTarget
-				})
-				if (currTarget) {
-					let fakeLocation = generateFakeLocation(currTarget.location)
-					this.setState({fakeLocation})
-					this.updateDirection(currPlayer, fakeLocation)
-				} else {
-					this.setState({directions: null, fakeLocation:[]})
+				if (!this.state.fightMode) {
+					// console.log('state-->', this.state)
+					this.setState({
+						markers: allPlayers,
+						currPlayer,
+						currTarget
+					})
+					if (currTarget) {
+						let fakeLocation = generateFakeLocation(currTarget.location)
+						this.setState({fakeLocation})
+						this.updateDirection(currPlayer, fakeLocation)
+					} else {
+						this.setState({directions: null, fakeLocation:[]})
+					}
 				}
 			})
 	}
@@ -169,21 +172,25 @@ class MapBox extends React.PureComponent {
 	nearBy(){
 		let myId = this.props.auth.uid
 		let myRef = firebase.database().ref(`/players/${myId}`)
+
 		myRef.on('value', snapshot => {
 			let targetId = snapshot.val().target
 			let myLocation = snapshot.val().location
 			// console.log('my location-->', myLocation)
 			let targetRef = firebase.database().ref(`/players/${targetId}`)
 			targetRef.on('value', snapshot => {
-				let targetLocation = snapshot.val().location
-				// console.log('target location -->', targetLocation)
-				if (myLocation && targetLocation) {
-					let distance = Geofire.distance(myLocation, targetLocation)
-					console.log('distance ---> ', distance)
-					if (distance < 0.01) {
-						let notificationSystem = this.refs.notificationSystem
-						this._addNotification(notificationSystem, this)
-						console.log('fight!!')
+				// console.log('state-->', this.state)
+				if (!this.state.fightMode) {
+					let targetLocation = snapshot.val().location
+					// console.log('target location -->', targetLocation)
+					if (myLocation && targetLocation) {
+						let distance = Geofire.distance(myLocation, targetLocation)
+						console.log('distance ---> ', distance)
+						if (distance < 0.008) {
+							let notificationSystem = this.refs.notificationSystem
+							this._addNotification(notificationSystem, this)
+							console.log('fight!!')
+						}
 					}
 				}
 			})
