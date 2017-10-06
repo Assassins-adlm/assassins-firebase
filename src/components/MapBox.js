@@ -12,6 +12,7 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
+const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	let myLocation = props.currPlayer.location
@@ -78,6 +79,7 @@ class MapBox extends React.PureComponent {
 		this.updateDirection = this.updateDirection.bind(this)
 		this.nearBy = this.nearBy.bind(this)
 		this.submitTarget = this.submitTarget.bind(this)
+		this._addNotification = this._addNotification.bind(this)
 	}
 
 	submitTarget(myRef, target) {
@@ -88,6 +90,19 @@ class MapBox extends React.PureComponent {
 	onToggleOpen(newMarker) {
 		newMarker.openInfo = !newMarker.openInfo
 		this.setState({markers: this.state.markers.map(marker=>marker.id===newMarker.id ? newMarker : marker)})
+	}
+
+	_addNotification(_notificationSystem, mapBox) {
+		_notificationSystem.addNotification({
+			message: 'Target nearby, kill him before too late!',
+			level: 'success',
+			action: {
+				label: 'Finish Him!',
+				callback: function() {
+					mapBox.setState({fightMode: true})
+				}
+			}
+		})
 	}
 
 	componentWillMount() {
@@ -120,7 +135,6 @@ class MapBox extends React.PureComponent {
 					let fakeLocation = generateFakeLocation(currTarget.location)
 					this.setState({fakeLocation})
 					this.updateDirection(currPlayer, fakeLocation)
-					this.nearBy()
 				} else {
 					this.setState({directions: null, fakeLocation:[]})
 				}
@@ -145,9 +159,11 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
+		// console.log('state-->', this.state)
 		const currPlayer = this.state.currPlayer
 		const {firebase} = this.props
 		getLocation(currPlayer, firebase)
+		this.nearBy()
 	}
 
 	nearBy(){
@@ -164,12 +180,12 @@ class MapBox extends React.PureComponent {
 				if (myLocation && targetLocation) {
 					let distance = Geofire.distance(myLocation, targetLocation)
 					console.log('distance ---> ', distance)
-					if (distance < 0.008) {
-						// this.setState({fightMode: true})
+					if (distance < 0.01) {
+						let notificationSystem = this.refs.notificationSystem
+						this._addNotification(notificationSystem, this)
 						console.log('fight!!')
 					}
 				}
-				// console.log('distance ---> ', distance)
 			})
 		})
 	}
@@ -178,16 +194,20 @@ class MapBox extends React.PureComponent {
 		return (
 			this.state.fightMode ?
 				<FightScene /> :
-				<MapWithAMarkerClusterer
-					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-					loadingElement={<div style={{ height: '100%' }} />}
-					containerElement={<div style={{ height: '100vh' }} />}
-					mapElement={<div style={{ height: '100%' }} />}
-					{...this.state}
-					onToggleOpen={this.onToggleOpen}
-					submitTarget={this.submitTarget}
-					mapStyles={MapStyle}
+				<div>
+					{/* <button onClick={this._addNotification}>Add notification</button> */}
+					<NotificationSystem ref="notificationSystem" />
+					<MapWithAMarkerClusterer
+						googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+						loadingElement={<div style={{ height: '100%' }} />}
+						containerElement={<div style={{ height: '100vh' }} />}
+						mapElement={<div style={{ height: '100%' }} />}
+						{...this.state}
+						onToggleOpen={this.onToggleOpen}
+						submitTarget={this.submitTarget}
+						mapStyles={MapStyle}
 		    	/>
+				</div>
 		)
 	}
 }
