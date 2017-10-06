@@ -16,17 +16,18 @@ class MyTarget extends React.Component {
 			myTarget: {},
 			me: {}
 		}
-		this.submitTarget = this.submitTarget.bind(this)
+		// this.submitTarget = this.submitTarget.bind(this)
 	}
 
-	submitTarget(myRef, target) {
-		// console.log('submit target!', this.props)
-		// console.log('me-->', myRef, 'target-->', target)
-		myRef.update({target: target.id})
-	}
+	// submitTarget(myRef, target) {
+	// 	// console.log('submit target!', this.props)
+	// 	// console.log('me-->', myRef, 'target-->', target)
+	// 	myRef.update({target: target.id})
+	// 	this.setState({myTarget: target})
+	// }
 
 	render() {
-		// console.log('player-->', this.props)
+		console.log('target props-->', this.props)
 		let targetId = this.props.target.id,
 			myId = this.props.auth.uid,
 			players = this.props.players,
@@ -46,7 +47,7 @@ class MyTarget extends React.Component {
 			<div>
 				<h1>this is: {target.name}</h1>
 				{
-					!me.target.length && <button onClick={() => this.submitTarget(myRef, target)}>target</button>
+					!me.target.length && <button onClick={() => this.props.submitTarget(myRef, target)}>target</button>
 				}
 			</div>
 		)
