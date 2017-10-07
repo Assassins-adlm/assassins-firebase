@@ -134,7 +134,8 @@ class MapBox extends React.PureComponent {
 						// mapBox.setState({})
 						console.log('run away successfully!')
 						// mapBox.setState({getTarget: false, getEscaped: true})
-						assassinRef.update({status: 'dead'})
+						assassinRef.update({status: 'dead', target: ''})
+						myRef.update({assassin: ''})
 					}
 				}
 			})
@@ -229,7 +230,7 @@ class MapBox extends React.PureComponent {
 				}
 			})
 			assassinRef.on('value', snapshot => {
-				if (snapshot.val() && !this.state.fightMode) {
+				if (snapshot.val() && !this.state.fightMode && snapshot.val().target) {
 					const assassinLocation = snapshot.val().location // need to change this
 					// console.log('target location -->', targetLocation)
 					if (myLocation && assassinLocation) {
