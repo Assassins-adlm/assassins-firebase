@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import React from 'react'
+import firebase from '../fire'
 import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
 import {withGoogleMap, GoogleMap, Marker, InfoWindow, DirectionsRenderer, Circle} from 'react-google-maps'
@@ -35,7 +36,6 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 				gridSize={10}
 			>
 				{props.markers.map((marker, idx) => {
-					{/* console.log('marker location-->', marker.location) //need to change this */}
 					return (
 						marker.location &&   //need to change this
 						<Marker
@@ -108,61 +108,64 @@ class MapBox extends React.PureComponent {
 
 	componentWillMount() {
 		console.log('will mount-->', this.state)
-		const {firebase} = this.props
+		// console.log(this.props)
+		// const {firebase} = this.props
 		const playerId = this.props.auth.uid
 		// console.log('state--->', this.state)
-		firebase.database().ref('players')
-			.on('value', (snapshot) => {
-				let players = snapshot.val()
-				let allPlayers = [], currPlayer,currTarget
-				for(let key in players){
-					let player = {}
-					player.location = players[key].location //need to change this
-					player.openInfo = false
-					player.id = key
-					allPlayers.push(player)
-					if (players[key].id === playerId) {
-						currPlayer = players[key]
-					}
+		const playersRef = firebase.database().ref('/players')
+		playersRef.on('value', (snapshot) => {
+			console.log('updating all players', snapshot.val())
+			let players = snapshot.val()
+			let allPlayers = [], currPlayer, currTarget
+			for(let key in players){
+				let player = {}
+				player.location = players[key].location //need to change this
+				player.openInfo = false
+				player.id = key
+				allPlayers.push(player)
+				if (players[key].id === playerId) {
+					currPlayer = players[key]
 				}
-				for (let key in players) {
-					if (players[key].id === currPlayer.target) {
-						currTarget = players[key]
-					}
+			}
+			for (let key in players) {
+				if (players[key].id === currPlayer.target) {
+					currTarget = players[key]
 				}
-				if (!this.state.fightMode) {
-					// console.log('state-->', this.state)
-					this.setState({
-						markers: allPlayers,
-						currPlayer,
-						currTarget
-					})
-					if (currTarget) {
-						let fakeLocation = generateFakeLocation(currTarget.location)
-						this.setState({fakeLocation})
-						this.updateDirection(currPlayer, fakeLocation)
-					} else {
-						this.setState({directions: null, fakeLocation:[]})
-					}
+			}
+			if (!this.state.fightMode) {
+				// console.log('state-->', this.state)
+				this.setState({
+					markers: allPlayers,
+					currPlayer,
+					currTarget
+				})
+				if (currTarget) {
+					let fakeLocation = generateFakeLocation(currTarget.location)
+					this.setState({fakeLocation})
+					this.updateDirection(currPlayer, fakeLocation)
+					this.nearBy()
+				} else {
+					this.setState({directions: null, fakeLocation:[]})
 				}
-			})
+			}
+		})
 	}
 
 	nearBy(){
-		const {firebase} = this.props
-		let myId = this.props.auth.uid
-		let myRef = firebase.database().ref(`/players/${myId}`)
+		// const {firebase} = this.props
+		const myId = this.props.auth.uid
+		const myRef = firebase.database().ref(`/players/${myId}`)
 		myRef.on('value', snapshot => {
-			let targetId = snapshot.val().target
-			let myLocation = snapshot.val().location  // need to change this
+			const targetId = snapshot.val().target
+			const myLocation = snapshot.val().location  // need to change this
 			// console.log('my location-->', myLocation)
-			let targetRef = firebase.database().ref(`/players/${targetId}`)
+			const targetRef = firebase.database().ref(`/players/${targetId}`)
 			targetRef.on('value', snapshot => {
 				if (snapshot.val()) {
-					let targetLocation = snapshot.val().location // need to change this
+					const targetLocation = snapshot.val().location // need to change this
 					// console.log('target location -->', targetLocation)
 					if (myLocation && targetLocation) {
-						let distance = Geofire.distance(myLocation, targetLocation)
+						const distance = Geofire.distance(myLocation, targetLocation)
 						console.log('distance ---> ', distance)
 						if (distance < 0.008) {
 						// this.setState({fightMode: true})
@@ -196,11 +199,10 @@ class MapBox extends React.PureComponent {
 		const {firebase} = this.props
 		const currPlayer = this.state.currPlayer
 		getLocation(currPlayer, firebase)  //need to change this
-		this.nearBy()
 	}
 
 	render() {
-		console.log('state-->', this.state)
+		// console.log('state-->', this.state)
 		return (
 			this.state.fightMode ?
 				<FightScene /> : (isLoaded(this.props) ?

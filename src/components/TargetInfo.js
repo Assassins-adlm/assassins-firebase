@@ -27,7 +27,7 @@ class MyTarget extends React.Component {
 	// }
 
 	render() {
-		console.log('target props-->', this.props)
+		// console.log('target props-->', this.props)
 		let targetId = this.props.target.id,
 			myId = this.props.auth.uid,
 			target = null,
