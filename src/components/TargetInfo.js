@@ -46,12 +46,13 @@ class MyTarget extends React.Component {
 		}
 		// console.log('target-->', target)
 		return (
-			<div>
-				<h1>this is: {target.name}</h1>
-				{
-					!me.target && <button onClick={() => this.props.submitTarget(myId, myRef, target, targetRef)}>target</button>
-				}
-			</div>
+			target ?
+				<div>
+					<h1>this is: {target.name}</h1>
+					{
+						(!me.target && me.status!=='dead') && <button onClick={() => this.props.submitTarget(myId, myRef, target, targetRef)}>target</button>
+					}
+				</div> : <div>loading...</div>
 		)
 	}
 }
