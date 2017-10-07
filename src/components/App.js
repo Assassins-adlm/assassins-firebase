@@ -31,7 +31,6 @@ class App extends Component {
 			// Called when the user has been successfully signed in.
 			callbacks    : {
 				signInSuccess: ( currentUser, credential, redirectUrl ) => {
-					console.log(currentUser, credential, redirectUrl)
 					return false
 
 				}
@@ -63,6 +62,8 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+
+		firebase.messaging().getToken().then( snap => console.log(snap))
 		firebase.auth().onAuthStateChanged((user) => {
 			this.setState({loading: false, user})
 			// console.log('user id--->', this.state.user.uid)
@@ -78,7 +79,6 @@ class App extends Component {
 			let players = snapshot.val()
 			for (let player in players) {
 				if(players[player].id==this.state.user.uid){
-
 					this.setState({
 						newPlayer: false
 					})
@@ -106,6 +106,8 @@ class App extends Component {
 	}
 
 	render() {
+
+
 		return (
 			<div>
 				{this.state.loading ? (
