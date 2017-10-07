@@ -15,29 +15,31 @@ import MapStyle from './MapStyle.json'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
+	// console.log('map props-->', props)
 	let myLocation = props.currPlayer.location //need to change this
 	let fakeLocation = props.fakeLocation
 	return (
-		<GoogleMap
-			zoom={15}
-			defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
-			options={{ styles: props.mapStyles, mapTypeControl: false }}
-		>
-			{
-				fakeLocation.length && <Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
-					radius={1000}
-				/>
-			}
-			{props.directions && <DirectionsRenderer options={{preserveViewport: true, suppressMarkers: true}} directions={props.directions}
-			/>}
-			<MarkerClusterer
-				averageCenter
-				enableRetinaIcons
-				gridSize={10}
+		myLocation ?
+			<GoogleMap
+				zoom={15}
+				defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
+				options={{ styles: props.mapStyles, mapTypeControl: false }}
 			>
-				{props.markers.map((marker, idx) => {
-					return (
-						marker.location &&   //need to change this
+				{
+					fakeLocation.length && <Circle center={{ lat: fakeLocation[0], lng: fakeLocation[1]}}
+						radius={1000}
+					/>
+				}
+				{props.directions && <DirectionsRenderer options={{preserveViewport: true, suppressMarkers: true}} directions={props.directions}
+				/>}
+				<MarkerClusterer
+					averageCenter
+					enableRetinaIcons
+					gridSize={10}
+				>
+					{props.markers.map((marker, idx) => {
+						return (
+							marker.location &&   //need to change this
 						<Marker
 							key={idx}
 							icon={{
@@ -56,10 +58,10 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 								</InfoWindow>
 							}
 						</Marker>
-					)
-				})}
-			</MarkerClusterer>
-		</GoogleMap>)}
+						)
+					})}
+				</MarkerClusterer>
+			</GoogleMap> : <div>loading...</div>)}
 )
 
 class MapBox extends React.PureComponent {
@@ -68,9 +70,10 @@ class MapBox extends React.PureComponent {
 		super()
 		this.state={
 			markers: [],
-			currPlayer: null,
+			currPlayer: {},
 			currLocation: [],
-			currTarget: null,
+			currTarget: {},
+			currAssassin: {},
 			fakeLocation: [],
 			directions: null,
 			fightMode: false
@@ -93,17 +96,30 @@ class MapBox extends React.PureComponent {
 		this.setState({markers: this.state.markers.map(marker=>marker.id===newMarker.id ? newMarker : marker)})
 	}
 
-	_addNotification(_notificationSystem, mapBox) {
-		_notificationSystem.addNotification({
-			message: 'Target nearby, kill him before too late!',
-			level: 'success',
-			action: {
-				label: 'Finish Him!',
-				callback: function() {
-					mapBox.setState({fightMode: true})
+	_addNotification(_notificationSystem, mapBox, option) {
+		if (option==='kill') {
+			_notificationSystem.addNotification({
+				message: 'Target nearby, kill him before too late!',
+				level: 'success',
+				action: {
+					label: 'Finish!',
+					callback: function() {
+						mapBox.setState({fightMode: true})
+					}
 				}
-			}
-		})
+			})
+		} else if (option==='escape') {
+			_notificationSystem.addNotification({
+				message: 'Assassin nearby, run bro!',
+				level: 'success',
+				action: {
+					label: 'Run away!',
+					callback: function() {
+						mapBox.setState({fightMode: true})
+					}
+				}
+			})
+		}
 	}
 
 	componentWillMount() {
@@ -111,22 +127,30 @@ class MapBox extends React.PureComponent {
 		// console.log(this.props)
 		// const {firebase} = this.props
 		const playerId = this.props.auth.uid
+		console.log('player ID-->', playerId)
 		// console.log('state--->', this.state)
 		const playersRef = firebase.database().ref('/players')
 		playersRef.on('value', (snapshot) => {
 			console.log('updating all players', snapshot.val())
 			let players = snapshot.val()
-			let allPlayers = [], currPlayer, currTarget
+			let allPlayers = [], currPlayer, currTarget, currAssassin
 			for(let key in players){
 				let player = {}
 				player.location = players[key].location //need to change this
 				player.openInfo = false
 				player.id = key
+
 				allPlayers.push(player)
 				if (players[key].id === playerId) {
 					currPlayer = players[key]
+					// console.log('curr player-->', currPlayer)
+				}
+				if (players[key].target === playerId) {
+					currAssassin = players[key]
+					// console.log('curr assassin-->', currAssassin)
 				}
 			}
+			// console.log('end for')
 			for (let key in players) {
 				if (players[key].id === currPlayer.target) {
 					currTarget = players[key]
@@ -137,7 +161,8 @@ class MapBox extends React.PureComponent {
 				this.setState({
 					markers: allPlayers,
 					currPlayer,
-					currTarget
+					currTarget,
+					currAssassin
 				})
 				if (currTarget) {
 					let fakeLocation = generateFakeLocation(currTarget.location)
@@ -154,22 +179,42 @@ class MapBox extends React.PureComponent {
 		// const {firebase} = this.props
 		const myId = this.props.auth.uid
 		const myRef = firebase.database().ref(`/players/${myId}`)
+
 		myRef.on('value', snapshot => {
 			const targetId = snapshot.val().target
+			const assassinId = this.state.currAssassin.id
 			const myLocation = snapshot.val().location  // need to change this
 			// console.log('my location-->', myLocation)
+			console.log('curr assassin-->', this.state.currAssassin)
 			const targetRef = firebase.database().ref(`/players/${targetId}`)
+			const assassinRef = firebase.database().ref(`/players/${assassinId}`)
 			targetRef.on('value', snapshot => {
-				if (snapshot.val()) {
+				if (snapshot.val() && !this.state.fightMode) {
 					const targetLocation = snapshot.val().location // need to change this
 					// console.log('target location -->', targetLocation)
 					if (myLocation && targetLocation) {
 						const distance = Geofire.distance(myLocation, targetLocation)
-						console.log('distance ---> ', distance)
-						if (distance < 0.01) {
+						console.log('target distance ---> ', distance)
+						if (distance < 0.015) {
 						// this.setState({fightMode: true})
 							const notificationSystem = this.refs.notificationSystem
-							this._addNotification(notificationSystem, this)
+							this._addNotification(notificationSystem, this, 'kill')
+							console.log('fight!!')
+						}
+					}
+				}
+			})
+			assassinRef.on('value', snapshot => {
+				if (snapshot.val() && !this.state.fightMode) {
+					const assassinLocation = snapshot.val().location // need to change this
+					// console.log('target location -->', targetLocation)
+					if (myLocation && assassinLocation) {
+						const distance = Geofire.distance(myLocation, assassinLocation)
+						console.log('assassin distance ---> ', distance)
+						if (distance < 0.015) {
+						// this.setState({fightMode: true})
+							const notificationSystem = this.refs.notificationSystem
+							this._addNotification(notificationSystem, this, 'escape')
 							console.log('fight!!')
 						}
 					}
