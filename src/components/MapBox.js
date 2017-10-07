@@ -174,7 +174,6 @@ class MapBox extends React.PureComponent {
 						}
 					}
 				}
-				// console.log('distance ---> ', distance)
 			})
 		})
 	}
