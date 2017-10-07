@@ -16,6 +16,7 @@ const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	// console.log('map props-->', props)
+	// console.log('markers-->', props.markers)
 	let myLocation = props.currPlayer.location //need to change this
 	let fakeLocation = props.fakeLocation
 	return (
@@ -39,7 +40,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 				>
 					{props.markers.map((marker, idx) => {
 						return (
-							marker.location &&   //need to change this
+							(marker.location && marker.status!=='dead') && //need to change this
 						<Marker
 							key={idx}
 							icon={{
@@ -76,7 +77,8 @@ class MapBox extends React.PureComponent {
 			currAssassin: {},
 			fakeLocation: [],
 			directions: null,
-			fightMode: false
+			fightMode: false,
+			getTarget: false
 		}
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		this.updateDirection = this.updateDirection.bind(this)
@@ -86,8 +88,9 @@ class MapBox extends React.PureComponent {
 	}
 
 
-	submitTarget(myRef, target) {
+	submitTarget(myId, myRef, target, targetRef) {
 		myRef.update({target: target.id})
+		targetRef.update({assassin: myId})
 		this.setState({currTarget: target})
 	}
 
@@ -96,15 +99,28 @@ class MapBox extends React.PureComponent {
 		this.setState({markers: this.state.markers.map(marker=>marker.id===newMarker.id ? newMarker : marker)})
 	}
 
-	_addNotification(_notificationSystem, mapBox, option) {
+	_addNotification(_notificationSystem, mapBox, option, targetRef, assassinRef, myRef) {
 		if (option==='kill') {
+			_notificationSystem.clearNotifications()
 			_notificationSystem.addNotification({
 				message: 'Target nearby, kill him before too late!',
 				level: 'success',
 				action: {
 					label: 'Finish!',
 					callback: function() {
-						mapBox.setState({fightMode: true})
+						// mapBox.setState({fightMode: true})
+						console.log('finish successfully!')
+						// mapBox.setState({getTarget: true, getEscaped: false})
+						//set target player to dead
+						targetRef.update({status: 'dead', assassin: ''})
+						myRef.once('value', snapshot=>{
+							if(snapshot.val().kills!==undefined){
+								myRef.update({kills: snapshot.val().kills+1, target: ''})
+							} else{
+								myRef.update({kills: 1})
+							}
+						})
+						//  get target ref, update to dead
 					}
 				}
 			})
@@ -115,7 +131,11 @@ class MapBox extends React.PureComponent {
 				action: {
 					label: 'Run away!',
 					callback: function() {
-						mapBox.setState({fightMode: true})
+						// mapBox.setState({})
+						console.log('run away successfully!')
+						// mapBox.setState({getTarget: false, getEscaped: true})
+						assassinRef.update({status: 'dead', target: ''})
+						myRef.update({assassin: ''})
 					}
 				}
 			})
@@ -139,7 +159,7 @@ class MapBox extends React.PureComponent {
 				player.location = players[key].location //need to change this
 				player.openInfo = false
 				player.id = key
-
+				player.status = players[key].status
 				allPlayers.push(player)
 				if (players[key].id === playerId) {
 					currPlayer = players[key]
@@ -147,7 +167,7 @@ class MapBox extends React.PureComponent {
 				}
 				if (players[key].target === playerId) {
 					currAssassin = players[key]
-					// console.log('curr assassin-->', currAssassin)
+					console.log('curr assassin-->', currAssassin)
 				}
 			}
 			// console.log('end for')
@@ -182,39 +202,44 @@ class MapBox extends React.PureComponent {
 
 		myRef.on('value', snapshot => {
 			const targetId = snapshot.val().target
-			const assassinId = this.state.currAssassin.id
+			let assassinId
+			if (this.state.currAssassin) {
+				assassinId = this.state.currAssassin.id
+			}
+			// const assassinId = this.state.currAssassin.id
 			const myLocation = snapshot.val().location  // need to change this
 			// console.log('my location-->', myLocation)
 			console.log('curr assassin-->', this.state.currAssassin)
 			const targetRef = firebase.database().ref(`/players/${targetId}`)
 			const assassinRef = firebase.database().ref(`/players/${assassinId}`)
 			targetRef.on('value', snapshot => {
-				if (snapshot.val() && !this.state.fightMode) {
+				// console.log('targetid-->', targetId)
+				if (snapshot.val() && !this.state.fightMode && snapshot.val().assassin) {
 					const targetLocation = snapshot.val().location // need to change this
 					// console.log('target location -->', targetLocation)
 					if (myLocation && targetLocation) {
 						const distance = Geofire.distance(myLocation, targetLocation)
 						console.log('target distance ---> ', distance)
-						if (distance < 0.015) {
+						if (distance < 1) {
 						// this.setState({fightMode: true})
 							const notificationSystem = this.refs.notificationSystem
-							this._addNotification(notificationSystem, this, 'kill')
+							this._addNotification(notificationSystem, this, 'kill', targetRef, assassinRef, myRef)
 							console.log('fight!!')
 						}
 					}
 				}
 			})
 			assassinRef.on('value', snapshot => {
-				if (snapshot.val() && !this.state.fightMode) {
+				if (snapshot.val() && !this.state.fightMode && snapshot.val().target) {
 					const assassinLocation = snapshot.val().location // need to change this
 					// console.log('target location -->', targetLocation)
 					if (myLocation && assassinLocation) {
 						const distance = Geofire.distance(myLocation, assassinLocation)
 						console.log('assassin distance ---> ', distance)
-						if (distance < 0.015) {
+						if (distance < 1) {
 						// this.setState({fightMode: true})
 							const notificationSystem = this.refs.notificationSystem
-							this._addNotification(notificationSystem, this, 'escape')
+							this._addNotification(notificationSystem, this, 'escape', targetRef, assassinRef, myRef)
 							console.log('fight!!')
 						}
 					}

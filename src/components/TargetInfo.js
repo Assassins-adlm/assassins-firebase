@@ -34,6 +34,7 @@ class MyTarget extends React.Component {
 			me = null
 		const {players} = this.props
 		const myRef = firebase.database().ref(`/players/${myId}`)
+		const targetRef = firebase.database().ref(`/players/${targetId}`)
 		// console.log('my ref-->', myRef)
 		for (let key in players) {
 			if (players[key].id===targetId) {
@@ -48,7 +49,7 @@ class MyTarget extends React.Component {
 			<div>
 				<h1>this is: {target.name}</h1>
 				{
-					!me.target && <button onClick={() => this.props.submitTarget(myRef, target)}>target</button>
+					!me.target && <button onClick={() => this.props.submitTarget(myId, myRef, target, targetRef)}>target</button>
 				}
 			</div>
 		)
