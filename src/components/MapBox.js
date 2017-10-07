@@ -143,7 +143,6 @@ class MapBox extends React.PureComponent {
 					let fakeLocation = generateFakeLocation(currTarget.location)
 					this.setState({fakeLocation})
 					this.updateDirection(currPlayer, fakeLocation)
-					this.nearBy()
 				} else {
 					this.setState({directions: null, fakeLocation:[]})
 				}
@@ -167,13 +166,14 @@ class MapBox extends React.PureComponent {
 					if (myLocation && targetLocation) {
 						const distance = Geofire.distance(myLocation, targetLocation)
 						console.log('distance ---> ', distance)
-						if (distance < 0.008) {
+						if (distance < 0.01) {
 						// this.setState({fightMode: true})
+							const notificationSystem = this.refs.notificationSystem
+							this._addNotification(notificationSystem, this)
 							console.log('fight!!')
 						}
 					}
 				}
-				// console.log('distance ---> ', distance)
 			})
 		})
 	}
@@ -199,6 +199,7 @@ class MapBox extends React.PureComponent {
 		const {firebase} = this.props
 		const currPlayer = this.state.currPlayer
 		getLocation(currPlayer, firebase)  //need to change this
+		this.nearBy()
 	}
 
 	render() {
