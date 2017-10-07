@@ -220,7 +220,7 @@ class MapBox extends React.PureComponent {
 					if (myLocation && targetLocation) {
 						const distance = Geofire.distance(myLocation, targetLocation)
 						console.log('target distance ---> ', distance)
-						if (distance < 1) {
+						if (distance < 0.008) {
 						// this.setState({fightMode: true})
 							const notificationSystem = this.refs.notificationSystem
 							this._addNotification(notificationSystem, this, 'kill', targetRef, assassinRef, myRef)
@@ -236,7 +236,7 @@ class MapBox extends React.PureComponent {
 					if (myLocation && assassinLocation) {
 						const distance = Geofire.distance(myLocation, assassinLocation)
 						console.log('assassin distance ---> ', distance)
-						if (distance < 1) {
+						if (distance < 0.008) {
 						// this.setState({fightMode: true})
 							const notificationSystem = this.refs.notificationSystem
 							this._addNotification(notificationSystem, this, 'escape', targetRef, assassinRef, myRef)
