@@ -16,23 +16,25 @@ class MyTarget extends React.Component {
 			myTarget: {},
 			me: {}
 		}
-		this.submitTarget = this.submitTarget.bind(this)
+		// this.submitTarget = this.submitTarget.bind(this)
 	}
 
-	submitTarget(myRef, target) {
-		// console.log('submit target!', this.props)
-		// console.log('me-->', myRef, 'target-->', target)
-		myRef.update({target: target.id})
-	}
+	// submitTarget(myRef, target) {
+	// 	// console.log('submit target!', this.props)
+	// 	// console.log('me-->', myRef, 'target-->', target)
+	// 	myRef.update({target: target.id})
+	// 	this.setState({myTarget: target})
+	// }
 
 	render() {
-		// console.log('player-->', this.props)
+		// console.log('target props-->', this.props)
 		let targetId = this.props.target.id,
 			myId = this.props.auth.uid,
-			players = this.props.players,
 			target = null,
-			me = null,
-		  myRef = firebase.database().ref(`/players/${myId}`)
+			me = null
+		const {players} = this.props
+		const myRef = firebase.database().ref(`/players/${myId}`)
+		const targetRef = firebase.database().ref(`/players/${targetId}`)
 		// console.log('my ref-->', myRef)
 		for (let key in players) {
 			if (players[key].id===targetId) {
@@ -42,13 +44,15 @@ class MyTarget extends React.Component {
 				me = players[key]
 			}
 		}
+		// console.log('target-->', target)
 		return (
-			<div>
-				<h1>this is: {target.name}</h1>
-				{
-					!me.target.length && <button onClick={() => this.submitTarget(myRef, target)}>target</button>
-				}
-			</div>
+			target ?
+				<div>
+					<h1>this is: {target.name}</h1>
+					{
+						(!me.target && me.status!=='dead') && <button onClick={() => this.props.submitTarget(myId, myRef, target, targetRef)}>target</button>
+					}
+				</div> : <div>loading...</div>
 		)
 	}
 }

@@ -5,6 +5,7 @@ import MapBox from './MapBox'
 import Map from './Map'
 import SideBar from './SideBar'
 import CharacterCreator from './charactercreator'
+import CharCreate from './CharCreate'
 import '../index.css'
 import {connect} from 'react-redux'
 import { compose } from 'redux'
@@ -117,7 +118,7 @@ class App extends Component {
 						this.state.newPlayer
 							? (<div>
 								<SideBar />
-								<CharacterCreator props = {this.state.user} />
+								<CharCreate props = {this.state.user} />
 							</div> )
 							:(
 								<div>
