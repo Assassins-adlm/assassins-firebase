@@ -22,7 +22,6 @@ class CharacterCreator extends React.Component {
 		firebase.database().ref('players/' + this.props.props.uid).set(player)
 	}
 
-
 	render(){
 		let user = this.props.props
 		console.log('id', this.props.props.uid)
@@ -42,7 +41,6 @@ class CharacterCreator extends React.Component {
 				</form>
 			</div>
 		)
-
 	}
 }
 

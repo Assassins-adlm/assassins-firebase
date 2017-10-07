@@ -21,6 +21,7 @@
     "react-icons": "^2.2.5",
     "react-map-gl": "^3.0.5",
     "react-mapbox-gl": "^2.5.2",
+    "react-notification-system": "^0.2.15",
     "react-redux": "^5.0.6",
     "react-redux-firebase": "^1.5.0",
     "react-router-dom": "^4.2.2",

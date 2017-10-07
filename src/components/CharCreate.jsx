@@ -68,7 +68,7 @@ class CharCreate extends React.Component {
 			finished: stepIndex >= 3,
 		});
 		isLoaded(this.props.auth.uid) ? this.setState({uid: this.props.auth.uid}) : console.log('loading,..')
-		stepIndex === 3 ? set(`/players/${this.state.uid}`, {name: this.state.charName , id: this.state.uid, image: this.state.charAvatarUrl}) : console.log('unable to send')
+		stepIndex === 3 ? set(`/players/${this.state.uid}`, {name: this.state.charName , id: this.state.uid, image: this.state.charAvatarUrl, location: [40.703, -74.009], target: ""}) : console.log('unable to send')
 	};
 
 	handlePrev = () => {

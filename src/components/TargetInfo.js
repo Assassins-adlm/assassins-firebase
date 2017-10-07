@@ -27,13 +27,13 @@ class MyTarget extends React.Component {
 	// }
 
 	render() {
-		console.log('target props-->', this.props)
+		// console.log('target props-->', this.props)
 		let targetId = this.props.target.id,
 			myId = this.props.auth.uid,
-			players = this.props.players,
 			target = null,
-			me = null,
-		  myRef = firebase.database().ref(`/players/${myId}`)
+			me = null
+		const {players} = this.props
+		const myRef = firebase.database().ref(`/players/${myId}`)
 		// console.log('my ref-->', myRef)
 		for (let key in players) {
 			if (players[key].id===targetId) {
@@ -43,11 +43,12 @@ class MyTarget extends React.Component {
 				me = players[key]
 			}
 		}
+		// console.log('target-->', target)
 		return (
 			<div>
 				<h1>this is: {target.name}</h1>
 				{
-					!me.target.length && <button onClick={() => this.props.submitTarget(myRef, target)}>target</button>
+					!me.target && <button onClick={() => this.props.submitTarget(myRef, target)}>target</button>
 				}
 			</div>
 		)

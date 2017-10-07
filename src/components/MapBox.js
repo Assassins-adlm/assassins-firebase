@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
-import firebase from '../fire'
 import React from 'react'
+import firebase from '../fire'
 import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
 import {withGoogleMap, GoogleMap, Marker, InfoWindow, DirectionsRenderer, Circle} from 'react-google-maps'
-import {firebaseConnect, dataToJS, pathToJS} from 'react-redux-firebase'
+import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
 import { compose } from 'redux'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
@@ -12,9 +12,10 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
+const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
-	let myLocation = props.currPlayer.location
+	let myLocation = props.currPlayer.location //need to change this
 	let fakeLocation = props.fakeLocation
 	return (
 		<GoogleMap
@@ -27,17 +28,16 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 					radius={1000}
 				/>
 			}
-
 			{props.directions && <DirectionsRenderer options={{preserveViewport: true, suppressMarkers: true}} directions={props.directions}
 			/>}
 			<MarkerClusterer
 				averageCenter
 				enableRetinaIcons
-				gridSize={60}
+				gridSize={10}
 			>
 				{props.markers.map((marker, idx) => {
 					return (
-						marker.location &&
+						marker.location &&   //need to change this
 						<Marker
 							key={idx}
 							icon={{
@@ -69,6 +69,7 @@ class MapBox extends React.PureComponent {
 		this.state={
 			markers: [],
 			currPlayer: null,
+			currLocation: [],
 			currTarget: null,
 			fakeLocation: [],
 			directions: null,
@@ -78,6 +79,7 @@ class MapBox extends React.PureComponent {
 		this.updateDirection = this.updateDirection.bind(this)
 		this.nearBy = this.nearBy.bind(this)
 		this.submitTarget = this.submitTarget.bind(this)
+		this._addNotification = this._addNotification.bind(this)
 	}
 
 
@@ -91,27 +93,47 @@ class MapBox extends React.PureComponent {
 		this.setState({markers: this.state.markers.map(marker=>marker.id===newMarker.id ? newMarker : marker)})
 	}
 
+	_addNotification(_notificationSystem, mapBox) {
+		_notificationSystem.addNotification({
+			message: 'Target nearby, kill him before too late!',
+			level: 'success',
+			action: {
+				label: 'Finish Him!',
+				callback: function() {
+					mapBox.setState({fightMode: true})
+				}
+			}
+		})
+	}
+
 	componentWillMount() {
+		console.log('will mount-->', this.state)
+		// console.log(this.props)
+		// const {firebase} = this.props
 		const playerId = this.props.auth.uid
-		firebase.database().ref('players')
-			.on('value', (snapshot) => {
-				let players = snapshot.val()
-				let allPlayers = [], currPlayer,currTarget
-				for(let key in players){
-					let player = {}
-					player.location = players[key].location
-					player.openInfo = false
-					player.id = key
-					allPlayers.push(player)
-					if (players[key].id === playerId) {
-						currPlayer = players[key]
-					}
+		// console.log('state--->', this.state)
+		const playersRef = firebase.database().ref('/players')
+		playersRef.on('value', (snapshot) => {
+			console.log('updating all players', snapshot.val())
+			let players = snapshot.val()
+			let allPlayers = [], currPlayer, currTarget
+			for(let key in players){
+				let player = {}
+				player.location = players[key].location //need to change this
+				player.openInfo = false
+				player.id = key
+				allPlayers.push(player)
+				if (players[key].id === playerId) {
+					currPlayer = players[key]
 				}
-				for (let key in players) {
-					if (players[key].id === currPlayer.target) {
-						currTarget = players[key]
-					}
+			}
+			for (let key in players) {
+				if (players[key].id === currPlayer.target) {
+					currTarget = players[key]
 				}
+			}
+			if (!this.state.fightMode) {
+				// console.log('state-->', this.state)
 				this.setState({
 					markers: allPlayers,
 					currPlayer,
@@ -125,10 +147,38 @@ class MapBox extends React.PureComponent {
 				} else {
 					this.setState({directions: null, fakeLocation:[]})
 				}
-			})
+			}
+		})
 	}
 
-	updateDirection(currPlayer, fakeLocation) {
+	nearBy(){
+		// const {firebase} = this.props
+		const myId = this.props.auth.uid
+		const myRef = firebase.database().ref(`/players/${myId}`)
+		myRef.on('value', snapshot => {
+			const targetId = snapshot.val().target
+			const myLocation = snapshot.val().location  // need to change this
+			// console.log('my location-->', myLocation)
+			const targetRef = firebase.database().ref(`/players/${targetId}`)
+			targetRef.on('value', snapshot => {
+				if (snapshot.val()) {
+					const targetLocation = snapshot.val().location // need to change this
+					// console.log('target location -->', targetLocation)
+					if (myLocation && targetLocation) {
+						const distance = Geofire.distance(myLocation, targetLocation)
+						console.log('distance ---> ', distance)
+						if (distance < 0.008) {
+						// this.setState({fightMode: true})
+							console.log('fight!!')
+						}
+					}
+				}
+				// console.log('distance ---> ', distance)
+			})
+		})
+	}
+
+	updateDirection(currPlayer, fakeLocation) { //need to change this
 		const DirectionsService = new google.maps.DirectionsService()
 		DirectionsService.route({
 			origin: new google.maps.LatLng(currPlayer.location[0], currPlayer.location[1]),
@@ -146,54 +196,35 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		const currPlayer = this.state.currPlayer
 		const {firebase} = this.props
-		getLocation(currPlayer, firebase)
-	}
-
-	nearBy(){
-		let myId = this.props.auth.uid
-		let myRef = firebase.database().ref(`/players/${myId}`)
-		myRef.on('value', snapshot => {
-			let targetId = snapshot.val().target
-			let myLocation = snapshot.val().location
-			// console.log('my location-->', myLocation)
-			let targetRef = firebase.database().ref(`/players/${targetId}`)
-			targetRef.on('value', snapshot => {
-				let targetLocation = snapshot.val().location
-				// console.log('target location -->', targetLocation)
-				if (myLocation && targetLocation) {
-					let distance = Geofire.distance(myLocation, targetLocation)
-					console.log('distance ---> ', distance)
-					if (distance < 0.008) {
-						// this.setState({fightMode: true})
-						console.log('fight!!')
-					}
-				}
-				// console.log('distance ---> ', distance)
-			})
-		})
+		const currPlayer = this.state.currPlayer
+		getLocation(currPlayer, firebase)  //need to change this
 	}
 
 	render() {
+		// console.log('state-->', this.state)
 		return (
 			this.state.fightMode ?
-				<FightScene /> :
-				<MapWithAMarkerClusterer
-					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-					loadingElement={<div style={{ height: '100%' }} />}
-					containerElement={<div style={{ height: '100vh' }} />}
-					mapElement={<div style={{ height: '100%' }} />}
-					{...this.state}
-					onToggleOpen={this.onToggleOpen}
-					submitTarget={this.submitTarget}
-					mapStyles={MapStyle}
-		    	/>
+				<FightScene /> : (isLoaded(this.props) ?
+					<div>
+						{/* <button onClick={this._addNotification}>Add notification</button> */}
+						<NotificationSystem ref="notificationSystem" />
+						<MapWithAMarkerClusterer
+							googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+							loadingElement={<div style={{ height: '100%' }} />}
+							containerElement={<div style={{ height: '100vh' }} />}
+							mapElement={<div style={{ height: '100%' }} />}
+							{...this.state}
+							onToggleOpen={this.onToggleOpen}
+							submitTarget={this.submitTarget}
+							mapStyles={MapStyle}
+		    	/></div> : <div>loading...</div>)
 		)
 	}
 }
 
 const mapStateToProps = (state) => {
+	// console.log('state==>', state)
 	return {
 		auth: pathToJS(state.firebase, 'auth'),
 		players: dataToJS(state.firebase, 'players'),
