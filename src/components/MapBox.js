@@ -1,10 +1,9 @@
 /* eslint-disable no-undef */
-import firebase from '../fire'
 import React from 'react'
 import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
 import {withGoogleMap, GoogleMap, Marker, InfoWindow, DirectionsRenderer, Circle} from 'react-google-maps'
-import {firebaseConnect, dataToJS, pathToJS} from 'react-redux-firebase'
+import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
 import { compose } from 'redux'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
@@ -36,7 +35,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 				gridSize={10}
 			>
 				{props.markers.map((marker, idx) => {
-					console.log('marker location-->', marker.location) //need to change this
+					{/* console.log('marker location-->', marker.location) //need to change this */}
 					return (
 						marker.location &&   //need to change this
 						<Marker
@@ -94,6 +93,8 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentWillMount() {
+		console.log('will mount-->', this.state)
+		const {firebase} = this.props
 		const playerId = this.props.auth.uid
 		firebase.database().ref('players')
 			.on('value', (snapshot) => {
@@ -119,6 +120,7 @@ class MapBox extends React.PureComponent {
 					currPlayer,
 					currTarget
 				})
+				console.log('curr target-->', currTarget)
 				if (currTarget) {
 					let fakeLocation = generateFakeLocation(currTarget.location) //need to change this
 					this.setState({fakeLocation})
@@ -128,6 +130,33 @@ class MapBox extends React.PureComponent {
 					this.setState({directions: null, fakeLocation:[]})
 				}
 			})
+	}
+
+	nearBy(){
+		const {firebase} = this.props
+		let myId = this.props.auth.uid
+		let myRef = firebase.database().ref(`/players/${myId}`)
+		myRef.on('value', snapshot => {
+			let targetId = snapshot.val().target
+			let myLocation = snapshot.val().location  // need to change this
+			// console.log('my location-->', myLocation)
+			let targetRef = firebase.database().ref(`/players/${targetId}`)
+			targetRef.on('value', snapshot => {
+				if (snapshot.val()) {
+					let targetLocation = snapshot.val().location // need to change this
+					// console.log('target location -->', targetLocation)
+					if (myLocation && targetLocation) {
+						let distance = Geofire.distance(myLocation, targetLocation)
+						console.log('distance ---> ', distance)
+						if (distance < 0.008) {
+						// this.setState({fightMode: true})
+							console.log('fight!!')
+						}
+					}
+				}
+				// console.log('distance ---> ', distance)
+			})
+		})
 	}
 
 	updateDirection(currPlayer, fakeLocation) { //need to change this
@@ -148,54 +177,33 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		const currPlayer = this.state.currPlayer
 		const {firebase} = this.props
+		const currPlayer = this.state.currPlayer
 		getLocation(currPlayer, firebase)  //need to change this
-	}
 
-	nearBy(){
-		let myId = this.props.auth.uid
-		let myRef = firebase.database().ref(`/players/${myId}`)
-		myRef.on('value', snapshot => {
-			let targetId = snapshot.val().target
-			let myLocation = snapshot.val().location  // need to change this
-			// console.log('my location-->', myLocation)
-			let targetRef = firebase.database().ref(`/players/${targetId}`)
-			targetRef.on('value', snapshot => {
-				let targetLocation = snapshot.val().location // need to change this
-				// console.log('target location -->', targetLocation)
-				if (myLocation && targetLocation) {
-					let distance = Geofire.distance(myLocation, targetLocation)
-					console.log('distance ---> ', distance)
-					if (distance < 0.008) {
-						// this.setState({fightMode: true})
-						console.log('fight!!')
-					}
-				}
-				// console.log('distance ---> ', distance)
-			})
-		})
 	}
 
 	render() {
+		console.log('state-->', this.state)
 		return (
 			this.state.fightMode ?
-				<FightScene /> :
-				<MapWithAMarkerClusterer
-					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-					loadingElement={<div style={{ height: '100%' }} />}
-					containerElement={<div style={{ height: '100vh' }} />}
-					mapElement={<div style={{ height: '100%' }} />}
-					{...this.state}
-					onToggleOpen={this.onToggleOpen}
-					submitTarget={this.submitTarget}
-					mapStyles={MapStyle}
-		    	/>
+				<FightScene /> : ( isLoaded(this.props) ?
+					<MapWithAMarkerClusterer
+						googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+						loadingElement={<div style={{ height: '100%' }} />}
+						containerElement={<div style={{ height: '100vh' }} />}
+						mapElement={<div style={{ height: '100%' }} />}
+						{...this.state}
+						onToggleOpen={this.onToggleOpen}
+						submitTarget={this.submitTarget}
+						mapStyles={MapStyle}
+		    	/> : <div>loading...</div>)
 		)
 	}
 }
 
 const mapStateToProps = (state) => {
+	// console.log('state==>', state)
 	return {
 		auth: pathToJS(state.firebase, 'auth'),
 		players: dataToJS(state.firebase, 'players'),
