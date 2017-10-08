@@ -11,7 +11,6 @@ const NOTIFYTOKEN = 'NOTIFIYTOKEN'
 /**
  * INITIAL STATE
  */
-
 const playerState = {
 	player: {}, //player.tokenid
 	players: [],
@@ -57,6 +56,7 @@ export const fetchCurrTarget = (uid) => {
 	return (dispatch) => {
 		firebase.database().ref(`/players/${uid}`).once('value')
 			.then(snapshot => {
+				let player = filterPlayer(snapshot.val())
 				let targetId = snapshot.val().target
 				if (targetId) {
 					firebase.database().ref(`/players/${targetId}`).once('value')
@@ -194,7 +194,7 @@ const filterPlayers = (players) => {
 	return filteredPlayers
 }
 
-const filterPlayer = (player) => {
+export const filterPlayer = (player) => {
 	if (player.Locations) {
 		let Locations = Object.values(player.Locations)
 		let Location = Locations[Locations.length-1]
