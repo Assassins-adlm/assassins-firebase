@@ -86,9 +86,9 @@ var key = 'AAAAdsUjORI:APA91bH2L8WHJdjWZO8R6DMxBGmhqA-PvXdAJrTYdHZUUybvfICkdCvqe
 
 var targetNotification = {
   'title': 'You Have Been Marked',
-  'body':  'Be on the LookOut',
-  'icon': 'firebase-logo.png',
-  'click_action': 'http://localhost:3000'
+	'body':  'Be on the Lookout',
+	//icon :
+  'click_action': 'https://assassins-aldm.firebaseapp.com/home'
 };
 
 export const addCurrTarget = (player, target) => {
@@ -110,7 +110,7 @@ export const addCurrTarget = (player, target) => {
 						'to': to
 					})
 				}).then(function(response) {
-					console.log(response);
+					console.log(response, "NOTIFICATION");
 				}).catch(function(error) {
 					console.error(error);
 				})
