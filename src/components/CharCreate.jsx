@@ -55,8 +55,7 @@ class CharCreate extends React.Component {
 	handleChange(evt) {
 		evt.preventDefault()
 		evt.target.name === 'charName' ? this.setState({charName: evt.target.value}) :
-			evt.target.name === 'charAvatarUrl' ? this.setState({charAvatarUrl: evt.target.value}) :
-				this.setState({os: evt.target.value})
+			evt.target.name === 'charAvatarUrl' ? this.setState({charAvatarUrl: evt.target.value}) : evt.target.name === 'os' ? this.setState({os: evt.target.value}) : evt.target.name ==='email' ? this.setState({email: evt.target.value})  : this.setState({password: evt.target.value})
 		console.log(this.state)
 	}
 
@@ -66,9 +65,11 @@ class CharCreate extends React.Component {
 		const {set} = this.props.firebase
 		this.setState({
 			stepIndex: stepIndex + 1,
-			finished: stepIndex >= 3,
+			finished: stepIndex >= 4,
 		});
 		isLoaded(this.props.auth.uid) ? this.setState({uid: this.props.auth.uid}) : console.log('loading,..')
+		stepIndex === 4 ? set(`/players/${this.state.uid}`, {name: this.state.charName , id: this.state.uid, image: this.state.charAvatarUrl, location: [40.703, -74.009], target: ""}) : console.log('unable to send')
+		stepIndex === 1  && isLoaded(this.props.firebase)? this.props.firebase.createUser({email: this.state.email , password: this.state.password}).catch(alert) : console.log('waiting...')
 		stepIndex === 3 ? set(`/players/${this.state.uid}`, {name: this.state.charName , id: this.state.uid, image: this.state.charAvatarUrl, location: [40.703, -74.009], target: "", token: ""}) : console.log('unable to send')
 	};
 
@@ -84,6 +85,26 @@ class CharCreate extends React.Component {
 		switch (stepIndex) {
 			case 0:
 				return (
+					<div>
+					<TextField
+						floatingLabelText="Enter your email: "
+						onChange={this.handleChange.bind(this)}
+						fullWidth={true}
+						name='email'
+						key={152}
+					/>
+					<TextField
+						floatingLabelText="password"
+						onChange={this.handleChange.bind(this)}
+						fullWidth={true}
+						name='password'
+						key={1248}
+						type="password"
+					/>
+					</div>
+				)
+			case 1:
+				return (
 					<TextField
 						floatingLabelText="Enter Player Name"
 						onChange={this.handleChange.bind(this)}
@@ -92,7 +113,7 @@ class CharCreate extends React.Component {
 						key={8}
 					/>
 				)
-			case 1:
+			case 2:
 				return (
 					<TextField key={9}
 						floatingLabelText="Enter URL of Avatar"
@@ -101,7 +122,7 @@ class CharCreate extends React.Component {
 						name='charAvatarUrl'
 					/>
 				)
-			case 2:
+			case 3:
 				return (
 					<RadioButtonGroup name="Mobile OS" defaultSelected="ios" onChange={this.handleChange.bind(this)}>
 						<RadioButton
@@ -119,7 +140,7 @@ class CharCreate extends React.Component {
 
 					</RadioButtonGroup>
 				)
-			case 3:
+			case 4:
 
 				return (
 					<div>{this.state.os === 'android' ?  fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc') } </div>
@@ -212,3 +233,5 @@ const mapStateToProps = (state) => {
 }
 
 export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'}]), connect(mapStateToProps))(CharCreate)
+
+
