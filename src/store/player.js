@@ -7,6 +7,7 @@ const ALL_PLAYERS = 'ALL_PLAYERS'
 const TOGGLE_SELECTED_PLAYER = 'TOGGLE_SELECTED_PLAYER'
 const CURRENT_LOCATION = 'CURRENT_LOCATION'
 const CURRENT_TARGET= 'CURRENT_TARGET'
+const NOTIFYTOKEN = 'NOTIFIYTOKEN'
 /**
  * INITIAL STATE
  */
@@ -16,6 +17,7 @@ const playerState = {
 	players: [],
 	location: {latitude: '' , longitude: ''},
 	target: {},
+	token: '',
 }
 
 /**
@@ -27,6 +29,8 @@ export function allPlayers (players) {return {type: ALL_PLAYERS, players}}
 export function toggleSelectedPlayer (player) {return {type: TOGGLE_SELECTED_PLAYER, player}}
 export function currentLocation (location) {return {type: CURRENT_LOCATION, location}}
 export function currentTarget (target) {return {type: CURRENT_TARGET, target}}
+export function getToken (token) { return {type: NOTIFYTOKEN, token}}
+
 
 // thunk creators
 export const fetchCurrPlayer = (uid) => {
@@ -38,6 +42,7 @@ export const fetchCurrPlayer = (uid) => {
 			}, error => console.error(error))
 	}
 }
+
 
 export const fetchPlayers = () => {
 	return (dispatch) => {
@@ -65,14 +70,48 @@ export const fetchCurrTarget = (uid) => {
 	}
 }
 
+export const getCurrToken = () => {
+	return (dispatch) => {
+		firebase.messaging().getToken()
+		.then( (tokenSnap) => {
+			dispatch(getToken(tokenSnap))
+		})
+	}
+}
+
+var key = 'AAAAdsUjORI:APA91bH2L8WHJdjWZO8R6DMxBGmhqA-PvXdAJrTYdHZUUybvfICkdCvqeTcwJmz8ij7c31VUXShQxpbVAnqYVghhDr0DSl5rBaxZHRLxOIXNDwkfyvblaCF6Cf8sstR4MM-5UJggtWuP'
+
+var targetNotification = {
+  'title': 'You Have Been Marked',
+  'body':  'Be on the LookOut',
+  'icon': 'firebase-logo.png',
+  'click_action': 'http://localhost:3000'
+};
+
 export const addCurrTarget = (player, target) => {
 	return (dispatch) => {
 		firebase.database().ref(`/players/${player.id}`).update({target: target.id})
 			.then(() => {
+				var to = target.token
 				dispatch(currentTarget(target))
 				dispatch(currentPlayer({...player, target: target.id}))
 				dispatch(listeningTarget(target))
-			}, error => console.error(error))
+				fetch('https://fcm.googleapis.com/fcm/send', {
+					'method': 'POST',
+					'headers': {
+						'Authorization': 'key=' + key,
+						'Content-Type': 'application/json'
+					},
+					'body': JSON.stringify({
+						'notification': targetNotification,
+						'to': to
+					})
+				}).then(function(response) {
+					console.log(response);
+				}).catch(function(error) {
+					console.error(error);
+				})
+			})
 	}
 }
 
@@ -110,6 +149,11 @@ export const listeningTarget = (target) => {
 
 export default function (state = playerState, action) {
 	switch (action.type) {
+	case NOTIFYTOKEN:
+		return {
+			...state,
+			token: action.token
+		}
 	case CURRENT_PLAYER:
 		return {
 			...state,

@@ -1,4 +1,5 @@
 import React from 'react'
+var Shake = require('shake.js')
 
 export default class FightScene extends React.Component {
 	constructor(){
