@@ -62,13 +62,14 @@ class CharCreate extends React.Component {
 
 	handleNext = () => {
 		const {stepIndex} = this.state;
+		console.log(this.props.auth.uid,"!!!!!!!!")
 		const {set} = this.props.firebase
 		this.setState({
 			stepIndex: stepIndex + 1,
 			finished: stepIndex >= 3,
 		});
 		isLoaded(this.props.auth.uid) ? this.setState({uid: this.props.auth.uid}) : console.log('loading,..')
-		stepIndex === 3 ? set(`/players/${this.state.uid}`, {name: this.state.charName , id: this.state.uid, image: this.state.charAvatarUrl, location: [40.703, -74.009], target: ""}) : console.log('unable to send')
+		stepIndex === 3 ? set(`/players/${this.state.uid}`, {name: this.state.charName , id: this.state.uid, image: this.state.charAvatarUrl, location: [40.703, -74.009], target: "", token: ""}) : console.log('unable to send')
 	};
 
 	handlePrev = () => {
@@ -187,7 +188,6 @@ class CharCreate extends React.Component {
 									onClick={this.handlePrev}
 									style={{marginRight: 12}}
 								/>
-
 								<RaisedButton
 									label={stepIndex === 2 ? 'Download Config' : 'Next'}
 									primary={true}

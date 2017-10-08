@@ -152,48 +152,63 @@ class MapBox extends React.PureComponent {
 		const playersRef = firebase.database().ref('/players')
 		playersRef.on('value', (snapshot) => {
 			console.log('updating all players', snapshot.val())
-			let players = snapshot.val()
-			let allPlayers = [], currPlayer, currTarget, currAssassin
-			for(let key in players){
-				let player = {}
-				player.location = players[key].location //need to change this
-				player.openInfo = false
-				player.id = key
-				player.status = players[key].status
-				allPlayers.push(player)
-				if (players[key].id === playerId) {
-					currPlayer = players[key]
-					// console.log('curr player-->', currPlayer)
-				}
-				if (players[key].target === playerId) {
-					currAssassin = players[key]
-					console.log('curr assassin-->', currAssassin)
-				}
-			}
-			// console.log('end for')
-			for (let key in players) {
-				if (players[key].id === currPlayer.target) {
-					currTarget = players[key]
-				}
-			}
-			if (!this.state.fightMode) {
-				// console.log('state-->', this.state)
-				this.setState({
-					markers: allPlayers,
-					currPlayer,
-					currTarget,
-					currAssassin
-				})
-				if (currTarget) {
-					let fakeLocation = generateFakeLocation(currTarget.location)
-					this.setState({fakeLocation})
-					this.updateDirection(currPlayer, fakeLocation)
-				} else {
-					this.setState({directions: null, fakeLocation:[]})
-				}
-			}
+					let players = snapshot.val()
+					let allPlayers = [], currPlayer, currTarget, currAssassin
+					for(let key in players){
+						let player = {}
+						player.location = players[key].location //need to change this
+						player.openInfo = false
+						player.id = key
+						player.status = players[key].status
+						allPlayers.push(player)
+						// player.TokenId = tokenId !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						if (players[key].id === playerId) {
+							currPlayer = players[key]
+							firebase.messaging().getToken()
+							.then( ( tokenId ) => {
+							currPlayer.tokenId = tokenId
+							console.log("!!TOKEN ID!!!", tokenId, currPlayer)
+							})
+							// console.log('curr player-->', currPlayer)
+						}
+						if (players[key].target === playerId) {
+							currAssassin = players[key]
+							console.log('curr assassin-->', currAssassin)
+						}
+					}
+
+					// console.log('end for')
+					for (let key in players) {
+			 if(currPlayer.target){
+							if (players[key].id === currPlayer.target) {
+								currTarget = players[key]
+							}}
+
+						console.log( '!!!!!!!!!!!!!', currPlayer,
+							currTarget,
+							currAssassin)
+					}
+					if (!this.state.fightMode) {
+						// console.log('state-->', this.state)
+						this.setState({
+							markers: allPlayers,
+							currPlayer,
+							currTarget,
+							currAssassin
+						})
+						if (currTarget) {
+							console.log(currTarget, 'currenttarget')
+							let fakeLocation = generateFakeLocation(currTarget.location)
+							this.setState({fakeLocation})
+							this.updateDirection(currPlayer, fakeLocation)
+						} else {
+							this.setState({directions: null, fakeLocation:[]})
+						}
+					}
 		})
 	}
+
+
 
 	nearBy(){
 		// const {firebase} = this.props

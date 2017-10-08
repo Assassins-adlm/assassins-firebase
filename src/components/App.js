@@ -64,7 +64,6 @@ class App extends Component {
 
 	componentDidMount() {
 
-		firebase.messaging().getToken().then( snap => console.log(snap))
 		firebase.auth().onAuthStateChanged((user) => {
 			this.setState({loading: false, user})
 			// console.log('user id--->', this.state.user.uid)
