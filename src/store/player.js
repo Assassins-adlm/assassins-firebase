@@ -56,7 +56,9 @@ export const fetchCurrTarget = (uid) => {
 				if (targetId) {
 					firebase.database().ref(`/players/${targetId}`).once('value')
 						.then(snapshot => {
-							dispatch(currentTarget(snapshot.val()))
+							let target = filterPlayer(snapshot.val())
+							dispatch(currentTarget(target))
+							dispatch(listeningTarget(target))
 						})
 				}
 			})
@@ -69,6 +71,7 @@ export const addCurrTarget = (player, target) => {
 			.then(() => {
 				dispatch(currentTarget(target))
 				dispatch(currentPlayer({...player, target: target.id}))
+				dispatch(listeningTarget(target))
 			}, error => console.error(error))
 	}
 }
@@ -88,6 +91,15 @@ export const listeningMyself = (uid) => {
 		firebase.database().ref(`/players/${uid}`)
 			.on('value', snapshot => {
 				dispatch(currentPlayer(filterPlayer(snapshot.val())))
+			})
+	}
+}
+
+export const listeningTarget = (target) => {
+	return (dispatch) => {
+		firebase.database().ref(`/players/${target.id}`)
+			.on('value', snapshot => {
+				dispatch(currentTarget(filterPlayer(snapshot.val())))
 			})
 	}
 }
