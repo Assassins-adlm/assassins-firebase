@@ -49,6 +49,21 @@ export const fetchPlayers = () => {
 	}
 }
 
+export const fetchCurrTarget = (uid) => {
+	return (dispatch) => {
+		firebase.database().ref(`/players/${uid}`).once('value')
+			.then(snapshot => {
+				let targetId = snapshot.val().target
+				if (targetId) {
+					firebase.database().ref(`/players/${targetId}`).once('value')
+						.then(snapshot => {
+							dispatch(currentTarget(snapshot.val()))
+						})
+				}
+			})
+	}
+}
+
 export const addCurrTarget = (player, target) => {
 	return (dispatch) => {
 		firebase.database().ref(`/players/${player.id}`).update({target: target.id})

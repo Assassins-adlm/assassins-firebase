@@ -12,7 +12,7 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
-import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget} from '../store'
+import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget} from '../store'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
@@ -84,8 +84,8 @@ class MapBox extends React.PureComponent {
 
 
 	submitTarget(target) {
-		const {getCurrTarget, player} = this.props
-		getCurrTarget(player, target)
+		const {submitCurrTarget, player} = this.props
+		submitCurrTarget(player, target)
 	}
 
 	onToggleOpen(player) {
@@ -260,13 +260,11 @@ class MapBox extends React.PureComponent {
 	// }
 
 	componentDidMount() {
-		const {firebase, auth, getCurrPlayer, getAllPlayer} = this.props
+		const {firebase, auth, getCurrPlayer, getAllPlayer, getCurrTarget} = this.props
 		console.log('uid*****', auth.uid)
 		getCurrPlayer(auth.uid)
 		getAllPlayer()
-		// const currPlayer = this.state.currPlayer
-		// getLocation(currPlayer, firebase)  //need to change this
-		// this.nearBy()
+		getCurrTarget(auth.uid)
 	}
 
 	render() {
@@ -294,7 +292,8 @@ const mapStateToProps = (state) => {
 	return {
 		auth: pathToJS(state.firebase, 'auth'),
 		players: state.player.players,
-		player: state.player.player
+		player: state.player.player,
+		target: state.player.target
 	}
 }
 
@@ -306,10 +305,13 @@ const mapDispatchToProps = (dispatch) => {
 		getAllPlayer() {
 			dispatch(fetchPlayers())
 		},
+		getCurrTarget(uid) {
+			dispatch(fetchCurrTarget(uid))
+		},
 		togglePlayer(player) {
 			dispatch(toggleSelectedPlayer(player))
 		},
-		getCurrTarget(player, target) {
+		submitCurrTarget(player, target) {
 			dispatch(addCurrTarget(player, target))
 		}
 	}
