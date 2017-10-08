@@ -3,6 +3,7 @@ import React from 'react'
 import firebase from '../fire'
 import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
+import EngagePrompt from './EngagePrompt'
 import {withGoogleMap, GoogleMap, Marker, InfoWindow, DirectionsRenderer, Circle} from 'react-google-maps'
 import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
@@ -264,9 +265,12 @@ class MapBox extends React.PureComponent {
 	// 	})
 	// }
 
+
+
 	componentDidMount() {
+		console.log('component did mount !!!!!')
 		const {auth, getCurrPlayer, getAllPlayer, getCurrTarget, listenAllPlayer, listenMyself} = this.props
-		console.log('uid*****', auth.uid)
+		// console.log('uid*****', auth.uid)
 		getCurrPlayer(auth.uid)
 		getAllPlayer()
 		getCurrTarget(auth.uid)
@@ -275,11 +279,15 @@ class MapBox extends React.PureComponent {
 	}
 
 	render() {
+		console.log('redering!!')
+		// console.log('props****>>', this.props)
+		const {player, target} = this.props
 		return (
 			(isLoaded(this.props) ?
 				<div>
-					{/* <button onClick={this._addNotification}>Add notification</button> */}
-					<NotificationSystem ref="notificationSystem" />
+					{
+						player.Locations && target.Locations && <EngagePrompt player={player} target={target} />
+					}
 					<MapWithAMarkerClusterer
 						googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
 						loadingElement={<div style={{ height: '100%' }} />}
