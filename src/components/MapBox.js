@@ -20,8 +20,8 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	const {players, mapStyles} = props
 	const currPlayer = props.player
 	let myLocation = [0,0]
-	myLocation[0] = currPlayer.Locations.lat || 74
-	myLocation[1] = currPlayer.Locations.lon || -40
+				myLocation[0] = currPlayer.Locations.lat || 74
+				myLocation[1] = currPlayer.Locations.lon || -40
 
 	// let fakeLocation = props.fakeLocation
 	console.log('curr player location*****>>', myLocation)
@@ -261,15 +261,11 @@ class MapBox extends React.PureComponent {
 		getCurrTarget(auth.uid)
 		listenAllPlayer()
 		listenMyself(auth.uid)
-		var token = getCurrentToken()
-		console.log("TOKEN SUCCESSFULLY PULLED", token )
-		firebase.database().ref(`/players/${auth.uid}`).update({token:token})
-		.then( () => { console.log ('updated Token Successfully')})
+		getCurrentToken(auth.uid)
 	}
 
 
 	render() {
-		console.log(this.props, "PROPS")
 		return (
 			(isLoaded(this.props) ?
 				<div>
@@ -301,8 +297,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getCurrentToken() {
-			dispatch(getCurrToken())
+		getCurrentToken(id) {
+			dispatch(getCurrToken(id))
 		},
 		getCurrPlayer(uid) {
 			dispatch(fetchCurrPlayer(uid))

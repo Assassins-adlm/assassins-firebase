@@ -70,11 +70,14 @@ export const fetchCurrTarget = (uid) => {
 	}
 }
 
-export const getCurrToken = () => {
-	return (dispatch) => {
+export const getCurrToken = (id) => {
+	return () => {
+		console.log( "getting current token for:", id)
 		firebase.messaging().getToken()
 		.then( (tokenSnap) => {
-			dispatch(getToken(tokenSnap))
+			console.log("tokensnap", tokenSnap)
+			firebase.database().ref(`/players/${id}`).update({token:tokenSnap})
+			.then( () => { console.log ('updated Token Successfully')})
 		})
 	}
 }
@@ -149,11 +152,6 @@ export const listeningTarget = (target) => {
 
 export default function (state = playerState, action) {
 	switch (action.type) {
-	case NOTIFYTOKEN:
-		return {
-			...state,
-			token: action.token
-		}
 	case CURRENT_PLAYER:
 		return {
 			...state,
