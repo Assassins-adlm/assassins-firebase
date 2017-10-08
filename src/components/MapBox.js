@@ -12,20 +12,20 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
-import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget, listeningAllPlayer, listeningMyself} from '../store'
+import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken} from '../store'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	// console.log('props***', props)
 	const {players, mapStyles} = props
 	const currPlayer = props.player
-	let myLocation = [0, 0]
-	if (currPlayer.Locations) {
-		myLocation[0] = currPlayer.Locations.lat
-		myLocation[1] = currPlayer.Locations.lon
-	}
+	let myLocation = [0,0]
+	myLocation[0] = currPlayer.Locations.lat || 74
+	myLocation[1] = currPlayer.Locations.lon || -40
+
 	// let fakeLocation = props.fakeLocation
 	console.log('curr player location*****>>', myLocation)
+
 	return (
 		myLocation ?
 			<GoogleMap
@@ -69,17 +69,7 @@ class MapBox extends React.PureComponent {
 
 	constructor(){
 		super()
-		// this.state={
-		// markers: [],
-		// currPlayer: {},
-		// currLocation: [],
-		// currTarget: {},
-		// currAssassin: {},
-		// fakeLocation: [],
-		// directions: null,
-		// fightMode: false,
-		// getTarget: false
-		// }
+
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		// this.updateDirection = this.updateDirection.bind(this)
 		// this.nearBy = this.nearBy.bind(this)
@@ -265,16 +255,21 @@ class MapBox extends React.PureComponent {
 	// }
 
 	componentDidMount() {
-		const {auth, getCurrPlayer, getAllPlayer, getCurrTarget, listenAllPlayer, listenMyself} = this.props
-		console.log('uid*****', auth.uid)
+		const {auth, getCurrPlayer, getAllPlayer, getCurrTarget, listenAllPlayer, listenMyself, getCurrentToken} = this.props
 		getCurrPlayer(auth.uid)
 		getAllPlayer()
 		getCurrTarget(auth.uid)
 		listenAllPlayer()
 		listenMyself(auth.uid)
+		var token = getCurrentToken()
+		console.log("TOKEN SUCCESSFULLY PULLED", token )
+		firebase.database().ref(`/players/${auth.uid}`).update({token:token})
+		.then( () => { console.log ('updated Token Successfully')})
 	}
 
+
 	render() {
+		console.log(this.props, "PROPS")
 		return (
 			(isLoaded(this.props) ?
 				<div>
@@ -299,12 +294,16 @@ const mapStateToProps = (state) => {
 		auth: pathToJS(state.firebase, 'auth'),
 		players: state.player.players,
 		player: state.player.player,
-		target: state.player.target
+		target: state.player.target,
+		token: state.player.token
 	}
 }
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		getCurrentToken() {
+			dispatch(getCurrToken())
+		},
 		getCurrPlayer(uid) {
 			dispatch(fetchCurrPlayer(uid))
 		},
