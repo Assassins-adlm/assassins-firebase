@@ -22,7 +22,7 @@ class EngagePrompt extends React.Component {
 		const targetLocation = parseLocation(target.Locations)
 		const distance = Geofire.distance(myLocation, targetLocation)
 		console.log('distance-->', distance)
-		if (distance < 2) {
+		if (distance < 0.1) {
 			this._addNotification(notificationSystem)
 		}
 	}
@@ -30,7 +30,10 @@ class EngagePrompt extends React.Component {
 	_addNotification(_notificationSystem) {
 		_notificationSystem.addNotification({
 			message: 'Target nearby, kill him before too late!',
-			level: 'success'
+			level: 'success',
+			action: {
+				label: 'Finish!'
+			}
 		})
 	}
 
