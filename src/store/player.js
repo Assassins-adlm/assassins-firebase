@@ -34,7 +34,7 @@ export const fetchCurrPlayer = (uid) => {
 		firebase.database().ref(`/players/${uid}`).once('value')
 			.then(snapshot => {
 				// let player = {...snapshot.val(), Locations:[]}
-				dispatch(currentPlayer(snapshot.val()))
+				dispatch(currentPlayer(filterPlayer(snapshot.val())))
 			}, error => console.error(error))
 	}
 }
@@ -43,8 +43,7 @@ export const fetchPlayers = () => {
 	return (dispatch) => {
 		firebase.database().ref('/players').once('value')
 			.then(snapshot => {
-				let players = Object.values(snapshot.val())
-				dispatch(allPlayers(players))
+				dispatch(allPlayers(filterPlayers(snapshot.val())))
 			}, error => console.error(error))
 	}
 }
@@ -71,6 +70,25 @@ export const addCurrTarget = (player, target) => {
 				dispatch(currentTarget(target))
 				dispatch(currentPlayer({...player, target: target.id}))
 			}, error => console.error(error))
+	}
+}
+
+export const listeningAllPlayer = () => {
+	return (dispatch) => {
+		firebase.database().ref('/players')
+			.on('value', snapshot => {
+				// console.log('listening all players-->', snapshot.val())
+				dispatch(allPlayers(filterPlayers(snapshot.val())))
+			})
+	}
+}
+
+export const listeningMyself = (uid) => {
+	return (dispatch) => {
+		firebase.database().ref(`/players/${uid}`)
+			.on('value', snapshot => {
+				dispatch(currentPlayer(filterPlayer(snapshot.val())))
+			})
 	}
 }
 
@@ -109,5 +127,26 @@ export default function (state = playerState, action) {
 	}
 }
 
+// helper funcs
+const filterPlayers = (players) => {
+	let filteredPlayers = Object.values(players).filter(player => {
+		if (player.Locations) {
+			let Locations = Object.values(player.Locations)
+			let Location = Locations[Locations.length-1]
+			player.Locations = Location
+			return player
+		}
+	})
+	return filteredPlayers
+}
 
+const filterPlayer = (player) => {
+	if (player.Locations) {
+		let Locations = Object.values(player.Locations)
+		let Location = Locations[Locations.length-1]
+		player.Locations = Location
+		return player
+	}
+	return {}
+}
 

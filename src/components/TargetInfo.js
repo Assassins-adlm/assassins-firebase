@@ -49,12 +49,4 @@ class MyTarget extends React.Component {
 	}
 }
 
-const mapStateToProps = (state) => {
-	// console.log('state-->', state)
-	return {
-		auth: pathToJS(state.firebase, 'auth'),
-		players: dataToJS(state.firebase, 'players'),
-	}
-}
-
-export default compose(firebaseConnect([{path: 'players' }, {path: 'auth'}]), connect(mapStateToProps))(MyTarget)
+export default MyTarget

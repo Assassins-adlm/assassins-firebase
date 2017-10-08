@@ -12,15 +12,20 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
-import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget} from '../store'
+import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget, listeningAllPlayer, listeningMyself} from '../store'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
-	console.log('props***', props)
+	// console.log('props***', props)
 	const {players, mapStyles} = props
 	const currPlayer = props.player
-	const myLocation = currPlayer.location //need to change this
+	let myLocation = [0, 0]
+	if (currPlayer.Locations) {
+		myLocation[0] = currPlayer.Locations.lat
+		myLocation[1] = currPlayer.Locations.lon
+	}
 	// let fakeLocation = props.fakeLocation
+	console.log('curr player location*****>>', myLocation)
 	return (
 		myLocation ?
 			<GoogleMap
@@ -35,13 +40,13 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 				>
 					{players.map((player, idx) => {
 						return (
-							(player.location && player.status!=='dead') && //need to change this
+							(player.Locations && player.status!=='dead') && //need to change this
 						<Marker
 							key={idx}
 							icon={{
 								url: './images/markers/assassin-icon.png'
 							}}
-							position={{ lat: player.location[0], lng: player.location[1] }}
+							position={{ lat: player.Locations.lat, lng: player.Locations.lon }}
 							onClick={()=> {
 								props.onToggleOpen(player)
 							}}
@@ -64,17 +69,17 @@ class MapBox extends React.PureComponent {
 
 	constructor(){
 		super()
-		this.state={
-			markers: [],
-			currPlayer: {},
-			currLocation: [],
-			currTarget: {},
-			currAssassin: {},
-			fakeLocation: [],
-			directions: null,
-			fightMode: false,
-			getTarget: false
-		}
+		// this.state={
+		// markers: [],
+		// currPlayer: {},
+		// currLocation: [],
+		// currTarget: {},
+		// currAssassin: {},
+		// fakeLocation: [],
+		// directions: null,
+		// fightMode: false,
+		// getTarget: false
+		// }
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		// this.updateDirection = this.updateDirection.bind(this)
 		// this.nearBy = this.nearBy.bind(this)
@@ -260,11 +265,13 @@ class MapBox extends React.PureComponent {
 	// }
 
 	componentDidMount() {
-		const {firebase, auth, getCurrPlayer, getAllPlayer, getCurrTarget} = this.props
+		const {auth, getCurrPlayer, getAllPlayer, getCurrTarget, listenAllPlayer, listenMyself} = this.props
 		console.log('uid*****', auth.uid)
 		getCurrPlayer(auth.uid)
 		getAllPlayer()
 		getCurrTarget(auth.uid)
+		listenAllPlayer()
+		listenMyself(auth.uid)
 	}
 
 	render() {
@@ -313,8 +320,14 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		submitCurrTarget(player, target) {
 			dispatch(addCurrTarget(player, target))
+		},
+		listenAllPlayer() {
+			dispatch(listeningAllPlayer())
+		},
+		listenMyself(uid) {
+			dispatch(listeningMyself(uid))
 		}
 	}
 }
 
-export default compose(firebaseConnect([{path: 'players' }, {path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(MapBox)
+export default compose(firebaseConnect([{path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(MapBox)
