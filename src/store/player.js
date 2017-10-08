@@ -72,24 +72,24 @@ export const fetchCurrTarget = (uid) => {
 
 export const getCurrToken = (id) => {
 	return () => {
-		console.log( "getting current token for:", id)
+		console.log( 'getting current token for:', id)
 		firebase.messaging().getToken()
-		.then( (tokenSnap) => {
-			console.log("tokensnap", tokenSnap)
-			firebase.database().ref(`/players/${id}`).update({token:tokenSnap})
-			.then( () => { console.log ('updated Token Successfully')})
-		})
+			.then( (tokenSnap) => {
+				console.log('tokensnap', tokenSnap)
+				firebase.database().ref(`/players/${id}`).update({token:tokenSnap})
+					.then( () => { console.log ('updated Token Successfully')})
+			})
 	}
 }
 
 var key = 'AAAAdsUjORI:APA91bH2L8WHJdjWZO8R6DMxBGmhqA-PvXdAJrTYdHZUUybvfICkdCvqeTcwJmz8ij7c31VUXShQxpbVAnqYVghhDr0DSl5rBaxZHRLxOIXNDwkfyvblaCF6Cf8sstR4MM-5UJggtWuP'
 
 var targetNotification = {
-  'title': 'You Have Been Marked',
-  'body':  'Be on the LookOut',
-  'icon': 'firebase-logo.png',
-  'click_action': 'http://localhost:3000'
-};
+	'title': 'You Have Been Marked',
+	'body':  'Be on the LookOut',
+	'icon': 'firebase-logo.png',
+	'click_action': 'http://localhost:3000'
+}
 
 export const addCurrTarget = (player, target) => {
 	return (dispatch) => {
@@ -110,9 +110,9 @@ export const addCurrTarget = (player, target) => {
 						'to': to
 					})
 				}).then(function(response) {
-					console.log(response);
+					console.log(response)
 				}).catch(function(error) {
-					console.error(error);
+					console.error(error)
 				})
 			})
 	}

@@ -276,7 +276,7 @@ class MapBox extends React.PureComponent {
 			(isLoaded(this.props) ?
 				<div>
 					{
-						player.Locations && target.Locations && <EngagePrompt player={player} target={target} />
+						player.Locations && target.Locations && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} />
 					}
 					<MapWithAMarkerClusterer
 						googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"

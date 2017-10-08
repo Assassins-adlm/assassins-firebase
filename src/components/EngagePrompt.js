@@ -11,6 +11,10 @@ class EngagePrompt extends React.Component {
 	}
 
 	componentWillReceiveProps() {
+
+	}
+
+	componentDidMount() {
 		const {player, target} = this.props
 		const notificationSystem = this.refs.notificationSystem
 		// console.log('player-->', player, 'target-->', target)
