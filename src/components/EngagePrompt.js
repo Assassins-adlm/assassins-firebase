@@ -10,10 +10,6 @@ class EngagePrompt extends React.Component {
 		this._addNotification = this._addNotification.bind(this)
 	}
 
-	componentWillReceiveProps() {
-
-	}
-
 	componentDidMount() {
 		const {player, target} = this.props
 		const notificationSystem = this.refs.notificationSystem
@@ -28,11 +24,16 @@ class EngagePrompt extends React.Component {
 	}
 
 	_addNotification(_notificationSystem) {
+		const {player} = this.props
 		_notificationSystem.addNotification({
 			message: 'Target nearby, kill him before too late!',
 			level: 'success',
+			autoDismiss: 0,
 			action: {
-				label: 'Finish!'
+				label: 'Finish!',
+				callback: function() {
+					this.props.battle(player.id)
+				}
 			}
 		})
 	}

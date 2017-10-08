@@ -99,21 +99,25 @@ export const addCurrTarget = (player, target) => {
 				dispatch(currentTarget(target))
 				dispatch(currentPlayer({...player, target: target.id}))
 				dispatch(listeningTarget(target))
-				fetch('https://fcm.googleapis.com/fcm/send', {
-					'method': 'POST',
-					'headers': {
-						'Authorization': 'key=' + key,
-						'Content-Type': 'application/json'
-					},
-					'body': JSON.stringify({
-						'notification': targetNotification,
-						'to': to
+				firebase.database().ref(`/players/${target.id}`).update({assassin: player.id})
+					.then(() => {
+						fetch('https://fcm.googleapis.com/fcm/send', {
+							'method': 'POST',
+							'headers': {
+								'Authorization': 'key=' + key,
+								'Content-Type': 'application/json'
+							},
+							'body': JSON.stringify({
+								'notification': targetNotification,
+								'to': to
+							})
+						}).then(function(response) {
+							console.log(response)
+						}).catch(function(error) {
+							console.error(error)
+						})
 					})
-				}).then(function(response) {
-					console.log(response)
-				}).catch(function(error) {
-					console.error(error)
-				})
+
 			})
 	}
 }
@@ -146,6 +150,27 @@ export const listeningTarget = (target) => {
 	}
 }
 
+export const determinWinner = (id) => {
+	return (dispatch) => {
+		firebase.database().ref(`/players/${id}`).once('value')
+			.then(snapshot => {
+				let player = filterPlayer(snapshot.val())
+				if (player.target) {
+					let targetId = player.target
+					firebase.database().ref(`/players/${targetId}`).once('value')
+						.then(snapshot => {
+							let target = filterPlayer(snapshot.val())
+							if (player.status === 'alive') {
+								console.log('you kill your target!')
+							}
+						})
+				} else if (player.status === 'dead') {
+					console.log('you are dead!')
+				}
+			})
+	}
+}
+
 /**
  * REDUCER
  */
@@ -161,7 +186,7 @@ export default function (state = playerState, action) {
 		return {
 			...state,
 			players: action.players.map(player => {
-				return {...player, openInfo: false}
+				return {...player, openInfo: player.openInfo ? true : false}
 			})
 		}
 	case TOGGLE_SELECTED_PLAYER:

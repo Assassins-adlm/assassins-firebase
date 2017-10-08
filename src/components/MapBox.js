@@ -13,7 +13,7 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
-import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken} from '../store'
+import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, determinWinner} from '../store'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
@@ -21,8 +21,8 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	const {players, mapStyles} = props
 	const currPlayer = props.player
 	let myLocation = [0,0]
-				myLocation[0] = currPlayer.Locations.lat || 74
-				myLocation[1] = currPlayer.Locations.lon || -40
+	myLocation[0] = currPlayer.Locations.lat || 74
+	myLocation[1] = currPlayer.Locations.lon || -40
 
 	// let fakeLocation = props.fakeLocation
 	console.log('curr player location*****>>', myLocation)
@@ -276,7 +276,7 @@ class MapBox extends React.PureComponent {
 			(isLoaded(this.props) ?
 				<div>
 					{
-						player.Locations && target.Locations && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} />
+						player.Locations && target.Locations && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
 					}
 					<MapWithAMarkerClusterer
 						googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
@@ -327,6 +327,9 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		listenMyself(uid) {
 			dispatch(listeningMyself(uid))
+		},
+		battle(id) {
+			dispatch(determinWinner(id))
 		}
 	}
 }
