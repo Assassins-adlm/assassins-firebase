@@ -12,7 +12,7 @@ const CURRENT_TARGET= 'CURRENT_TARGET'
  */
 
 const playerState = {
-	player: {},
+	player: {}, //player.tokenid
 	players: [],
 	location: {latitude: '' , longitude: ''},
 	target: {},
@@ -28,7 +28,7 @@ export function toggleSelectedPlayer (player) {return {type: TOGGLE_SELECTED_PLA
 export function currentLocation (location) {return {type: CURRENT_LOCATION, location}}
 export function currentTarget (target) {return {type: CURRENT_TARGET, target}}
 
-// thunk
+// thunk creators
 export const fetchCurrPlayer = (uid) => {
 	return (dispatch) => {
 		firebase.database().ref(`/players/${uid}`).once('value')

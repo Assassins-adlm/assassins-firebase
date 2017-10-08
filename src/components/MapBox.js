@@ -285,7 +285,6 @@ class MapBox extends React.PureComponent {
 						loadingElement={<div style={{ height: '100%' }} />}
 						containerElement={<div style={{ height: '100vh' }} />}
 						mapElement={<div style={{ height: '100%' }} />}
-						{...this.state}
 						{...this.props}
 						onToggleOpen={this.onToggleOpen}
 						submitTarget={this.submitTarget}
