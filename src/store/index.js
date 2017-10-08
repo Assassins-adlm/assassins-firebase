@@ -1,11 +1,8 @@
-import { composeWithDevTools } from 'redux-devtools-extension'
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux'
-import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
+import { reactReduxFirebase, firebaseStateReducer, getFirebase } from 'react-redux-firebase'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
 import player from './player.js'
-
-
 
 var firebaseConfig = {
 	apiKey: 'AIzaSyAFYb47n-YcDhRxHivbFM9f66VT5p6X46g',
@@ -16,18 +13,17 @@ var firebaseConfig = {
 	messagingSenderId: '510113560850'
 }
 
-const reduxFirebaseConfig = { userProfile: 'users' }
-
-
-const createStoreWithFirebase = compose(reactReduxFirebase(firebaseConfig, reduxFirebaseConfig))(createStore)
-
 const initialState = {}
 
 const rootReducer = combineReducers({
 	firebase: firebaseStateReducer, player
 })
 
-const store = createStoreWithFirebase(rootReducer, initialState)
+const store = createStore(rootReducer, initialState, compose(
+	applyMiddleware(
+		thunk.withExtraArgument(getFirebase), createLogger
+	), reactReduxFirebase(firebaseConfig, { userProfile: 'users', enableLogging: false })
+))
 // const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 
 export default store

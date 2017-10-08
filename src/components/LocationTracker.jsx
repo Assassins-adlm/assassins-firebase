@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Geolocation from 'react-geolocation'
-import {currentPlayer, currentLocation, currentTargets} from '../store'
+import {currentPlayer, currentLocation, currentTarget} from '../store'
 import {connect} from 'react-redux'
 import { compose } from 'redux'
 
@@ -64,7 +64,7 @@ const mapDispatchToProps = ( dispatch ) => {
 		}
 		,
 		getTargets( evt ) {
-			dispatch(currentTargets(evt))
+			dispatch(currentTarget(evt))
 		}
 	}
 }
