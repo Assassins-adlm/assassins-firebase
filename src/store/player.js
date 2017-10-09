@@ -9,6 +9,7 @@ const TOGGLE_SELECTED_PLAYER = 'TOGGLE_SELECTED_PLAYER'
 const CURRENT_TARGET= 'CURRENT_TARGET'
 const GUESS_PROMPT = 'GUESS_PROMPT'
 const CURRENT_ASSASSIN = 'CURRENT_ASSASSIN'
+const CURRENT_STATUS = 'CURRENT_STATUS'
 const NOTIFYTOKEN = 'NOTIFIYTOKEN'
 /**
  * INITIAL STATE
@@ -20,7 +21,7 @@ const playerState = {
 	target: {},
 	token: '',
 	guessPrompt: false,
-	assassin: {}
+	assassin: {},
 }
 
 /**
@@ -138,6 +139,10 @@ export const addCurrTarget = (player, target) => {
 					console.error(error)
 				})
 			})
+			.then(() => {
+				firebase.database().ref(`/players/${target.id}`).update({beingTargted: true})
+			})
+			.catch(error => console.error(error))
 	}
 }
 
@@ -168,12 +173,6 @@ export const listeningMyself = (uid) => {
 				}
 				if (player.target) {
 					dispatch(listeningTarget(player.target))
-				}
-				if (player.status === 'kill') {
-					console.log('you win!!!')
-				}
-				if (player.status === 'dead') {
-					console.log('you lose!!!')
 				}
 			})
 	}
@@ -246,6 +245,7 @@ export const setStatus = (player, status) => {
 		firebase.database().ref(`/players/${player.id}`).update({status})
 			.then(() => {
 				console.log('set status!!!')
+
 			})
 	}
 }

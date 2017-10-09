@@ -5,14 +5,16 @@ import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
 import EngagePrompt from './EngagePrompt'
 import GuessPrompt from './GuessPrompt'
-import {withGoogleMap, GoogleMap, Marker, InfoWindow, DirectionsRenderer, Circle} from 'react-google-maps'
+import BattleResult from './BattleResult'
+import TargetingWarning from './TargetingWarning'
+import {withGoogleMap, GoogleMap, Marker, InfoWindow} from 'react-google-maps'
 import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
 import { compose } from 'redux'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
 import Geofire from 'geofire'
-import FightScene from './fightScene'
-import {generateFakeLocation, getLocation} from './HelperFunc'
+// import FightScene from './fightScene'
+// import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
 import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, battle, setStatus} from '../store'
 const NotificationSystem = require('react-notification-system')
@@ -109,6 +111,12 @@ class MapBox extends React.PureComponent {
 					}
 					{
 						guessPrompt && <GuessPrompt player={player} assassin={assassin} setStatus={this.props.setStatus}/>
+					}
+					{
+						(player.status === 'dead' || player.status === 'kill') && <BattleResult status={player.status}/>
+					}
+					{
+						player.beingTargetd && <TargetingWarning />
 					}
 					<MapWithAMarkerClusterer
 						googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
