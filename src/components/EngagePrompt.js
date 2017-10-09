@@ -24,15 +24,15 @@ class EngagePrompt extends React.Component {
 	}
 
 	_addNotification(_notificationSystem, battle) {
-		const {player} = this.props
+		const {player, target} = this.props
 		_notificationSystem.addNotification({
-			message: 'Target nearby, kill him before too late!',
-			level: 'success',
+			message: 'Target nearby, finish him before too late!',
+			level: 'info',
 			autoDismiss: 0,
 			action: {
 				label: 'Finish!',
 				callback: function() {
-					battle(player.id)
+					battle(player, target)
 				}
 			}
 		})

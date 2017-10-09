@@ -4,6 +4,7 @@ import firebase from '../fire'
 import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
 import EngagePrompt from './EngagePrompt'
+import GuessPrompt from './GuessPrompt'
 import {withGoogleMap, GoogleMap, Marker, InfoWindow, DirectionsRenderer, Circle} from 'react-google-maps'
 import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
@@ -13,7 +14,7 @@ import Geofire from 'geofire'
 import FightScene from './fightScene'
 import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
-import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, fetchCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, determinWinner} from '../store'
+import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, battle, setStatus} from '../store'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
@@ -86,10 +87,11 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		const {auth, getCurrPlayer, getAllPlayer, getCurrTarget, listenAllPlayer, listenMyself, getCurrentToken} = this.props
+		const {auth, getCurrPlayer, getAllPlayer, listenAllPlayer, listenMyself, getCurrentToken} = this.props
 		getCurrPlayer(auth.uid)
 		getAllPlayer()
-		getCurrTarget(auth.uid)
+		// getCurrTarget(auth.uid)
+		// getCurrAssassin(auth.uid)
 		listenAllPlayer()
 		listenMyself(auth.uid)
 		getCurrentToken(auth.uid)
@@ -98,12 +100,15 @@ class MapBox extends React.PureComponent {
 	render() {
 		console.log('redering!!')
 		// console.log('props****>>', this.props)
-		const {player, target} = this.props
+		const {player, target, guessPrompt} = this.props
 		return (
 			(isLoaded(this.props) ?
 				<div>
 					{
 						player.Locations && target.Locations && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
+					}
+					{
+						guessPrompt && <GuessPrompt player={player} assassin={assassin} setStatus={this.props.setStatus}/>
 					}
 					<MapWithAMarkerClusterer
 						googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
@@ -125,6 +130,8 @@ const mapStateToProps = (state) => {
 		players: state.player.players,
 		player: state.player.player,
 		target: state.player.target,
+		assassin: state.player.assassin,
+		guessPrompt: state.player.guessPrompt,
 		token: state.player.token
 	}
 }
@@ -140,14 +147,20 @@ const mapDispatchToProps = (dispatch) => {
 		getAllPlayer() {
 			dispatch(fetchPlayers())
 		},
-		getCurrTarget(uid) {
-			dispatch(fetchCurrTarget(uid))
-		},
+		// getCurrTarget(uid) {
+		// 	dispatch(fetchCurrTarget(uid))
+		// },
+		// getCurrAssassin(uid) {
+		// 	dispatch(fetchCurrAssassin(uid))
+		// },
 		togglePlayer(player) {
 			dispatch(toggleSelectedPlayer(player))
 		},
 		submitCurrTarget(player, target) {
 			dispatch(addCurrTarget(player, target))
+		},
+		setStatus(winner) {
+			dispatch(setStatus(winner))
 		},
 		listenAllPlayer() {
 			dispatch(listeningAllPlayer())
@@ -155,8 +168,8 @@ const mapDispatchToProps = (dispatch) => {
 		listenMyself(uid) {
 			dispatch(listeningMyself(uid))
 		},
-		battle(id) {
-			dispatch(determinWinner(id))
+		battle(player, target) {
+			dispatch(battle(player, target))
 		}
 	}
 }
