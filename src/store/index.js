@@ -3,6 +3,9 @@ import { reactReduxFirebase, firebaseStateReducer, getFirebase } from 'react-red
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
 import player from './player.js'
+// -------- message --------
+import message from './message.js'
+
 
 var firebaseConfig = {
 	apiKey: 'AIzaSyAFYb47n-YcDhRxHivbFM9f66VT5p6X46g',
@@ -16,7 +19,7 @@ var firebaseConfig = {
 const initialState = {}
 
 const rootReducer = combineReducers({
-	firebase: firebaseStateReducer, player
+	firebase: firebaseStateReducer, player, message
 })
 
 const store = createStore(rootReducer, initialState, compose(
@@ -29,5 +32,7 @@ const store = createStore(rootReducer, initialState, compose(
 export default store
 
 export * from './player'
+
+export * from './message'
 
 // Add Firebase to reducers

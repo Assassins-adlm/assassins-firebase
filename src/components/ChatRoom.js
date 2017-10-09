@@ -11,6 +11,11 @@ export default class ChatRoom extends React.Component {
 
 	componentDidMount() {
 		let messagesRef = firebase.database().ref('messages').limitToLast(100)
+		// messagesRef.once('value').then(snapshot =>{
+		// 	const message = Object.values(snapshot.val())
+		// 	message.forEach(x => console.log(x.name, x.body))
+		// })
+
 		messagesRef.on('child_added', snapshot => {
 			let message = {
 				text: {
@@ -19,8 +24,6 @@ export default class ChatRoom extends React.Component {
 				},
 				id: snapshot.key
 			}
-			console.log('message--->', message)
-			// this.setState({ messages: [message].concat(this.state.messages) })
 			this.setState({ messages: this.state.messages.concat(message) })
 		})
 		firebase.auth().onAuthStateChanged((user) => {
@@ -30,8 +33,6 @@ export default class ChatRoom extends React.Component {
 
 	addMessage(e) {
 		e.preventDefault()
-		console.log('body-->', this.inputEl.value)
-		console.log('user-->', this.state.user.displayName)
 		if (this.inputEl.value.length){
 			let message = {
 				name: this.state.user.displayName,
@@ -43,6 +44,7 @@ export default class ChatRoom extends React.Component {
 	}
 
 	render() {
+		console.log('Local messages ', this.state.messages)
 
 		return (
 			this.state.user ?
