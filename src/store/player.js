@@ -154,19 +154,19 @@ export const determinWinner = (id) => {
 	return (dispatch) => {
 		firebase.database().ref(`/players/${id}`).once('value')
 			.then(snapshot => {
-				let player = filterPlayer(snapshot.val())
-				if (player.target) {
-					let targetId = player.target
-					firebase.database().ref(`/players/${targetId}`).once('value')
-						.then(snapshot => {
-							let target = filterPlayer(snapshot.val())
-							if (player.status === 'alive') {
-								console.log('you kill your target!')
-							}
-						})
-				} else if (player.status === 'dead') {
-					console.log('you are dead!')
-				}
+				const player = filterPlayer(snapshot.val())
+				const targetId = player.target
+				firebase.database().ref(`/players/${targetId}`).once('value')
+					.then(snapshot => {
+						const target = filterPlayer(snapshot.val())
+						if (player.status === 'dead') {
+							// remove target from player in db
+							// set player to a respawning timer
+						} else {
+							// set target status to dead
+							// remove assassin in target
+						}
+					})
 			})
 	}
 }

@@ -11,7 +11,7 @@ class EngagePrompt extends React.Component {
 	}
 
 	componentDidMount() {
-		const {player, target} = this.props
+		const {player, target, battle} = this.props
 		const notificationSystem = this.refs.notificationSystem
 		// console.log('player-->', player, 'target-->', target)
 		const myLocation = parseLocation(player.Locations)
@@ -19,11 +19,11 @@ class EngagePrompt extends React.Component {
 		const distance = Geofire.distance(myLocation, targetLocation)
 		console.log('distance-->', distance)
 		if (distance < 0.1) {
-			this._addNotification(notificationSystem)
+			this._addNotification(notificationSystem, battle)
 		}
 	}
 
-	_addNotification(_notificationSystem) {
+	_addNotification(_notificationSystem, battle) {
 		const {player} = this.props
 		_notificationSystem.addNotification({
 			message: 'Target nearby, kill him before too late!',
@@ -32,7 +32,7 @@ class EngagePrompt extends React.Component {
 			action: {
 				label: 'Finish!',
 				callback: function() {
-					this.props.battle(player.id)
+					battle(player.id)
 				}
 			}
 		})
