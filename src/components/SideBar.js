@@ -2,7 +2,6 @@ import React from 'react'
 import firebase from '../fire'
 import { slide as Menu } from 'react-burger-menu'
 import { Link } from 'react-router-dom'
-import GetLocation from './LocationTracker.jsx'
 import currentPlayer from '../store/player.js'
 
 

@@ -9,7 +9,7 @@ import CharCreate from './CharCreate'
 import '../index.css'
 import {connect} from 'react-redux'
 import { compose } from 'redux'
-import {currentPlayer, currentLocation, currentTarget} from '../store'
+import {currentPlayer, currentTarget} from '../store'
 import {
 	firebaseConnect,
 	isLoaded,
@@ -140,12 +140,7 @@ const mapDispatchToProps = ( dispatch ) => {
 	return {
 		getPlayer( evt ) {
 			dispatch(currentPlayer(evt))
-		}
-		,
-		getLocation( evt ) {
-			dispatch(currentLocation(evt))
-		}
-		,
+		},
 		getTargets( evt ) {
 			dispatch(currentTarget(evt))
 		}
