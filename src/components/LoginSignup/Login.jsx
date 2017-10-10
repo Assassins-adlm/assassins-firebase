@@ -81,17 +81,8 @@ class Login extends Component {
 					<LinearProgress mode="indeterminate" color='lightblue'/>
 					<Divider/>
 				</div>
-			</Paper>
-			)
-		} else if (isLoaded(this.props.auth) &&  !isEmpty(auth)) {
-			return (
-					<MapBox auth={auth}/>
-			)
-		} else {
-			return (
-				<div>loading...</div>
-			)
-		}
+			</Paper> : <h4> Welcome</h4>)
+
 	}
 }
 
