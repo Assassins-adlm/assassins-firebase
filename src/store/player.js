@@ -121,26 +121,29 @@ export const addCurrTarget = (player, target) => {
 		firebase.database().ref(`/players/${player.id}`).update({target: target.id})
 			.then(() => {
 				var to = target.token
-				dispatch(currentTarget(target))
-				dispatch(currentPlayer({...player, target: target.id}))
-				fetch('https://fcm.googleapis.com/fcm/send', {
-					'method': 'POST',
-					'headers': {
-						'Authorization': 'key=' + key,
-						'Content-Type': 'application/json'
-					},
-					'body': JSON.stringify({
-						'notification': targetNotification,
-						'to': to
+				firebase.database().ref(`/players/${target.id}`).once('value')
+					.then(snapshot => {
+						dispatch(currentTarget(snapshot.val()))
+						dispatch(currentPlayer({...player, target: target.id}))
+						fetch('https://fcm.googleapis.com/fcm/send', {
+							'method': 'POST',
+							'headers': {
+								'Authorization': 'key=' + key,
+								'Content-Type': 'application/json'
+							},
+							'body': JSON.stringify({
+								'notification': targetNotification,
+								'to': to
+							})
+						}).then(function(response) {
+							console.log(response)
+						}).catch(function(error) {
+							console.error(error)
+						})
 					})
-				}).then(function(response) {
-					console.log(response)
-				}).catch(function(error) {
-					console.error(error)
-				})
 			})
 			.then(() => {
-				firebase.database().ref(`/players/${target.id}`).update({beingTargted: true})
+				firebase.database().ref(`/players/${target.id}`).update({beingTargeted: true})
 			})
 			.catch(error => console.error(error))
 	}
@@ -233,20 +236,27 @@ export const listeningTarget = (targetId) => {
 
 export const battle = (player, target) => {
 	return (dispatch) => {
-		firebase.database().ref(`/players/${target.id}`).update({assassin: player.id})
+		firebase.database().ref(`/players/${target.id}`).update({assassin: player.id, beingTargeted: false})
 			.then(() => {
 				console.log('kill command!')
 			})
 	}
 }
 
-export const setStatus = (player, status) => {
+export const setStatus = (player, role, status) => {
+	console.log('player-->', player, 'status-->', status)
 	return (dispatch) => {
-		firebase.database().ref(`/players/${player.id}`).update({status})
-			.then(() => {
-				console.log('set status!!!')
-
-			})
+		if (role==='assassin') {
+			firebase.database().ref(`/players/${player.id}`).update({status: status, target: ''})
+				.then(() => {
+					console.log('set assassin status!!!')
+				})
+		} else if (role==='player') {
+			firebase.database().ref(`/players/${player.id}`).update({status: status, assassin: ''})
+				.then(() => {
+					console.log('set player status!!!')
+				})
+		}
 	}
 }
 
@@ -301,8 +311,10 @@ const filterPlayers = (players) => {
 		if (player.Locations) {
 			let Locations = Object.values(player.Locations)
 			let Location = Locations[Locations.length-1]
-			player.Locations = Location
-			return player
+			if (typeof Location === 'object') {
+				player.Locations = Location
+				return player
+			}
 		}
 	})
 	return filteredPlayers

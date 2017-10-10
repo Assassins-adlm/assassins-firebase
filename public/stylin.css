@@ -16,12 +16,18 @@
 } */
  .Login {
   /* border: 3px solid #000000; */
+  display: block;
   margin-left: auto;
   margin-right: auto;
   /* background-color: #F0E0E0; */
-   background: rgba(98, 98, 112, 0.29);
+   background: rgba(187, 187, 224, 0.29);
    text-align: center;
    color:#fff
+ }
+ .clickButton {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
  }
 
  .titlefont {

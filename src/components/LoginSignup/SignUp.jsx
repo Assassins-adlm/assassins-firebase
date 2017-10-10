@@ -192,7 +192,9 @@ class CharCreate extends React.Component {
 			fontcolor: 'white',
 			orientation: 'vertical',
 		}
+
 		return (
+
 			 <Paper style={paperStyle} zDepth={5} >
 				<div>
 					<IconButton tooltip="Close" touch={true}  onClick={this.close.bind(this)} className='closeButton'>
@@ -200,6 +202,7 @@ class CharCreate extends React.Component {
 					</IconButton>
 					<CircularProgress size={30} thickness={7} className='progCirc' color='lightblue'/>
 					<Stepper activeStep={stepIndex}  orientation='vertical'>
+
 						<Step>
 							<StepLabel  style={{color: 'white'}}>Sign Up</StepLabel>
 						</Step>

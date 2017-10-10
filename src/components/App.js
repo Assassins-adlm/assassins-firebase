@@ -54,6 +54,7 @@ class App extends Component {
 				{this.state.showLogin && isEmpty(this.props.auth) ? <Login/> : null}
 				{isLoaded(this.props.step) &&  this.props.step !== 4  ? <SignUp/> : null }
 			</div>
+
 		)
 	}
 }
