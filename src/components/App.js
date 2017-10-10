@@ -42,12 +42,12 @@ class App extends Component {
 					<AppBar
 						title={`Assassins ${a}`}
 						iconClassNameRight="muidocs-icon-navigation-expand-more"
-						iconElementLeft={<IconButton tooltip='SignUp' iconStyle={{background: 'white'}} touch={true}   onClick={this.setIndex.bind(this)}>
+						iconElementLeft={isLoaded(this.props.step) &&  this.props.step !== 4 ? <IconButton tooltip='SignUp' iconStyle={{background: 'white'}} touch={true}   onClick={this.setIndex.bind(this)}>
 							<LogOut  />
-						</IconButton>}
-						iconElementRight={<IconButton tooltip='Login' iconStyle={{background: 'grey'}} touch={true}   onClick={this.showLogin.bind(this)}>
+						</IconButton> : null}
+						iconElementRight={isEmpty(this.props.auth) ? <IconButton tooltip='Login' iconStyle={{background: 'grey'}} touch={true}   onClick={this.showLogin.bind(this)}>
 							<LogOut  />
-						</IconButton>}
+						</IconButton> : null}
 					/>
 
 
