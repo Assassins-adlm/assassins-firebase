@@ -12,14 +12,15 @@ class GuessPrompt extends React.Component {
 	}
 
 	handleSubmit(evt) {
+		evt.preventDefault()
 		const {setStatus, player, assassin} = this.props
 		const name = evt.target.name.value
 		if (assassin.name === name) {
-			setStatus(assassin, 'dead')
-			setStatus(player, 'kill')
+			setStatus(assassin, 'assassin', 'dead')
+			setStatus(player, 'player', 'kill')
 		} else {
-			setStatus(assassin, 'kill')
-			setStatus(player, 'dead')
+			setStatus(assassin, 'assassin', 'kill')
+			setStatus(player, 'player', 'dead')
 		}
 	}
 
@@ -28,7 +29,7 @@ class GuessPrompt extends React.Component {
 			<div>
 				<form onSubmit={this.handleSubmit}>
 					<label>
-          Guess Who is that:
+          Guess Who is trying to finish you:
 						<input type="text" name="name" />
 					</label>
 					<input type="submit" value="Submit" />
