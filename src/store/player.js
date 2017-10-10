@@ -121,23 +121,26 @@ export const addCurrTarget = (player, target) => {
 		firebase.database().ref(`/players/${player.id}`).update({target: target.id})
 			.then(() => {
 				var to = target.token
-				dispatch(currentTarget(target))
-				dispatch(currentPlayer({...player, target: target.id}))
-				fetch('https://fcm.googleapis.com/fcm/send', {
-					'method': 'POST',
-					'headers': {
-						'Authorization': 'key=' + key,
-						'Content-Type': 'application/json'
-					},
-					'body': JSON.stringify({
-						'notification': targetNotification,
-						'to': to
+				firebase.database().ref(`/players/${target.id}`).once('value')
+					.then(snapshot => {
+						dispatch(currentTarget(snapshot.val()))
+						dispatch(currentPlayer({...player, target: target.id}))
+						fetch('https://fcm.googleapis.com/fcm/send', {
+							'method': 'POST',
+							'headers': {
+								'Authorization': 'key=' + key,
+								'Content-Type': 'application/json'
+							},
+							'body': JSON.stringify({
+								'notification': targetNotification,
+								'to': to
+							})
+						}).then(function(response) {
+							console.log(response)
+						}).catch(function(error) {
+							console.error(error)
+						})
 					})
-				}).then(function(response) {
-					console.log(response)
-				}).catch(function(error) {
-					console.error(error)
-				})
 			})
 			.then(() => {
 				firebase.database().ref(`/players/${target.id}`).update({beingTargted: true})
