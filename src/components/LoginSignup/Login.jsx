@@ -45,16 +45,16 @@ class Login extends Component {
 
 	render() {
 		const style = {
-			display: 'inline-block',
-			margin: '16px 32px 16px 20px',
+			display: 'block',
+
 			textAlign: 'center',
 			width: '75%',
 			float: 'left',
 		}
 		let {auth} = this.props
 
-		return (isLoaded(this.props.auth) &&  isEmpty(auth) ? <Paper style={style} zDepth={5}>
-				<div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+		return (isLoaded(this.props.auth) &&  isEmpty(auth) ? <Paper zDepth={5}>
+				<div className ="Login">
 
 					<h4> Login to Assassin Account </h4>
 					<Divider/>
