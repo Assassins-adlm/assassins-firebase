@@ -100,6 +100,7 @@ class MapBox extends React.PureComponent {
 	}
 
 	submitTarget(target) {
+		console.log('target-->', target.id)
 		const {submitCurrTarget, player} = this.props
 		submitCurrTarget(player, target)
 	}
@@ -125,20 +126,22 @@ class MapBox extends React.PureComponent {
 	render() {
 		console.log('redering!!')
 		// console.log('props****>>', this.props)
-		const {player, target, guessPrompt} = this.props
+		const {player, target, guessPrompt, assassin} = this.props
+		console.log('curr player-->', player)
+		console.log('being target-->', player.beingTargeted)
 		return (
 			<div>
 				{
-					player.Locations && target.Locations && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
+					player.Locations && target.Locations && target.status !== 'dead' && !target.assassin && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
 				}
 				{
-					guessPrompt && <GuessPrompt player={player} assassin={assassin} setStatus={this.props.setStatus}/>
+					guessPrompt && player.assassin && <GuessPrompt player={player} assassin={assassin} setStatus={this.props.setStatus}/>
 				}
 				{
 					(player.status === 'dead' || player.status === 'kill') && <BattleResult status={player.status}/>
 				}
 				{
-					player.beingTargetd && <TargetingWarning />
+					player.beingTargeted && <TargetingWarning />
 				}
 				<MapWithAMarkerClusterer
 					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
@@ -154,6 +157,7 @@ class MapBox extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
+	// console.log('state==>', state)
 	return {
 		// auth: pathToJS(state.firebase, 'auth'),
 		players: state.player.players,
@@ -188,8 +192,8 @@ const mapDispatchToProps = (dispatch) => {
 		submitCurrTarget(player, target) {
 			dispatch(addCurrTarget(player, target))
 		},
-		setStatus(winner) {
-			dispatch(setStatus(winner))
+		setStatus(player, role, status) {
+			dispatch(setStatus(player, role, status))
 		},
 		listenAllPlayer() {
 			dispatch(listeningAllPlayer())

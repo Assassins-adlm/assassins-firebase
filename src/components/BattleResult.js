@@ -26,7 +26,7 @@ class BattleResult extends React.Component {
 		if (option === 'dead') {
 			_notificationSystem.addNotification({
 				message: 'You lose, wait for resurrecting!',
-				level: 'danger',
+				level: 'error',
 				autoDismiss: 0
 			})
 		}

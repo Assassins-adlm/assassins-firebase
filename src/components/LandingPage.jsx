@@ -2,49 +2,42 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 
-
-
-	//Layout Thrashing/////////?????
-	// const sections = Array.from(document.querySelectorAll('section'));
-	// const rects = sections.map(section => section.getBoundingClientRect());
-	// for (let i = 0; i < sections.length; i++) {
-
-	// 	const section = sections[i];
-	// 	const rect = rects[i];
-
-	// 	if (rect<(section*3)) {
-	// 		section.classList.add('active');
-	// 	} else {
-	// 		section.classList.remove('active');
-	// 	}
-	// }
-
 class LandingPage extends React.Component{
 
-	componentDidMount() {
-		window.addEventListener('scroll', () => {
-			const scrollPosition = window.scrollY
-		document.querySelectorAll("section").forEach( section => {
-		if(scrollPosition>300&&scrollPosition<1200){
-			section.classList.add('active');
-		} else{
-			section.classList.remove('active');
+	constructor(){
+		super()
+		this.handleScroll = this.handleScroll.bind(this)
+		this.handleAnimation=this.handleAnimation.bind(this)
 		}
-		})})
-		//Paralaxing ///////////??????
+
+	componentDidMount() {
+		this.handleAnimation();
+		this.handleScroll();
+	}
+
+	handleAnimation(){
+	window.addEventListener('scroll', () => {
+		const scrollPosition = window.scrollY
+	document.querySelectorAll("section").forEach( section => {
+	if(scrollPosition>300&&scrollPosition<1200){
+		section.classList.add('active');
+	} else{
+		section.classList.remove('active');
+	}
+	})})}
+
+	handleScroll(){
 		const carouselImages = document.querySelectorAll(".carousel-image");
 		window.addEventListener('scroll', function(){
 			const scrollPosition = window.scrollY
-			console.log(scrollPosition, "!!!!")
-			console.log(carouselImages)
 			carouselImages.forEach( image => {
-				console.log(image)
 				image.style.transform = `translateY(${scrollPosition/3}px)`;
 			})
-		})
+	})}
 
+	componentWillUnmount() {
+		window.addEventListener('scroll', this.handleScroll(), this.handleAnimation());
 	}
-
 
   render(){
 
@@ -106,7 +99,7 @@ class LandingPage extends React.Component{
 				</div>
       </section>
       <section >
-          <Link to="/home"> <button className = "Login"> CLICK TO PLAY </button></Link>
+          <Link to="/home"> <button className = "clickButton"> CLICK TO PLAY </button></Link>
       </section>
 		</div>
 	)}
