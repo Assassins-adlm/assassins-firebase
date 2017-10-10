@@ -21,7 +21,7 @@ const initialState = {id: null}
 
 
 const rootReducer = combineReducers({
-	firebase: firebaseStateReducer
+	firebase: firebaseStateReducer, player
 })
 
 

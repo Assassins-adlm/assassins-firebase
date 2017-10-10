@@ -154,6 +154,7 @@ class MapBox extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
+	console.log('state==>', state)
 	return {
 		// auth: pathToJS(state.firebase, 'auth'),
 		players: state.player.players,
