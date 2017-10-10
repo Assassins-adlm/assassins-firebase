@@ -99,7 +99,7 @@ class LandingPage extends React.Component{
 				</div>
       </section>
       <section >
-          <Link to="/home"> <button className = "Login"> CLICK TO PLAY </button></Link>
+          <Link to="/home"> <button className = "clickButton"> CLICK TO PLAY </button></Link>
       </section>
 		</div>
 	)}

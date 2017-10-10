@@ -16,7 +16,7 @@ export default class Main extends React.Component {
 		return (
 			<Router history={history}>
 				<Switch>
-					<Route exact path="/landing" component={LandingPage}/>
+					<Route exact path="/" component={LandingPage}/>
 					<Route path="/home" component={App}/>
 					<Route path="/profile" component={PlayerProfile}/>
 					<Route path="/chat" component={ChatRoom}/>

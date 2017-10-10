@@ -20,6 +20,7 @@ export default class SideBar extends React.Component {
 		firebase.auth().onAuthStateChanged((user) => {
 			this.setState({loading: false, user})
 		})
+		//Need to create XOR if display name does not exist then render the character name.
 	}
 
 	showSettings (event) {
@@ -30,7 +31,6 @@ export default class SideBar extends React.Component {
 		const avatarStyle = {
 			width: 100
 		}
-		console.log("state", this.state.user)
 		return (
 			this.state.user &&
 						<Menu isOpen={this.state.menuOpen}>
