@@ -7,16 +7,15 @@ import {fetchAllMessages} from '../store'
 import { compose } from 'redux'
 import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
-// import ReactDOM from 'react-dom'
 
 class ChatRoom extends React.Component {
 
 	componentDidMount() {
 		this.props.fetchAllMessages()
-		this.scrollToBottom()
 	}
 	componentDidUpdate() {
-		this.scrollToBottom()
+		let el = this.refs.chatbox
+		el.scrollTop = el.scrollHeight
 	}
 
 	addMessage(e) {
@@ -32,14 +31,6 @@ class ChatRoom extends React.Component {
 		}
 	}
 
-	scrollToBottom() {
-		// const node = ReactDOM.findDOMNode(this.messagesEnd);
-		// node.scrollIntoView({ behavior: "smooth" });
-		const obj = isLoaded(this.refs.endMessage)?this.refs.endMessage : <div>...Loading</div>
-		// obj.scrollIntoView()
-		console.log('find me dude ',obj)
-	}
-
 	render() {
 		return (
 			isLoaded(this.props.auth) ?
@@ -51,7 +42,7 @@ class ChatRoom extends React.Component {
 							<div style={{clear:'both'}}></div>
 						</div>
 
-						<div id="chatbox">
+						<div id="chatbox" ref="chatbox">
 							<ul style={{listStyle: 'none'}}>
 								{
 									Array.isArray(this.props.messages) && this.props.messages.map((message,ind) =>{
@@ -62,11 +53,6 @@ class ChatRoom extends React.Component {
 								}
 							</ul>
 						</div>
-						<div style={{ float:"left", clear: "both" }}
-							ref="endMessage">
-						</div>
-
-
 						<form name="message" onSubmit={this.addMessage.bind(this)}>
 							<input name="usermsg" type="text" id="usermsg" size="63" ref={ el => this.inputEl = el }/>
 							<input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
