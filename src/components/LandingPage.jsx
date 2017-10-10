@@ -1,24 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-	window.addEventListener('scroll', () => {
-		const scrollPosition = window.scrollY
-  document.querySelectorAll("section").forEach( section => {
-  if(scrollPosition>300&&scrollPosition<1200){
-    section.classList.add('active');
-  } else{
-		section.classList.remove('active');
-	}
-	})})
-	//Paralaxing ///////////??????
-	// const carouselImages = document.querySelectorAll(".carousel-image");
-	// window.addEventListener('scroll', function(){
-	// 	const scrollPosition = window.scrollY
-	// 	console.log(scrollPosition, "!!!!")
-	// 	carouselImages.forEach( image => {
-	// 		image.styles.transform = (scrollPosition*.3)
-	// 	})
-	// })
 
 
 
@@ -39,6 +21,29 @@ import { Link } from 'react-router-dom'
 
 class LandingPage extends React.Component{
 
+	componentDidMount() {
+		window.addEventListener('scroll', () => {
+			const scrollPosition = window.scrollY
+		document.querySelectorAll("section").forEach( section => {
+		if(scrollPosition>300&&scrollPosition<1200){
+			section.classList.add('active');
+		} else{
+			section.classList.remove('active');
+		}
+		})})
+		//Paralaxing ///////////??????
+		const carouselImages = document.querySelectorAll(".carousel-image");
+		window.addEventListener('scroll', function(){
+			const scrollPosition = window.scrollY
+			console.log(scrollPosition, "!!!!")
+			console.log(carouselImages)
+			carouselImages.forEach( image => {
+				console.log(image)
+				image.style.transform = `translateY(${scrollPosition/3}px)`;
+			})
+		})
+
+	}
 
 
   render(){
