@@ -225,8 +225,10 @@ class CharCreate extends React.Component {
 							</div>
 						)}
 					</div>
+
 				</div>
 			</Paper> : <h3> Welcome!</h3>
+
 		)
 	}
 }

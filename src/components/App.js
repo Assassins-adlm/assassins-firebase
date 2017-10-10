@@ -1,6 +1,9 @@
+
 import React, {Component} from 'react'
 import MapBox from './MapBox'
+
 import SideBar from './SideBar'
+import MapBox from './MapBox'
 import '../index.css'
 import {connect} from 'react-redux'
 import Login from './LoginSignup/Login'
@@ -35,6 +38,8 @@ export default connect(({firebase}) => ({
 	players: dataToJS(firebase, 'players'),
 	auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
 }))(fbWrapped)
+
+
 
 
 

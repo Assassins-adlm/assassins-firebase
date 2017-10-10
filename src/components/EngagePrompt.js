@@ -1,5 +1,5 @@
 import React from 'react'
-import {parseLocation} from './HelperFunc'
+import {parseLocation, parseTargetLocation} from './HelperFunc'
 import Geofire from 'geofire'
 const NotificationSystem = require('react-notification-system')
 
@@ -10,23 +10,31 @@ class EngagePrompt extends React.Component {
 		this._addNotification = this._addNotification.bind(this)
 	}
 
-	componentWillReceiveProps() {
-		const {player, target} = this.props
+	componentDidMount() {
+		const {player, target, battle} = this.props
 		const notificationSystem = this.refs.notificationSystem
 		// console.log('player-->', player, 'target-->', target)
 		const myLocation = parseLocation(player.Locations)
-		const targetLocation = parseLocation(target.Locations)
+		const targetLocation = parseTargetLocation(target.Locations)
 		const distance = Geofire.distance(myLocation, targetLocation)
 		console.log('distance-->', distance)
-		if (distance < 2) {
-			this._addNotification(notificationSystem)
+		if (distance < 0.1) {
+			this._addNotification(notificationSystem, battle)
 		}
 	}
 
-	_addNotification(_notificationSystem) {
+	_addNotification(_notificationSystem, battle) {
+		const {player, target} = this.props
 		_notificationSystem.addNotification({
-			message: 'Target nearby, kill him before too late!',
-			level: 'success'
+			message: 'Target nearby, finish him before too late!',
+			level: 'info',
+			autoDismiss: 0,
+			action: {
+				label: 'Finish!',
+				callback: function() {
+					battle(player, target)
+				}
+			}
 		})
 	}
 
