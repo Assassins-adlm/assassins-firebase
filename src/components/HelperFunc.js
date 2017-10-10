@@ -38,6 +38,7 @@ export const parseLocation = (location) => {
 }
 
 export const parseTargetLocation = (locations) => {
+	console.log('target locations-->', locations)
 	let Locations = Object.values(locations)
 	let length = Locations.length
 	return [Locations[length-1].lat, Locations[length-1].lon]
