@@ -79,7 +79,9 @@ a {
 
 
 .navBar {
-  background-color: black;
+  background-color: midnightblue;
   color: white;
-  background-position-x:  ;
+}
+.signInInfo {
+  color: red;
 }

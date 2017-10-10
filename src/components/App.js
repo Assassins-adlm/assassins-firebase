@@ -44,7 +44,7 @@ class App extends Component {
 		let a = isLoaded(this.state.profile) ? this.state.profile.name : ''
 			console.log(this.props)
 		return (
-			<div  style={{width: '100%', maxWidth: 700, margin: 'auto', fontcolor: 'white'}}>
+			<div  style={{width: '100%'}}>
 				<div>
 					<AppBar
 						style={{backgroundColor: 'black', fontcolor: 'white' , backgroundImage: 'url(http://www.unixstickers.com/image/data/stickers/guyfawkes/guyfawkes.sh.png)',
@@ -60,7 +60,7 @@ class App extends Component {
 						</IconButton> }
 						iconElementRight={isEmpty(this.props.auth) ? <IconButton tooltip='Login' iconStyle={{background: 'white'}} touch={true}   onClick={this.showLogin.bind(this)}>
 							<LogOut  />
-						</IconButton> : <IconButton tooltip='Logout' iconStyle={{background: 'pink'}} touch={true}   onClick={this.logout.bind(this)}>
+						</IconButton> : <IconButton tooltip='Logout' iconStyle={{background: 'red'}} touch={true}   onClick={this.logout.bind(this)}>
 							<LogOutAcc  />
 						</IconButton>}
 					/>
@@ -68,7 +68,7 @@ class App extends Component {
 
 				</div>
 				{this.state.showLogin && isEmpty(this.props.auth) ? <Login/> : null}
-				{ this.props.step !== 4  ? <SignUp/> :  <Paper> { `${!isEmpty(this.props.profile) ? 'You\'re signed in, ' + this.props.profile.name : ``}` } </Paper> }
+				{ this.props.step !== 4  ? <SignUp/> :  <Paper className='signInInfo'> { `${!isEmpty(this.props.profile) ? 'You\'re signed in, ' + this.props.profile.name : ``}` } </Paper> }
 			</div>
 
 		)
