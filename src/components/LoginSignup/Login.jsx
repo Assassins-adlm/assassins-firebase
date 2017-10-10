@@ -14,7 +14,7 @@ import {
 	pathToJS,
 } from 'react-redux-firebase'
 import './style.css'
-import SignUp from './SignUp'
+
 
 class Login extends Component {
 
@@ -47,7 +47,8 @@ class Login extends Component {
 			display: 'inline-block',
 			margin: '16px 32px 16px 20px',
 			textAlign: 'center',
-			width: '75%'
+			width: '75%',
+			float: 'left',
 		}
 		let {auth} = this.props
 		return (isLoaded(this.props.auth) &&  isEmpty(auth) ? <Paper style={style} zDepth={5}>
@@ -89,10 +90,12 @@ const mapStateToProps = (state) => {
 	return {
 		auth: pathToJS(state.firebase, 'auth'),
 		myProfile: dataToJS(state.firebase, 'players'),
+		profile: pathToJS(state.firebase, 'profile'), // pass profile data as this.props.profile
+
 	}
 }
 
-export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'}]), connect(mapStateToProps))(Login)
+export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'} ,{path: 'profile'}]), connect(mapStateToProps))(Login)
 
 
 

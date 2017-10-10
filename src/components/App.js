@@ -16,6 +16,7 @@ import SignUp from './LoginSignup/SignUp'
 
 class App extends Component {
 	render() {
+		console.log(this.props)
 		return (
 			<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
 				<SideBar/>
@@ -26,12 +27,12 @@ class App extends Component {
 	}
 }
 
-const fbWrapped = firebaseConnect([{path: 'players'}, {path: 'profile'},
+const fbWrapped = firebaseConnect([{path: 'players'}, {path: 'profile'}, {path: 'auth'}
 ])(App)
 
 export default connect(({firebase}) => ({
-	profile: pathToJS(firebase, 'players'),
-	players: dataToJS(firebase, '/players'),
+	profile: pathToJS(firebase, 'profile'),
+	players: dataToJS(firebase, 'players'),
 	auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
 }))(fbWrapped)
 
