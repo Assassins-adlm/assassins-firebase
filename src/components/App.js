@@ -18,7 +18,6 @@ import SignUp from './LoginSignup/SignUp'
 
 class App extends Component {
 	render() {
-		console.log(this.props)
 		return (
 			this.props.auth ? <div>
 				<SideBar/>
