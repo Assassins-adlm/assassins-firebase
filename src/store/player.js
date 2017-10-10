@@ -301,8 +301,10 @@ const filterPlayers = (players) => {
 		if (player.Locations) {
 			let Locations = Object.values(player.Locations)
 			let Location = Locations[Locations.length-1]
-			player.Locations = Location
-			return player
+			if (typeof Location === 'object') {
+				player.Locations = Location
+				return player
+			}
 		}
 	})
 	return filteredPlayers
