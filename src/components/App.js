@@ -17,11 +17,10 @@ import SignUp from './LoginSignup/SignUp'
 class App extends Component {
 	render() {
 		return (
-			<div className='mainComp'>
+			<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
 				<SideBar/>
 				<Login/>
 				<SignUp/>
-				{isLoaded(this.props.profile) ? <MapBox/> : <div>aa</div>}
 			</div>
 		)
 	}

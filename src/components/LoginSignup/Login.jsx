@@ -51,7 +51,7 @@ class Login extends Component {
 		}
 		let {auth} = this.props
 		return (isLoaded(this.props.auth) &&  isEmpty(auth) ? <Paper style={style} zDepth={5}>
-				<div  className='loginComp'>
+				<div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
 					<h4> Login to Assassin Account </h4>
 					<Divider/>
 

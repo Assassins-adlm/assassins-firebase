@@ -185,8 +185,8 @@ class CharCreate extends React.Component {
 			marginLeft: '25%',
 		}
 		return (
-			isEmpty(this.props.auth) || !isLoaded(this.props.profile) ? <Paper style={paperStyle} zDepth={5} className='signupComp'>
-				<div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+			isEmpty(this.props.auth) || !isLoaded(this.props.profile) ? <Paper style={paperStyle} zDepth={5} >
+				<div>
 					<Stepper activeStep={stepIndex}>
 						<Step>
 							<StepLabel>Sign Up</StepLabel>
@@ -198,7 +198,7 @@ class CharCreate extends React.Component {
 							<StepLabel> Install OwnTrack Config</StepLabel>
 						</Step>
 					</Stepper>
-					<div style={contentStyle}>
+					<div style={paperStyle}>
 						{finished ? (
 							<p>
 								<a
@@ -211,7 +211,7 @@ class CharCreate extends React.Component {
 								</a>
 							</p>
 						) : (
-							<div>
+							<div >
 								<p>{this.getStepContent(stepIndex)}</p>
 								<div style={{marginTop: 12}}>
 									<FlatButton
