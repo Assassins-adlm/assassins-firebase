@@ -5,6 +5,7 @@ import CharCreate from './LoginSignup/SignUp'
 import Setting from './Setting'
 import ChatRoom from './ChatRoom'
 import Target from './Target'
+import LandingPage from './LandingPage'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import {Router} from 'react-router'
 
@@ -16,6 +17,7 @@ export default class Main extends React.Component {
 		return (
 			<Router history={history}>
 				<Switch>
+					<Route exact path="/landing" component={LandingPage}/>
 					<Route path="/createchar" component={CharCreate}/>
 					<Route path="/home" component={App}/>
 					<Route path="/profile" component={PlayerProfile}/>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import SideBar from './SideBar'
+import MapBox from './MapBox'
 import '../index.css'
 import {connect} from 'react-redux'
 import Login from './LoginSignup/Login'
@@ -19,13 +20,21 @@ class App extends Component {
 	render() {
 		console.log(this.props)
 		return (
-			<div className='mainComp'>
-				<SideBar />
-				<Login/>
-				<SignUp/>
-			</div> )}
+			this.props.auth ?
+				(
+					<div className='mainComp'>
+						<SideBar />
+						<MapBox auth={this.props.auth}/>
+					</div>
+				):(
+					<div className='mainComp'>
+						<SideBar />
+						<Login/>
+						<SignUp/>
+					</div>
+				))
+	}
 }
-
 
 const mapStateToProps = (state) => {
 	return {
