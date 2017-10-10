@@ -59,6 +59,41 @@ export const fetchPlayers = () => {
 	}
 }
 
+// export const fetchCurrTarget = (uid) => {
+// 	return (dispatch) => {
+// 		firebase.database().ref(`/players/${uid}`).once('value')
+// 			.then(snapshot => {
+// 				let player = filterPlayer(snapshot.val())
+// 				let targetId = snapshot.val().target
+// 				if (targetId) {
+// 					firebase.database().ref(`/players/${targetId}`).once('value')
+// 						.then(snapshot => {
+// 							let target = filterPlayer(snapshot.val())
+// 							dispatch(currentTarget(target))
+// 							dispatch(listeningTarget(target))
+// 						})
+// 				}
+// 			})
+// 	}
+// }
+
+// export const fetchCurrAssassin = (uid) => {
+// 	return (dispatch) => {
+// 		firebase.database().ref(`/players/${uid}`).once('value')
+// 			.then(snapshot => {
+// 				let player = filterPlayer(snapshot.val())
+// 				let assassinId = snapshot.val().assassin
+// 				if (assassinId) {
+// 					firebase.database().ref(`/players/${assassinId}`).once('value')
+// 						.then(snapshot => {
+// 							let assassin = filterPlayer(snapshot.val())
+// 							dispatch(currentAssassin(assassin))
+// 							dispatch(listeningAssassin(assassin.id))
+// 						})
+// 				}
+// 			})
+// 	}
+// }
 
 export const getCurrToken = (id) => {
 	return () => {
@@ -72,24 +107,24 @@ export const getCurrToken = (id) => {
 	}
 }
 
-var key = process.env.SERVER_KEY
+var key = 'AAAAdsUjORI:APA91bH2L8WHJdjWZO8R6DMxBGmhqA-PvXdAJrTYdHZUUybvfICkdCvqeTcwJmz8ij7c31VUXShQxpbVAnqYVghhDr0DSl5rBaxZHRLxOIXNDwkfyvblaCF6Cf8sstR4MM-5UJggtWuP'
 
 var targetNotification = {
 	'title': 'You Have Been Marked',
 	'body':  'Be on the LookOut',
 	'icon': 'firebase-logo.png',
-	'click_action': 'https://assassins-aldm.firebaseapp.com/home'
+	'click_action': 'http://localhost:3000'
 }
 
 export const addCurrTarget = (player, target) => {
 	return (dispatch) => {
-		firebase.database().ref(`/players/${player.id}`).update({target: target.id})
+		firebase.database().ref(`/players/${player.uid}`).update({target: target.uid})
 			.then(() => {
 				var to = target.token
-				firebase.database().ref(`/players/${target.id}`).once('value')
+				firebase.database().ref(`/players/${target.uid}`).once('value')
 					.then(snapshot => {
 						dispatch(currentTarget(snapshot.val()))
-						dispatch(currentPlayer({...player, target: target.id}))
+						dispatch(currentPlayer({...player, target: target.uid}))
 						fetch('https://fcm.googleapis.com/fcm/send', {
 							'method': 'POST',
 							'headers': {
@@ -108,7 +143,7 @@ export const addCurrTarget = (player, target) => {
 					})
 			})
 			.then(() => {
-				firebase.database().ref(`/players/${target.id}`).update({beingTargeted: true})
+				firebase.database().ref(`/players/${target.uid}`).update({beingTargeted: true})
 			})
 			.catch(error => console.error(error))
 	}
@@ -201,7 +236,7 @@ export const listeningTarget = (targetId) => {
 
 export const battle = (player, target) => {
 	return (dispatch) => {
-		firebase.database().ref(`/players/${target.id}`).update({assassin: player.id, beingTargeted: false})
+		firebase.database().ref(`/players/${target.uid}`).update({assassin: player.uid, beingTargeted: false})
 			.then(() => {
 				console.log('kill command!')
 			})
@@ -212,13 +247,13 @@ export const setStatus = (player, role, status) => {
 	console.log('player-->', player, 'status-->', status)
 	return (dispatch) => {
 		if (role==='assassin') {
-			firebase.database().ref(`/players/${player.id}`).update({status: status, target: ''})
+			firebase.database().ref(`/players/${player.uid}`).update({status: status, target: ''})
 				.then(() => {
 					console.log('set assassin status!!!')
 					dispatch(currentTarget({}))
 				})
 		} else if (role==='player') {
-			firebase.database().ref(`/players/${player.id}`).update({status: status, assassin: ''})
+			firebase.database().ref(`/players/${player.uid}`).update({status: status, assassin: ''})
 				.then(() => {
 					console.log('set player status!!!')
 
@@ -248,7 +283,7 @@ export default function (state = playerState, action) {
 	case TOGGLE_SELECTED_PLAYER:
 		return {
 			...state,
-			players: state.players.map(player => player.id === action.player.id ? {...player, openInfo: !player.openInfo} : player)
+			players: state.players.map(player => player.uid === action.player.uid ? {...player, openInfo: !player.openInfo} : player)
 		}
 	// case CURRENT_LOCATION:
 	// 	return Object.assign({}, state, { location: {latitude: action.location.latitude, longitude: action.location.longitude}})
@@ -296,4 +331,3 @@ export const filterPlayer = (player) => {
 	}
 	return {}
 }
-
