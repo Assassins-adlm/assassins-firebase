@@ -1,33 +1,47 @@
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux'
-import { reactReduxFirebase, firebaseStateReducer, getFirebase } from 'react-redux-firebase'
+import {reactReduxFirebase, firebaseStateReducer, getFirebase} from 'react-redux-firebase'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
 import player from './player.js'
 // -------- message --------
 import message from './message.js'
 
+import game from './game'
 
-var firebaseConfig = {
+const firebaseConfig = {
 	apiKey: 'AIzaSyAFYb47n-YcDhRxHivbFM9f66VT5p6X46g',
 	authDomain: 'assassins-aldm.firebaseapp.com',
 	databaseURL: 'https://assassins-aldm.firebaseio.com',
 	projectId: 'assassins-aldm',
 	storageBucket: 'assassins-aldm.appspot.com',
-	messagingSenderId: '510113560850'
+	messagingSenderId: '510113560850',
 }
+const config = {
+	userProfile: '/players',
+	enableLogging: false,
+}
+const initialState = {id: null}
 
-const initialState = {}
 
 const rootReducer = combineReducers({
 	firebase: firebaseStateReducer, player, message
 })
 
-const store = createStore(rootReducer, initialState, compose(
+
+
+const createStoreWithFirebase = compose(
 	applyMiddleware(
-		thunk.withExtraArgument(getFirebase), createLogger
-	), reactReduxFirebase(firebaseConfig, { userProfile: 'users', enableLogging: false })
-))
-// const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+		thunk.withExtraArgument(getFirebase), createLogger),
+	reactReduxFirebase(firebaseConfig, {
+		userProfile: '/players',
+		enableLogging: false,
+	})
+)(createStore)
+
+
+const store = createStoreWithFirebase(rootReducer, initialState)
+
+
 
 export default store
 
@@ -36,3 +50,4 @@ export * from './player'
 export * from './message'
 
 // Add Firebase to reducers
+export * from './game'

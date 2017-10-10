@@ -33,3 +33,13 @@ export const getLocation = (currPlayer, firebase) => {
 	navigator.geolocation.watchPosition(success, error, options)
 }
 
+export const parseLocation = (location) => {
+	return [location.lat, location.lon]
+}
+
+export const parseTargetLocation = (locations) => {
+	console.log('target locations-->', locations)
+	let Locations = Object.values(locations)
+	let length = Locations.length
+	return [Locations[length-1].lat, Locations[length-1].lon]
+}
