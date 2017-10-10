@@ -3,7 +3,6 @@ import React, {Component} from 'react'
 import MapBox from './MapBox'
 
 import SideBar from './SideBar'
-import MapBox from './MapBox'
 import '../index.css'
 import {connect} from 'react-redux'
 import Login from './LoginSignup/Login'
