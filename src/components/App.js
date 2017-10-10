@@ -18,6 +18,7 @@ import {
 import SignUp from './LoginSignup/SignUp'
 import IconButton from 'material-ui/IconButton'
 import LogOut from 'material-ui/svg-icons/content/add'
+import Paper from 'material-ui/Paper'
 
 class App extends Component {
 	state = {
@@ -33,11 +34,13 @@ class App extends Component {
 	}
 
 	render() {
+		let a = isLoaded(this.state.profile) ? this.state.profile.name : ''
+			console.log(this.props)
 		return (
 			<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
 				<div>
 					<AppBar
-						title='Assassins'
+						title={`Assassins ${a}`}
 						iconClassNameRight="muidocs-icon-navigation-expand-more"
 						iconElementLeft={<IconButton tooltip='SignUp' iconStyle={{background: 'white'}} touch={true}   onClick={this.setIndex.bind(this)}>
 							<LogOut  />
@@ -49,10 +52,8 @@ class App extends Component {
 
 
 				</div>
-
-				<SideBar/>
 				{this.state.showLogin && isEmpty(this.props.auth) ? <Login/> : null}
-				{isLoaded(this.props.step) &&  this.props.step !== 4  ? <SignUp/> : null }
+				{isLoaded(this.props.step) &&  this.props.step !== 4  ? <SignUp/> :  <Paper> {`Your Signed in ${!isEmpty(this.props.profile) ? this.props.profile.name : ' joe'}`} </Paper> }
 			</div>
 
 		)
