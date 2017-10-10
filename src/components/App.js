@@ -62,7 +62,7 @@ class App extends Component {
 
 				</div>
 				{this.state.showLogin && isEmpty(this.props.auth) ? <Login/> : null}
-				{isLoaded(this.props.step) &&  this.props.step !== 4  ? <SignUp/> :  <Paper> {`Your Signed in ${!isEmpty(this.props.profile) ? this.props.profile.name : ' joe'}`} </Paper> }
+				{isLoaded(this.props.step) &&  this.props.step !== 4  ? <SignUp/> :  <Paper> { `${!isEmpty(this.props.profile) ? 'You\'re signed in, ' + this.props.profile.name : ``}` } </Paper> }
 			</div>
 
 		)
