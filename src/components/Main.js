@@ -22,7 +22,7 @@ export default class Main extends React.Component {
 					<Route path="/chat" component={ChatRoom}/>
 					<Route path="/setting" component={Setting}/>
 					<Route path="/target" component={Target}/>
-					<Redirect to="/home" component={App}/>
+					<Redirect to="/" component={LandingPage}/>
 				</Switch>
 			</Router>
 		)

@@ -78,3 +78,10 @@ a {
 }
 
 
+.navBar {
+  background-color: midnightblue;
+  color: white;
+}
+.signInInfo {
+  color: red;
+}
