@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import MapBox from '../MapBox'
 import TextField from 'material-ui/TextField';
 import LinearProgress from 'material-ui/LinearProgress'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -50,7 +51,9 @@ class Login extends Component {
 		}
 		let {auth} = this.props
 		console.log(isLoaded(this.props.auth), isEmpty(auth), auth)
-		return (isLoaded(this.props.auth) &&  isEmpty(auth) ? <Paper style={style} zDepth={5}>
+		if (isLoaded(this.props.auth) &&  isEmpty(auth)) {
+			return (
+				<Paper style={style} zDepth={5}>
 				<div  className='loginComp'>
 					<h4> Login to Assassin Account </h4>
 					<Divider/>
@@ -77,9 +80,17 @@ class Login extends Component {
 					<LinearProgress mode="indeterminate" color='lightblue'/>
 					<Divider/>
 				</div>
-			</Paper> : <h1> Welcome !</h1>)
-
-
+			</Paper>
+			)
+		} else if (isLoaded(this.props.auth) &&  !isEmpty(auth)) {
+			return (
+					<MapBox auth={auth}/>
+			)
+		} else {
+			return (
+				<div>loading...</div>
+			)
+		}
 	}
 }
 
