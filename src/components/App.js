@@ -20,11 +20,15 @@ class App extends Component {
 	render() {
 		console.log(this.props)
 		return (
-			<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+			this.props.auth ? <div>
 				<SideBar/>
-				<Login/>
-				<SignUp/>
-			</div>
+				<MapBox auth={this.props.auth}/>
+			</div> :
+				<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+					<SideBar/>
+					<Login/>
+					<SignUp/>
+				</div>
 		)
 	}
 }
