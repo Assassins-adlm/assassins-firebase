@@ -85,7 +85,7 @@ class CharCreate extends React.Component {
 			uid: isLoaded(this.props.auth.uid) ? this.props.auth.uid : '...',
 			image: this.state.charAvatarUrl,
 			score: `$${500}`,
-				Locations: {lat: 40, lon: 74},
+				Locations: {},
 		})}).catch(alert) : console.log('wait')
 
 		stepIndex === 2 ? this.setState({uid: this.props.auth.uid}) : console.log('...')
