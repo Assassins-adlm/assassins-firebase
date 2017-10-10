@@ -7,11 +7,16 @@ import {fetchAllMessages} from '../store'
 import { compose } from 'redux'
 import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
+// import ReactDOM from 'react-dom'
 
 class ChatRoom extends React.Component {
 
 	componentDidMount() {
 		this.props.fetchAllMessages()
+		this.scrollToBottom()
+	}
+	componentDidUpdate() {
+		this.scrollToBottom()
 	}
 
 	addMessage(e) {
@@ -25,6 +30,11 @@ class ChatRoom extends React.Component {
 			this.props.fetchAllMessages()
 			this.inputEl.value = ''
 		}
+	}
+
+	scrollToBottom() {
+		// const node = ReactDOM.findDOMNode(this.messagesEnd);
+		// node.scrollIntoView({ behavior: "smooth" });
 	}
 
 	render() {
@@ -49,6 +59,10 @@ class ChatRoom extends React.Component {
 								}
 							</ul>
 						</div>
+						<div style={{ float:"left", clear: "both" }}
+							ref={(el) => { this.messagesEnd = el; }}>
+						</div>
+
 
 						<form name="message" onSubmit={this.addMessage.bind(this)}>
 							<input name="usermsg" type="text" id="usermsg" size="63" ref={ el => this.inputEl = el }/>
