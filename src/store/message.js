@@ -4,6 +4,7 @@ import firebase from '../fire'
 // ACTION TYPE
 const ALL_MESSAGES = 'ALL_MESSAGES'
 
+
 // INITITAL STATE
 const messageState = {
 	messages: []
@@ -14,6 +15,7 @@ export function allMessages(message) {
 	return {type: ALL_MESSAGES, message}
 } 
 
+
 // THUNKS
 export const fetchAllMessages = () => dispatch => {
 	let messagesRef = firebase.database().ref('messages').limitToLast(100)
@@ -22,7 +24,6 @@ export const fetchAllMessages = () => dispatch => {
 		dispatch(allMessages(messages))
 	})
 }
-
 
 
 // REDUCERS
