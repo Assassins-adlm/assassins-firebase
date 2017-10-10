@@ -37,7 +37,7 @@ class App extends Component {
 			<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
 				<div>
 					<AppBar
-						title={this.props.auth ? `Welcome ${isLoaded(this.props.profile.name) ? this.props.profile.name : '...'} `:' Please Login or Sign up'}
+						title='Assassins'
 						iconClassNameRight="muidocs-icon-navigation-expand-more"
 						iconElementLeft={<IconButton tooltip='SignUp' iconStyle={{background: 'white'}} touch={true}   onClick={this.setIndex.bind(this)}>
 							<LogOut  />
