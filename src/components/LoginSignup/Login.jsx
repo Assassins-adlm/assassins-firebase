@@ -45,16 +45,16 @@ class Login extends Component {
 
 	render() {
 		const style = {
-			display: 'block',
-
+			display: 'inline-block',
+			margin: '16px 16px 16px 20px',
 			textAlign: 'center',
 			width: '75%',
 			float: 'left',
 		}
-		let {auth} = this.props
 
-		return (isLoaded(this.props.auth) &&  isEmpty(auth) ? <Paper zDepth={5}>
-				<div >
+
+		return (<Paper style={style} zDepth={5}>
+				<div style={{width: '100%', maxWidth: 700}}>
 
 					<h4> Login to Assassin Account </h4>
 					<Divider/>
@@ -74,14 +74,14 @@ class Login extends Component {
 					/>
 					<Divider/>
 
-					<RaisedButton label="Sign in" backgroundColor='lightblue' fullWidth={true}
+					<RaisedButton label="Sign in" backgroundColor='teal' fullWidth={true}
 					              onClick={this.handleSignIn.bind(this)}/>
 					<Divider/>
 
 					<LinearProgress mode="indeterminate" color='lightblue'/>
 					<Divider/>
 				</div>
-			</Paper> : <h4> Welcome</h4>)
+			</Paper>)
 
 	}
 }
