@@ -27,6 +27,8 @@ const rootReducer = combineReducers({
 
 
 const createStoreWithFirebase = compose(
+	applyMiddleware(
+		thunk.withExtraArgument(getFirebase), createLogger),
 	reactReduxFirebase(firebaseConfig, {
 		userProfile: '/players',
 		enableLogging: false,
