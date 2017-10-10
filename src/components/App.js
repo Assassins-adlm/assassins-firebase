@@ -18,6 +18,7 @@ import {
 import SignUp from './LoginSignup/SignUp'
 import IconButton from 'material-ui/IconButton'
 import LogOut from 'material-ui/svg-icons/content/add'
+import LogOutAcc from 'material-ui/svg-icons/navigation/close'
 import Paper from 'material-ui/Paper'
 
 class App extends Component {
@@ -32,6 +33,12 @@ class App extends Component {
 		let doIt = this.state.showLogin ? false : true
 		this.setState({showLogin: doIt})
 	}
+	logout() {
+		isLoaded(this.props.firebase) ? this.props.firebase.logout() : null
+		this.props.firebase.set(`step`, 0)
+
+	}
+
 
 	render() {
 		let a = isLoaded(this.state.profile) ? this.state.profile.name : ''
@@ -42,11 +49,13 @@ class App extends Component {
 					<AppBar
 						title={`Assassins ${a}`}
 						iconClassNameRight="muidocs-icon-navigation-expand-more"
-						iconElementLeft={<IconButton tooltip='SignUp' iconStyle={{background: 'white'}} touch={true}   onClick={this.setIndex.bind(this)}>
+						iconElementLeft={isLoaded(this.props.step) &&  this.props.step !== 4 ? <IconButton tooltip='SignUp' iconStyle={{background: 'white'}} touch={true}   onClick={this.setIndex.bind(this)}>
 							<LogOut  />
-						</IconButton>}
-						iconElementRight={<IconButton tooltip='Login' iconStyle={{background: 'grey'}} touch={true}   onClick={this.showLogin.bind(this)}>
+						</IconButton> : null}
+						iconElementRight={isEmpty(this.props.auth) ? <IconButton tooltip='Login' iconStyle={{background: 'grey'}} touch={true}   onClick={this.showLogin.bind(this)}>
 							<LogOut  />
+						</IconButton> : <IconButton tooltip='Logout' iconStyle={{background: 'red'}} touch={true}   onClick={this.logout.bind(this)}>
+							<LogOutAcc  />
 						</IconButton>}
 					/>
 
