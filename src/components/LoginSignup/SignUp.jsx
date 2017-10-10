@@ -182,7 +182,7 @@ class CharCreate extends React.Component {
 
 		return (
 			!this.state.done ?  <Paper zDepth={5} >
-				<div className = "Login">
+				<div >
 					<Stepper activeStep={stepIndex}>
 						<Step>
 							<StepLabel>Sign Up</StepLabel>
