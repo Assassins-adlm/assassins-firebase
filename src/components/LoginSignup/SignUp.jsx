@@ -16,19 +16,19 @@ import PropTypes from 'prop-types'
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
+import AppDownload from 'material-ui/svg-icons/action/get-app'
 import './style.css'
+import {
+	Stepper,
+	Step,
+	StepLabel,
+} from 'material-ui/Stepper'
+import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
+import Divider from 'material-ui/Divider'
 
 //Config File Downloader
 import fileDownload from 'react-file-download' //get new dl library non depc
-
-import {
-	Step,
-	Stepper,
-	StepLabel,
-} from 'material-ui/Stepper'
-
-import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
 
 class CharCreate extends React.Component {
 	static propTypes = {
@@ -47,6 +47,7 @@ class CharCreate extends React.Component {
 			charAvatarUrl: '',
 			os: '',
 			uid: '',
+			done: false,
 		}
 
 		this.handleChange = this.handleChange.bind(this)
@@ -57,9 +58,7 @@ class CharCreate extends React.Component {
 
 	handleChange(evt) {
 		evt.preventDefault()
-		evt.target.name === 'charName' ? this.setState({charName: evt.target.value.join(' ')}) :
-			evt.target.name === 'charAvatarUrl' ? this.setState({charAvatarUrl: evt.target.value}) : evt.target.name === 'os' ? this.setState({os: evt.target.value}) : evt.target.name === 'email' ? this.setState({email: evt.target.value}) : this.setState({password: evt.target.value})
-		console.log(this.state)
+		evt.target.name === 'charName' ? this.setState({charName: evt.target.value.split(' ').join('').trim()}) : evt.target.name === 'charAvatarUrl' ? this.setState({charAvatarUrl: evt.target.value}) : evt.target.name === 'os' ? this.setState({os: evt.target.value}) : evt.target.name === 'email' ? this.setState({email: evt.target.value}) : this.setState({password: evt.target.value})
 	}
 
 	handleNext = () => {
@@ -70,21 +69,24 @@ class CharCreate extends React.Component {
 			finished: stepIndex >= 4,
 		})
 
-		stepIndex === 4 && isLoaded(this.props.firebase) ? this.props.firebase.createUser({
-			email: this.state.email,
-			password: this.state.password,
-		}).then(e => {
-			this.setState({uid: this.props.auth.uid})
-		}).then(evt => {
-			set(`/players/${this.state.uid}`, {
-				name: this.state.charName,
-				id: this.state.uid,
-				image: this.state.charAvatarUrl,
-			})
-		}).catch(alert) : null
+		if (stepIndex === 1) {
+			isLoaded(this.props.auth) ? this.props.firebase.createUser({
+				email: this.state.email,
+				password: this.state.password,
+			}).then((ev) => {
+				isLoaded(this.props.auth.uid)
+					?
+					set(`/players/${this.props.auth.uid}`, {
+						name: this.state.charName,
+						image: this.state.charAvatarUrl,
+						uid: this.props.auth.uid,
+						score: `$${500}`,
+					}) : console.log('loading....')
+			}).then(console.log)
+				.catch(alert) : console.log('loading....')
 
+		}
 	}
-
 	handlePrev = () => {
 		const {stepIndex} = this.state
 		if (stepIndex > 0) {
@@ -97,7 +99,7 @@ class CharCreate extends React.Component {
 		switch (stepIndex) {
 			case 0:
 				return (
-					<div>
+					<div key={23214}>
 						<TextField
 							floatingLabelText="Enter your email: "
 							onChange={this.handleChange.bind(this)}
@@ -117,48 +119,62 @@ class CharCreate extends React.Component {
 				)
 			case 1:
 				return (
-					<TextField
-						floatingLabelText="Enter Player Name"
-						onChange={this.handleChange.bind(this)}
-						fullWidth={true}
-						name='charName'
-						key={8}
-					/>
+					<div key={2322251} className="signMarg">
+						<TextField
+							floatingLabelText="Enter Player Name"
+							onChange={this.handleChange.bind(this)}
+							fullWidth={true}
+							name='charName'
+							key={8}
+						/>
+
+						<TextField key={9}
+						           floatingLabelText="Enter URL of Avatar"
+						           onChange={this.handleChange.bind(this)}
+						           fullWidth={true}
+						           name='charAvatarUrl'
+						/>
+					</div>
 				)
+
 			case 2:
-				return (
-					<TextField key={9}
-					           floatingLabelText="Enter URL of Avatar"
-					           onChange={this.handleChange.bind(this)}
-					           fullWidth={true}
-					           name='charAvatarUrl'
-					/>
+				return (<div key={23235252341} className="signMarg">
+						<RadioButtonGroup name="os" defaultSelected="ios"
+						                  onChange={this.handleChange.bind(this)}>
+							<RadioButton
+								value="ios"
+								label="Apple iOS"
+								key={124121}
+							/>
+							<RadioButton
+								value="android"
+								label="Android"
+								key={242141}
+							/>
+						</RadioButtonGroup>
+						<Divider/>
+
+						<RaisedButton
+							key={9328}
+							backgroundColor={this.state.os === 'android' ? 'lightgreen' : 'lightblue'}
+							icon={<AppDownload color={this.state.os === 'android' ? 'white' : 'blue'}/>}
+							label={this.state.os === 'android' ? 'Download OwnTracks from Google Play Free' : 'Download OwnTracks from App Store Free'}
+							style={{margin: 30}}
+							href={this.state.os === 'android' ? 'https://play.google.com/store/apps/details?id=org.owntracks.android' : 'https://itunes.apple.com/us/app/owntracks/id692424691?mt=8'}
+						/>
+						<Divider/>
+
+					</div>
 				)
 			case 3:
 				return (
-					<RadioButtonGroup name="Mobile OS" defaultSelected="ios" onChange={this.handleChange.bind(this)}>
-						<RadioButton
-							value="ios"
-							label="Apple iOS"
-							name="os"
-							key={1}
-						/>
-						<RadioButton
-							value="android"
-							label="Android"
-							name="Android"
-							key={2}
-						/>
-
-					</RadioButtonGroup>
+					<div className="signMarg" key={234232}>
+						{this.state.os === 'android' ? fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')}
+					</div>
 				)
+
 			case 4:
-
-				return (
-					<div>{this.state.os === 'android' ? fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')} </div>
-				)
-
-			default:
+				this.setState({done: true})
 				return 'Download App and Config file'
 		}
 	}
@@ -170,71 +186,74 @@ class CharCreate extends React.Component {
 			display: 'inline-block',
 			margin: '16px 32px 16px 20px',
 			textAlign: 'center',
+			marginLeft: '25%',
 		}
-
-		return (isLoaded(this.props.auth) && isEmpty(this.props.auth) ?
-				<Paper style={paperStyle} zDepth={5} className='signupComp'>
-					<div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
-						<Stepper activeStep={stepIndex}>
-							<Step>
-								<StepLabel>Sign Up</StepLabel>
-							</Step>
-							<Step>
-								<StepLabel>Select Player Name</StepLabel>
-							</Step>
-							<Step>
-								<StepLabel> Avatar Image URL </StepLabel>
-							</Step>
-							<Step>
-								<StepLabel> Install OwnTrack Config</StepLabel>
-							</Step>
-						</Stepper>
-						<div style={contentStyle}>
-							{finished ? (
-								<p>
-									<a
-										href="#"
-										onClick={(event) => {
-											event.preventDefault()
-											this.setState({stepIndex: 0, finished: true})
-										}}
-									>
-									</a>
-								</p>
-							) : (
-								<div>
-									<p>{this.getStepContent(stepIndex)}</p>
-									<div style={{marginTop: 12}}>
-										<FlatButton
-											label="Back"
-											disabled={stepIndex === 0}
-											onClick={this.handlePrev}
-											style={{marginRight: 12}}
-										/>
-										<RaisedButton
-											label={stepIndex === 3 ? 'Download Config' : stepIndex === 4 ? 'Complete Signup!' : 'Next'}
-											primary={true}
-											onClick={this.handleNext}
-
-										/>
-									</div>
-
+		console.log(this.props)
+		return (
+			!this.state.done ? <Paper style={paperStyle} zDepth={5} className='signupComp'>
+				<div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+					<Stepper activeStep={stepIndex}>
+						<Step>
+							<StepLabel>Sign Up</StepLabel>
+						</Step>
+						<Step>
+							<StepLabel>Select Player Name</StepLabel>
+						</Step>
+						<Step>
+							<StepLabel> Install OwnTrack Config</StepLabel>
+						</Step>
+					</Stepper>
+					<div style={contentStyle}>
+						{finished ? (
+							<p>
+								<a
+									href="#"
+									onClick={(event) => {
+										event.preventDefault()
+										this.setState({stepIndex: 0, finished: true})
+									}}
+								>
+								</a>
+							</p>
+						) : (
+							<div>
+								<p>{this.getStepContent(stepIndex)}</p>
+								<div style={{marginTop: 12}}>
+									<FlatButton
+										label="Back"
+										disabled={stepIndex === 0}
+										onClick={this.handlePrev}
+										style={{marginRight: 12}}
+									/>
+									<RaisedButton
+										label={stepIndex === 3 ? 'Download Config' : stepIndex === 4 ? 'Complete Signup!' : 'Next'}
+										primary={true}
+										onClick={this.handleNext}
+									/>
 								</div>
-							)}
-						</div>
+
+							</div>
+						)}
 					</div>
-				</Paper> : <h5> Welcome </h5>
+				</div>
+			</Paper> : <h3> Welcome!</h3>
 		)
 	}
 }
 
-const mapStateToProps = (state) => {
-	return {
-		auth: pathToJS(state.firebase, 'auth'),
-		myProfile: dataToJS(state.firebase, 'players'),
-	}
-}
+const
+	abWrap = firebaseConnect([{path: 'players'}, {path: 'profile'},
+	])(CharCreate)
 
-export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'}]), connect(mapStateToProps))(CharCreate)
-
+export default connect(
+	({
+		 firebase,
+	 }) =>
+		({
+			players: dataToJS(firebase, 'players'),
+			profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
+			auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
+		}),
+)
+(abWrap)
 

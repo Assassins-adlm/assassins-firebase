@@ -47,6 +47,7 @@ class Login extends Component {
 			display: 'inline-block',
 			margin: '16px 32px 16px 20px',
 			textAlign: 'center',
+			width: '75%'
 		}
 		let {auth} = this.props
 		console.log(isLoaded(this.props.auth), isEmpty(auth), auth)

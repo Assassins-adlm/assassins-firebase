@@ -82,3 +82,7 @@ a {
   backgroundColor: black;
   maring-left: 25%;
 }
+
+.tabBar {
+  width: 75%;
+}
