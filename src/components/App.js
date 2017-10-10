@@ -19,16 +19,24 @@ class App extends Component {
 
 	render() {
 
+		console.log(this.props.auth)
+
 		return (
+			this.props.auth ?
+			(
+				<div className='mainComp'>
+					<SideBar />
+					<MapBox />
+				</div>
+			):(
 			<div className='mainComp'>
 				<SideBar />
 				<Login/>
 				<SignUp/>
 			</div>
-		)
+		))
 	}
 }
-
 
 const mapStateToProps = (state) => {
 	return {
