@@ -16,54 +16,35 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	const players = []
 	if (myLocation) {
 		return (
-			<GoogleMap
-				zoom={15}
-				defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
-				options={{ styles: mapStyles, mapTypeControl: false }}
-			>
-				<MarkerClusterer
-					averageCenter
-					enableRetinaIcons
-					gridSize={10}
+			<div>
+				<GoogleMap
+					zoom={50}
+					defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
+					options={{ styles: mapStyles, mapTypeControl: false }}
 				>
-					{players.map((player, idx) => {
-						return (
-							(player.Locations && player.status!=='dead') && //need to change this
+					<MarkerClusterer
+						averageCenter
+						enableRetinaIcons
+						gridSize={10}
+					>
 						<Marker
-							key={idx}
 							icon={{
 								url: './images/markers/assassin-icon.png'
 							}}
-							position={{ lat: player.Locations.lat, lng: player.Locations.lon }}
-							onClick={()=> {
-								props.onToggleOpen(player)
-							}}
-						>
-							{
-								player.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(player)}}>
-									{
-										player.id === currPlayer.id ? <MyInfo {...currPlayer}/> : <MyTarget submitTarget={props.submitTarget} target={player} currPlayer={currPlayer}/>
-									}
-								</InfoWindow>
-							}
+							position={{ lat: myLocation[0], lng: myLocation[1] }}>
+
 						</Marker>
-						)
-					})}
-				</MarkerClusterer>
-			</GoogleMap> )
+					</MarkerClusterer>
+				</GoogleMap>
+			</div>
+		)
 	} else if (!myLocation) {
 		return (
 			<GoogleMap
-				zoom={15}
+				zoom={100}
 				defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
 				options={{ styles: mapStyles, mapTypeControl: false }}
 			>
-				<HeatmapLayer
-					data={Object.values(target.Locations).map(location => {
-						return new google.maps.LatLng(location.lat, location.lon)
-					})}
-				>
-				</HeatmapLayer>
 			</GoogleMap>
 		)
 	} else {
@@ -75,14 +56,13 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 
 class MapBox extends React.PureComponent {
 
-	constructor(){
-		super()
+	constructor(props){
+		super(props)
 		this.onToggleOpen = this.onToggleOpen.bind(this)
 		this.submitTarget = this.submitTarget.bind(this)
 	}
 
 	submitTarget(target) {
-		// console.log('target-->', target.id)
 		const {submitCurrTarget, player} = this.props
 		submitCurrTarget(player, target)
 	}
@@ -92,15 +72,9 @@ class MapBox extends React.PureComponent {
 		togglePlayer(player)
 	}
 
-	componentDidMount() {
-
-
-	}
 
 	render() {
-		console.log('redering!!')
 		const {profile, players} = this.props
-
 		return (
 			<div>
 
@@ -129,7 +103,6 @@ export default connect(({firebase}) => ({
 	profile: pathToJS(firebase, 'profile'),
 	players: dataToJS(firebase, 'players'),
 	step: dataToJS(firebase, '/step'),
-	auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
+	auth: pathToJS(firebase, 'auth')
 }))(Map)
 
-// export default compose(firebaseConnect([{path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(MapBox)
