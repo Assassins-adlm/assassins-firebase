@@ -1,9 +1,9 @@
 import React from 'react'
 import firebase from '../fire'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import '../chatRoom.css'
 
-import {fetchAllMessages} from '../store'
+import {fetchAllMessages, fetchPlayers} from '../store'
 import { compose } from 'redux'
 import {firebaseConnect, dataToJS, pathToJS, isLoaded} from 'react-redux-firebase'
 import {connect} from 'react-redux'
@@ -12,6 +12,7 @@ class ChatRoom extends React.Component {
 
 	componentDidMount() {
 		this.props.fetchAllMessages()
+		this.props.fetchPlayers()
 	}
 	componentDidUpdate() {
 		let el = this.refs.chatbox
@@ -38,6 +39,19 @@ class ChatRoom extends React.Component {
 					<div className="col-xs-12">
 						<div id="menu">
 							<p className="welcome">Welcome, <b>{this.props.auth.displayName}</b></p>
+							
+							<p>
+								<select >
+									<option>All</option>
+									{
+										this.props.players.map((player, ind) =>{
+											return(
+												<option key={ind}>{player.name}</option>
+											)
+										})
+									}
+								</select>
+							</p>
 							<p className="logout"><Link id="exit" to="/home">Exit Chat</Link></p>
 							<div style={{clear:'both'}}></div>
 						</div>
@@ -68,6 +82,7 @@ const mapStateToProps = (state) => {
 	return {
 		auth: pathToJS(state.firebase, 'auth'),
 		messages: state.message,
+		players: state.player.players
 	}
 }
 
@@ -75,6 +90,9 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		fetchAllMessages() {
 			dispatch(fetchAllMessages())
+		},
+		fetchPlayers(){
+			dispatch(fetchPlayers())
 		}
 		
 	}
