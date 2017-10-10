@@ -6,11 +6,14 @@ import './index.css'
 import Main from './components/Main'
 import { BrowserRouter as Router } from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 
 ReactDOM.render(
 	<Provider store={store}>
-		<MuiThemeProvider>
+		<MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
 			<Main />
 		</MuiThemeProvider>
 	</Provider>,
