@@ -15,12 +15,17 @@ import {
 	pathToJS,
 } from 'react-redux-firebase'
 import SignUp from './LoginSignup/SignUp'
+import IconButton from 'material-ui/IconButton'
+import LogOut from 'material-ui/svg-icons/navigation/cancel'
 
 class App extends Component {
 	render() {
-		console.log(this.props)
 		return (
 			<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+				<IconButton tooltip="Close" touch={true} style='background-color: red' >
+					<LogOut style='background-color: red' />
+				</IconButton>
+
 				<SideBar/>
 				<Login/>
 				<SignUp/>
@@ -35,6 +40,7 @@ const fbWrapped = firebaseConnect([{path: 'players'}, {path: 'profile'}, {path: 
 export default connect(({firebase}) => ({
 	profile: pathToJS(firebase, 'profile'),
 	players: dataToJS(firebase, 'players'),
+	step: pathToJS(firebase, '/step'),
 	auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
 }))(fbWrapped)
 

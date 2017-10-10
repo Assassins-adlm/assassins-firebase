@@ -26,6 +26,9 @@ import {
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
+import IconButton from 'material-ui/IconButton';
+import DeleteSweep from 'material-ui/svg-icons/navigation/cancel'
+
 
 //Config File Downloader
 import fileDownload from 'react-file-download' //get new dl library non depc
@@ -54,6 +57,7 @@ class CharCreate extends React.Component {
 		this.handleNext = this.handleNext.bind(this)
 		this.handlePrev = this.handlePrev.bind(this)
 		this.getStepContent = this.getStepContent.bind(this)
+		this.close = this.close.bind(this)
 	}
 
 	handleChange(evt) {
@@ -84,7 +88,7 @@ class CharCreate extends React.Component {
 
 		stepIndex === 2 ? this.setState({uid: this.props.auth.uid}) : console.log('...')
 		stepIndex === 4 ? this.setState({done:true, finished: true}) : console.log('...')
-
+		 stepIndex ? this.props.firebase.set(`/step`, this.state.stepIndex) : null
 	}
 	handlePrev = () => {
 		const {stepIndex} = this.state
@@ -92,6 +96,10 @@ class CharCreate extends React.Component {
 			this.setState({stepIndex: stepIndex - 1})
 		}
 	}
+	close = () => {
+		this.setState({done: true, finished: true})
+	}
+
 
 	getStepContent(stepIndex) {
 		switch (stepIndex) {
@@ -162,10 +170,10 @@ class CharCreate extends React.Component {
 					</div>
 				)
 			case 3:
-			return	<div>{this.state.os === 'android' ? fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')} </div>
+			return	<div>{this.state.os === 'android' ? fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')}  </div>
 
 			case 4:
-				this.setState({done: true})
+				this.setState({done: true, finished: true})
 				return <h1>finito</h1>
 		}
 	}
@@ -175,22 +183,25 @@ class CharCreate extends React.Component {
 		const contentStyle = {margin: '0 16px'}
 		const paperStyle = {
 			display: 'inline-block',
-			margin: '16px 32px 16px 20px',
+			margin: '5px 5px 5px 5px',
 			textAlign: 'center',
-			marginLeft: '25%',
+			marginRight: '5%',
 		}
 		return (
 			!this.state.done ?  <Paper style={paperStyle} zDepth={5} >
 				<div>
+					<IconButton tooltip="Close" touch={true} style='background-color: red' onClick={this.close.bind(this)}>
+						<DeleteSweep style='background-color: red' />
+					</IconButton>
 					<Stepper activeStep={stepIndex}>
 						<Step>
 							<StepLabel>Sign Up</StepLabel>
 						</Step>
 						<Step>
-							<StepLabel>Select Player Name</StepLabel>
+							<StepLabel>Select Name</StepLabel>
 						</Step>
 						<Step>
-							<StepLabel> Install OwnTrack Config</StepLabel>
+							<StepLabel> Config</StepLabel>
 						</Step>
 					</Stepper>
 					<div style={paperStyle}>
@@ -200,6 +211,7 @@ class CharCreate extends React.Component {
 									href="#"
 									onClick={(event) => {
 										event.preventDefault()
+										this.props.firebase.set('/step', {done: true})
 										this.setState({stepIndex: 0, finished: true})
 									}}
 								>
@@ -216,7 +228,7 @@ class CharCreate extends React.Component {
 										style={{marginRight: 12}}
 									/>
 									<RaisedButton
-										label={stepIndex === 3 ? 'Download Config' : stepIndex === 4 ? 'Complete Signup!' : 'Next'}
+										label={stepIndex === 3 ? 'Download Config' : stepIndex === 3 ? 'Complete Signup!' : 'Next'}
 										primary={true}
 										onClick={this.handleNext}
 									/>
@@ -227,7 +239,7 @@ class CharCreate extends React.Component {
 					</div>
 
 				</div>
-			</Paper> : <h3> Welcome!</h3>
+			</Paper> : <h3></h3>
 
 		)
 	}
