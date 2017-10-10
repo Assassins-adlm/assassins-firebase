@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react'
 import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
@@ -75,6 +76,12 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 				defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
 				options={{ styles: mapStyles, mapTypeControl: false }}
 			>
+				<HeatmapLayer
+					data={Object.values(target.Locations).map(location => {
+						return new google.maps.LatLng(location.lat, location.lon)
+					})}
+				>
+				</HeatmapLayer>
 			</GoogleMap>
 		)
 	} else {
