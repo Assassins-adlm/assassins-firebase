@@ -98,8 +98,7 @@ class CharCreate extends React.Component {
 		}
 	}
 	close = () => {
-		this.props.firebase.set(`step`, 4)
-		this.setState({done: true, finished: true})
+		isLoaded(this.props.firebase) ? this.props.firebase.set(`step`, 4) : console.log('loading...')
 	}
 
 
@@ -175,8 +174,8 @@ class CharCreate extends React.Component {
 			return	<div>{this.state.os === 'android' ? fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')}  </div>
 
 			case 4:
-				this.props.firebase.set(`step`, this.state.stepIndex)
 				this.setState({done: true, finished: true})
+				this.props.firebase.set(`step`, this.state.stepIndex)
 				return <h1>finito</h1>
 		}
 	}
