@@ -250,11 +250,13 @@ export const setStatus = (player, role, status) => {
 			firebase.database().ref(`/players/${player.id}`).update({status: status, target: ''})
 				.then(() => {
 					console.log('set assassin status!!!')
+					dispatch(currentTarget({}))
 				})
 		} else if (role==='player') {
 			firebase.database().ref(`/players/${player.id}`).update({status: status, assassin: ''})
 				.then(() => {
 					console.log('set player status!!!')
+
 				})
 		}
 	}

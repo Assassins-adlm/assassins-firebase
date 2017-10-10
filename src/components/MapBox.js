@@ -132,7 +132,7 @@ class MapBox extends React.PureComponent {
 		return (
 			<div>
 				{
-					player.Locations && target.Locations && target.status !== 'dead' && !target.assassin && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
+					player.Locations && target.Locations && player.status !== 'dead' && target.status !== 'dead' && !target.assassin && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
 				}
 				{
 					guessPrompt && player.assassin && <GuessPrompt player={player} assassin={assassin} setStatus={this.props.setStatus}/>
