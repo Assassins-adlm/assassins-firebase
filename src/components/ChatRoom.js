@@ -32,6 +32,10 @@ class ChatRoom extends React.Component {
 		}
 	}
 
+	handleChange(e){
+		console.log('something', e.target.value)
+	}
+
 	render() {
 		return (
 			isLoaded(this.props.auth) ?
@@ -41,7 +45,7 @@ class ChatRoom extends React.Component {
 							<p className="welcome">Welcome, <b>{this.props.auth.displayName}</b></p>
 							
 							<p>
-								<select >
+								<select onChange={this.handleChange.bind(this)}>
 									<option>All</option>
 									{
 										this.props.players.map((player, ind) =>{
@@ -68,7 +72,7 @@ class ChatRoom extends React.Component {
 							</ul>
 						</div>
 						<form name="message" onSubmit={this.addMessage.bind(this)}>
-							<input name="usermsg" type="text" id="usermsg" autocomplete="off" size="63" ref={ el => this.inputEl = el }/>
+							<input name="usermsg" type="text" id="usermsg" autoComplete="off" size="63" ref={ el => this.inputEl = el }/>
 							<input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
 						</form>
 					</div>
@@ -100,3 +104,4 @@ const mapDispatchToProps = (dispatch) => {
 
 export default compose(firebaseConnect([{path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(ChatRoom)
 
+// onChange={this.handleChange}
