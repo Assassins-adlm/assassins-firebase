@@ -43,3 +43,17 @@ export const parseTargetLocation = (locations) => {
 	let length = Locations.length
 	return [Locations[length-1].lat, Locations[length-1].lon]
 }
+
+export const parseMostRecentLocation = (Locations) => {
+	let locations = Object.values(Locations)
+	return [locations[locations.length-1].lat, locations[locations.length-1].lon]
+}
+
+// export const parseAllLocations = ()
+
+export const parsePlayers = (players) => {
+	let Players = Object.values(players)
+	return Players.map(player => {
+		player.Locations = Object.values(player.Locations)
+	})
+}
