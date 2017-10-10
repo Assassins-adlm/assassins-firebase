@@ -59,6 +59,41 @@ export const fetchPlayers = () => {
 	}
 }
 
+// export const fetchCurrTarget = (uid) => {
+// 	return (dispatch) => {
+// 		firebase.database().ref(`/players/${uid}`).once('value')
+// 			.then(snapshot => {
+// 				let player = filterPlayer(snapshot.val())
+// 				let targetId = snapshot.val().target
+// 				if (targetId) {
+// 					firebase.database().ref(`/players/${targetId}`).once('value')
+// 						.then(snapshot => {
+// 							let target = filterPlayer(snapshot.val())
+// 							dispatch(currentTarget(target))
+// 							dispatch(listeningTarget(target))
+// 						})
+// 				}
+// 			})
+// 	}
+// }
+
+// export const fetchCurrAssassin = (uid) => {
+// 	return (dispatch) => {
+// 		firebase.database().ref(`/players/${uid}`).once('value')
+// 			.then(snapshot => {
+// 				let player = filterPlayer(snapshot.val())
+// 				let assassinId = snapshot.val().assassin
+// 				if (assassinId) {
+// 					firebase.database().ref(`/players/${assassinId}`).once('value')
+// 						.then(snapshot => {
+// 							let assassin = filterPlayer(snapshot.val())
+// 							dispatch(currentAssassin(assassin))
+// 							dispatch(listeningAssassin(assassin.id))
+// 						})
+// 				}
+// 			})
+// 	}
+// }
 
 export const getCurrToken = (id) => {
 	return () => {
@@ -72,13 +107,13 @@ export const getCurrToken = (id) => {
 	}
 }
 
-var key = process.env.SERVER_KEY
+var key = 'AAAAdsUjORI:APA91bH2L8WHJdjWZO8R6DMxBGmhqA-PvXdAJrTYdHZUUybvfICkdCvqeTcwJmz8ij7c31VUXShQxpbVAnqYVghhDr0DSl5rBaxZHRLxOIXNDwkfyvblaCF6Cf8sstR4MM-5UJggtWuP'
 
 var targetNotification = {
 	'title': 'You Have Been Marked',
 	'body':  'Be on the LookOut',
 	'icon': 'firebase-logo.png',
-	'click_action': 'https://assassins-aldm.firebaseapp.com/home'
+	'click_action': 'http://localhost:3000'
 }
 
 export const addCurrTarget = (player, target) => {
@@ -296,4 +331,3 @@ export const filterPlayer = (player) => {
 	}
 	return {}
 }
-

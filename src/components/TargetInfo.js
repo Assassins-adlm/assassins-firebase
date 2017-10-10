@@ -37,7 +37,7 @@ class MyTarget extends React.Component {
 
 	render() {
 		const {submitTarget, target, currPlayer} = this.props
-		// console.log('target-->', target)
+		console.log('target-->', target.name)
 		return (
 			<div>
 				<h1>this is: {target.name}</h1>
