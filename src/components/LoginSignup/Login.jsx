@@ -40,7 +40,9 @@ class Login extends Component {
 		console.log(this.state)
 	}
 	handleSignIn = () => {
-		this.props.firebase.login({email: this.state.email, password: this.state.password}).catch(alert)
+		this.props.firebase.login({email: this.state.email, password: this.state.password}).then(()=>{
+			return this.props.firebase.set(`step`, 4)
+		}).catch(alert)
 	}
 
 	render() {
@@ -92,12 +94,13 @@ const mapStateToProps = (state) => {
 	return {
 		auth: pathToJS(state.firebase, 'auth'),
 		myProfile: dataToJS(state.firebase, 'players'),
+		step: dataToJS(state.firebase, '/step'),
 		profile: pathToJS(state.firebase, 'profile'), // pass profile data as this.props.profile
 
 	}
 }
 
-export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'} ,{path: 'profile'}]), connect(mapStateToProps))(Login)
+export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'} ,{path: 'profile'}, {path: 'step'}]), connect(mapStateToProps))(Login)
 
 
 
