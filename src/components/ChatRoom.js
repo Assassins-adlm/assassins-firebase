@@ -54,7 +54,7 @@ class ChatRoom extends React.Component {
 							</ul>
 						</div>
 						<form name="message" onSubmit={this.addMessage.bind(this)}>
-							<input name="usermsg" type="text" id="usermsg" size="63" ref={ el => this.inputEl = el }/>
+							<input name="usermsg" type="text" id="usermsg" autocomplete="off" size="63" ref={ el => this.inputEl = el }/>
 							<input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
 						</form>
 					</div>

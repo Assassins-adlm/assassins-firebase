@@ -20,7 +20,8 @@ export function allMessages(message) {
 export const fetchAllMessages = () => dispatch => {
 	let messagesRef = firebase.database().ref('messages').limitToLast(100)
 	messagesRef.once('value').then(snapshot => {
-		const messages = Object.values(snapshot.val())
+		const snap = snapshot.val() || []
+		const messages = Object.values(snap) 
 		dispatch(allMessages(messages))
 	})
 }
