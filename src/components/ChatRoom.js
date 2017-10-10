@@ -35,6 +35,9 @@ class ChatRoom extends React.Component {
 	scrollToBottom() {
 		// const node = ReactDOM.findDOMNode(this.messagesEnd);
 		// node.scrollIntoView({ behavior: "smooth" });
+		const obj = isLoaded(this.refs.endMessage)?this.refs.endMessage : <div>...Loading</div>
+		// obj.scrollIntoView()
+		console.log('find me dude ',obj)
 	}
 
 	render() {
@@ -60,7 +63,7 @@ class ChatRoom extends React.Component {
 							</ul>
 						</div>
 						<div style={{ float:"left", clear: "both" }}
-							ref={(el) => { this.messagesEnd = el; }}>
+							ref="endMessage">
 						</div>
 
 
