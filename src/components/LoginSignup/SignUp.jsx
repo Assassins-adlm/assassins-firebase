@@ -59,6 +59,7 @@ class CharCreate extends React.Component {
 	handleChange(evt) {
 		evt.preventDefault()
 		evt.target.name === 'charName' ? this.setState({charName: evt.target.value.split(' ').join('').trim()}) : evt.target.name === 'charAvatarUrl' ? this.setState({charAvatarUrl: evt.target.value}) : evt.target.name === 'os' ? this.setState({os: evt.target.value}) : evt.target.name === 'email' ? this.setState({email: evt.target.value}) : this.setState({password: evt.target.value})
+
 	}
 
 	handleNext = () => {
@@ -66,26 +67,22 @@ class CharCreate extends React.Component {
 		const {set} = this.props.firebase
 		this.setState({
 			stepIndex: stepIndex + 1,
-			finished: stepIndex >= 4,
+			finished: stepIndex === 4,
 		})
+		this.state.stepIndex === 2 && !isEmpty(this.props.auth) ? this.setState({myId: this.props.auth.uid}) : this.state.stepIndex === 2 && isLoaded(this.props.firebase) ? this.props.firebase.createUser({
+			email: this.state.email,
+			password: this.state.password,
+		}).then(() => {
+			return set(`/players/${this.props.auth.uid}`, {
+			name: this.state.charName,
+			uid: isLoaded(this.props.auth.uid) ? this.props.auth.uid : '...',
+			image: this.state.charAvatarUrl,
+			score: `$${500}`,
+				Locations: {lat: 40, lon: 74},
+		})}).catch(alert) : console.log('wait')
 
-		if (stepIndex === 1) {
-			isLoaded(this.props.auth) ? this.props.firebase.createUser({
-				email: this.state.email,
-				password: this.state.password,
-			}).then((ev) => {
-				isLoaded(this.props.auth.uid)
-					?
-					set(`/players/${this.props.auth.uid}`, {
-						name: this.state.charName,
-						image: this.state.charAvatarUrl,
-						uid: this.props.auth.uid,
-						score: `$${500}`,
-					}) : console.log('loading....')
-			}).then(console.log)
-				.catch(alert) : console.log('loading....')
+		stepIndex === 4 ? this.setState({done:true, finished: true}) : console.log('...')
 
-		}
 	}
 	handlePrev = () => {
 		const {stepIndex} = this.state
@@ -95,7 +92,6 @@ class CharCreate extends React.Component {
 	}
 
 	getStepContent(stepIndex) {
-
 		switch (stepIndex) {
 			case 0:
 				return (
@@ -136,7 +132,6 @@ class CharCreate extends React.Component {
 						/>
 					</div>
 				)
-
 			case 2:
 				return (<div key={23235252341} className="signMarg">
 						<RadioButtonGroup name="os" defaultSelected="ios"
@@ -167,15 +162,16 @@ class CharCreate extends React.Component {
 					</div>
 				)
 			case 3:
-				return (
-					<div className="signMarg" key={234232}>
-						{this.state.os === 'android' ? fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')}
-					</div>
-				)
 
+				  this.state.os === 'android' ?
+					fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) :
+					fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')
+				console.log('state', this.state,'props', this.props)
+
+				return <div>done</div>
 			case 4:
 				this.setState({done: true})
-				return 'Download App and Config file'
+				return <h1>finito</h1>
 		}
 	}
 
@@ -188,9 +184,8 @@ class CharCreate extends React.Component {
 			textAlign: 'center',
 			marginLeft: '25%',
 		}
-		console.log(this.props)
 		return (
-			!this.state.done ? <Paper style={paperStyle} zDepth={5} className='signupComp'>
+			isEmpty(this.props.auth) || !isLoaded(this.props.profile) ? <Paper style={paperStyle} zDepth={5} className='signupComp'>
 				<div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
 					<Stepper activeStep={stepIndex}>
 						<Step>
@@ -221,7 +216,7 @@ class CharCreate extends React.Component {
 								<div style={{marginTop: 12}}>
 									<FlatButton
 										label="Back"
-										disabled={stepIndex === 0}
+										disabled={stepIndex === 0 }
 										onClick={this.handlePrev}
 										style={{marginRight: 12}}
 									/>

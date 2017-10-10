@@ -50,7 +50,6 @@ class Login extends Component {
 			width: '75%'
 		}
 		let {auth} = this.props
-		console.log(isLoaded(this.props.auth), isEmpty(auth), auth)
 		return (isLoaded(this.props.auth) &&  isEmpty(auth) ? <Paper style={style} zDepth={5}>
 				<div  className='loginComp'>
 					<h4> Login to Assassin Account </h4>
