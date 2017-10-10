@@ -22,10 +22,14 @@ import LogOutAcc from 'material-ui/svg-icons/navigation/close'
 import Paper from 'material-ui/Paper'
 
 class App extends Component {
-	state = {
-		showLogin : false,
-		showSign: false,
+	constructor(){
+		super()
+		this.state = {
+			showLogin : false,
+			showSign: false,
+		}
 	}
+
 	setIndex () {
 		 this.props.firebase.set(`step`, 0)
 	}
@@ -44,7 +48,7 @@ class App extends Component {
 		let a = isLoaded(this.state.profile) ? this.state.profile.name : ''
 			console.log(this.props)
 		return (
-			<div  style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+			<div  style={{width: '100%',margin: 'auto'}}>
 				<div>
 					<AppBar
 						title={`Assassins ${a}`}

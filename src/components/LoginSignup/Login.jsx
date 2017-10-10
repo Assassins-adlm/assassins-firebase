@@ -14,7 +14,7 @@ import {
 	dataToJS,
 	pathToJS,
 } from 'react-redux-firebase'
-import './style.css'
+
 
 
 class Login extends Component {
@@ -54,7 +54,7 @@ class Login extends Component {
 
 
 		return (<Paper style={style} zDepth={5}>
-				<div style={{width: '100%', maxWidth: 700}}>
+				<div style={{width: '100%'}}>
 
 					<h4> Login to Assassin Account </h4>
 					<Divider/>
@@ -65,7 +65,6 @@ class Login extends Component {
 						hintText="Email Address"
 					/>
 					<Divider/>
-
 					<TextField
 						hintText="Password"
 						onChange={this.handleLogin.bind(this)}

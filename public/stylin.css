@@ -251,17 +251,17 @@ h2 {
     height: 3em; }
 
 header {
-  transform: translateY(-4em);
-  padding: 10px;
-  margin: 0 4em 0 4em;
+  transform: translateY(-6em);
+  /* padding: 10px; */
+  /* margin: 0 4em 0 4em; */
   background-color: rgba(37, 37, 37, 0.8);
   color: #fff;
   height: 3em;
-  width: calc(100vw - 8em);
+  width: 100vw;
   border-radius: 0 0 1em 1em;
   position: fixed;
   z-index: 2;
-  transition: all 1s;
+  transition: all 1.5s;
   }
 
   header.active{
@@ -396,3 +396,32 @@ section {
   border-radius: 1em 1em 0 0;
   background-color: #252525;
   color: #fff; }
+
+
+  body {
+    color: white;
+    background-color: #4e4a46;
+}
+/* .signupComp {
+
+    margin: 4px 4px 4px 4px;
+}
+
+.loginComp {
+    margin: 5px 5px 5px 5px;
+
+}
+
+.signMarg {
+    margin: 5px 10px 5px 5px;
+
+} */
+.closeButton {
+    float: left;
+}
+.progCirc {
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+

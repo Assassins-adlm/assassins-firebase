@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import App from './App'
 
 
 class LandingPage extends React.Component{
@@ -24,7 +25,14 @@ class LandingPage extends React.Component{
 	} else{
 		section.classList.remove('active');
 	}
-	})})}
+	})
+	const header = document.getElementsByTagName("header")[0]
+  if(scrollPosition > 600){
+    header.classList.add("active");
+  } else {
+    header.classList.remove("active");
+  }
+})}
 
 	handleScroll(){
 		const carouselImages = document.querySelectorAll(".carousel-image");
@@ -43,8 +51,11 @@ class LandingPage extends React.Component{
 
 	return(
 
-		<div>
 
+		<div>
+			<header>
+				<App />
+			</header>
 			<section id="carousel">
 				<div id="carousel-text">
 					<h1>The Geo-Assassins</h1>

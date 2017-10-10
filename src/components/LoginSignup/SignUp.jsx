@@ -17,7 +17,6 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 import AppDownload from 'material-ui/svg-icons/action/get-app'
-import './style.css'
 import {
 	Stepper,
 	Step,
