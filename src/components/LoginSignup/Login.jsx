@@ -53,7 +53,7 @@ class Login extends Component {
 		}
 
 
-		return (isEmpty(this.props.auth) ? <Paper style={style} zDepth={5}>
+		return (<Paper style={style} zDepth={5}>
 				<div style={{width: '100%', maxWidth: 700}}>
 
 					<h4> Login to Assassin Account </h4>
@@ -74,14 +74,14 @@ class Login extends Component {
 					/>
 					<Divider/>
 
-					<RaisedButton label="Sign in" backgroundColor='lightblue' fullWidth={true}
+					<RaisedButton label="Sign in" backgroundColor='teal' fullWidth={true}
 					              onClick={this.handleSignIn.bind(this)}/>
 					<Divider/>
 
 					<LinearProgress mode="indeterminate" color='lightblue'/>
 					<Divider/>
 				</div>
-			</Paper> : <h4> Welcome</h4>)
+			</Paper>)
 
 	}
 }

@@ -1,3 +1,7 @@
+body {
+    color: white;
+    background-color: #4e4a46;
+}
 .signupComp {
     margin: 4px 4px 4px 4px;
 }
@@ -11,8 +15,13 @@
     margin: 5px 10px 5px 5px;
 }
 body {
-    background-image: url('http://www.pngall.com/wp-content/uploads/2016/07/Target.png');
-    background-size: 15%;
-    background-repeat: repeat;
-    background-color: #039be5;
+    background-color: gainsboro;
+}
+.closeButton {
+    float: left;
+}
+.progCirc {
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
 }

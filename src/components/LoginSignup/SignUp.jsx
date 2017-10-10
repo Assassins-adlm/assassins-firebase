@@ -28,6 +28,8 @@ import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
 import IconButton from 'material-ui/IconButton';
 import DeleteSweep from 'material-ui/svg-icons/navigation/cancel'
+import CircularProgress from 'material-ui/CircularProgress';
+
 
 
 //Config File Downloader
@@ -88,7 +90,6 @@ class CharCreate extends React.Component {
 
 		stepIndex === 2 ? this.setState({uid: this.props.auth.uid}) : console.log('...')
 		stepIndex === 4 ? this.setState({done:true, finished: true}) : console.log('...')
-		 stepIndex ? this.props.firebase.set(`/step`, this.state.stepIndex) : null
 	}
 	handlePrev = () => {
 		const {stepIndex} = this.state
@@ -97,6 +98,7 @@ class CharCreate extends React.Component {
 		}
 	}
 	close = () => {
+		this.props.firebase.set(`step`, 4)
 		this.setState({done: true, finished: true})
 	}
 
@@ -173,6 +175,7 @@ class CharCreate extends React.Component {
 			return	<div>{this.state.os === 'android' ? fileDownload(`{"_type":"configuration","waypoints":[],"autostartOnBoot":true,"beaconBackgroundScanPeriod":30,"beaconForegroundScanPeriod":0,"beaconLayout":"m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24","beaconMode":0,"cleanSession":false,"httpSchedulerConsiderStrategyDirect":true,"ignoreInaccurateLocations":0,"ignoreStaleLocations":0,"locatorAccuracyBackground":1,"locatorAccuracyForeground":0,"locatorDisplacement":1,"locatorInterval":10,"mode":3,"notification":true,"ranging":false,"url":"https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json"}`, `config.otrc`) : fileDownload(`{ "ranging" : false, "positions" : 50, "sub" : true, "locked" : false, "url" : "https://assassins-aldm.firebaseio.com/players/${this.state.uid}/Locations.json", "deviceId" : "", "monitoring" : 2, "cmd" : false, "tid" : "as", "allowRemoteLocation" : true, "_type" : "configuration", "ignoreStaleLocations" : 0, "updateAddressBook" : true, "allowinvalidcerts" : false, "locatorInterval" : 120, "extendedData" : true, "ignoreInaccurateLocations" : 0, "locatorDisplacement" : 1, "mode" : 3, "cp" : true }`, 'config.otrc')}  </div>
 
 			case 4:
+				this.props.firebase.set(`step`, this.state.stepIndex)
 				this.setState({done: true, finished: true})
 				return <h1>finito</h1>
 		}
@@ -186,22 +189,25 @@ class CharCreate extends React.Component {
 			margin: '5px 5px 5px 5px',
 			textAlign: 'center',
 			marginRight: '5%',
+			fontcolor: 'white',
+			orientation: 'vertical',
 		}
 		return (
-			!this.state.done ?  <Paper style={paperStyle} zDepth={5} >
+			 <Paper style={paperStyle} zDepth={5} >
 				<div>
-					<IconButton tooltip="Close" touch={true} style='background-color: red' onClick={this.close.bind(this)}>
+					<IconButton tooltip="Close" touch={true}  onClick={this.close.bind(this)} className='closeButton'>
 						<DeleteSweep style='background-color: red' />
 					</IconButton>
-					<Stepper activeStep={stepIndex}>
+					<CircularProgress size={30} thickness={7} className='progCirc' color='lightblue'/>
+					<Stepper activeStep={stepIndex}  orientation='vertical'>
 						<Step>
-							<StepLabel>Sign Up</StepLabel>
+							<StepLabel  style={{color: 'white'}}>Sign Up</StepLabel>
 						</Step>
 						<Step>
-							<StepLabel>Select Name</StepLabel>
+							<StepLabel  style={{color: 'white'}}>Select Name</StepLabel>
 						</Step>
 						<Step>
-							<StepLabel> Config</StepLabel>
+							<StepLabel  style={{color: 'white'}}> Config</StepLabel>
 						</Step>
 					</Stepper>
 					<div style={paperStyle}>
@@ -239,14 +245,13 @@ class CharCreate extends React.Component {
 					</div>
 
 				</div>
-			</Paper> : <h3></h3>
-
+			</Paper>
 		)
 	}
 }
 
 const
-	abWrap = firebaseConnect([{path: 'players'}, {path: 'profile'},
+	abWrap = firebaseConnect([{path: 'players'}, {path: 'profile'},{path: 'step'}
 	])(CharCreate)
 
 export default connect(
@@ -256,6 +261,7 @@ export default connect(
 		({
 			players: dataToJS(firebase, 'players'),
 			profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
+			step: dataToJS(firebase, '/step'),
 			auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
 		}),
 )
