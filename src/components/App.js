@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import MapBox from './MapBox'
 import SideBar from './SideBar'
 import '../index.css'
 import {connect} from 'react-redux'
@@ -19,15 +18,12 @@ class App extends Component {
 
 	render() {
 		console.log(this.props)
-
 		return (
 			<div className='mainComp'>
 				<SideBar />
 				<Login/>
 				<SignUp/>
-			</div>
-		)
-	}
+			</div> )}
 }
 
 

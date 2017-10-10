@@ -1,5 +1,5 @@
 import React from 'react'
-import {parseLocation} from './HelperFunc'
+import {parseLocation, parseTargetLocation} from './HelperFunc'
 import Geofire from 'geofire'
 const NotificationSystem = require('react-notification-system')
 
@@ -15,7 +15,7 @@ class EngagePrompt extends React.Component {
 		const notificationSystem = this.refs.notificationSystem
 		// console.log('player-->', player, 'target-->', target)
 		const myLocation = parseLocation(player.Locations)
-		const targetLocation = parseLocation(target.Locations)
+		const targetLocation = parseTargetLocation(target.Locations)
 		const distance = Geofire.distance(myLocation, targetLocation)
 		console.log('distance-->', distance)
 		if (distance < 0.1) {

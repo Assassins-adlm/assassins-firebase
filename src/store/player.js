@@ -9,7 +9,7 @@ const TOGGLE_SELECTED_PLAYER = 'TOGGLE_SELECTED_PLAYER'
 const CURRENT_TARGET= 'CURRENT_TARGET'
 const GUESS_PROMPT = 'GUESS_PROMPT'
 const CURRENT_ASSASSIN = 'CURRENT_ASSASSIN'
-const CURRENT_STATUS = 'CURRENT_STATUS'
+// const CURRENT_STATUS = 'CURRENT_STATUS'
 const NOTIFYTOKEN = 'NOTIFIYTOKEN'
 /**
  * INITIAL STATE
@@ -150,7 +150,7 @@ export const listeningAllPlayer = () => {
 	return (dispatch) => {
 		firebase.database().ref('/players')
 			.on('value', snapshot => {
-				// console.log('listening all players-->', snapshot.val())
+				console.log('listening all players-->', snapshot.val())
 				dispatch(allPlayers(filterPlayers(snapshot.val())))
 			})
 	}
@@ -182,7 +182,7 @@ export const listeningTarget = (targetId) => {
 	return (dispatch) => {
 		firebase.database().ref(`/players/${targetId}`)
 			.on('value', snapshot => {
-				dispatch(currentTarget(filterPlayer(snapshot.val())))
+				dispatch(currentTarget(snapshot.val()))
 			})
 	}
 }
