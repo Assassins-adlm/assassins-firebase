@@ -143,7 +143,7 @@ export const addCurrTarget = (player, target) => {
 					})
 			})
 			.then(() => {
-				firebase.database().ref(`/players/${target.id}`).update({beingTargted: true})
+				firebase.database().ref(`/players/${target.id}`).update({beingTargeted: true})
 			})
 			.catch(error => console.error(error))
 	}
@@ -236,20 +236,27 @@ export const listeningTarget = (targetId) => {
 
 export const battle = (player, target) => {
 	return (dispatch) => {
-		firebase.database().ref(`/players/${target.id}`).update({assassin: player.id})
+		firebase.database().ref(`/players/${target.id}`).update({assassin: player.id, beingTargeted: false})
 			.then(() => {
 				console.log('kill command!')
 			})
 	}
 }
 
-export const setStatus = (player, status) => {
+export const setStatus = (player, role, status) => {
+	console.log('player-->', player, 'status-->', status)
 	return (dispatch) => {
-		firebase.database().ref(`/players/${player.id}`).update({status})
-			.then(() => {
-				console.log('set status!!!')
-
-			})
+		if (role==='assassin') {
+			firebase.database().ref(`/players/${player.id}`).update({status: status, target: ''})
+				.then(() => {
+					console.log('set assassin status!!!')
+				})
+		} else if (role==='player') {
+			firebase.database().ref(`/players/${player.id}`).update({status: status, assassin: ''})
+				.then(() => {
+					console.log('set player status!!!')
+				})
+		}
 	}
 }
 

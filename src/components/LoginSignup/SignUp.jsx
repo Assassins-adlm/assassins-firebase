@@ -179,9 +179,10 @@ class CharCreate extends React.Component {
 			textAlign: 'center',
 			marginLeft: '25%',
 		}
+
 		return (
-			!this.state.done ?  <Paper style={paperStyle} zDepth={5} >
-				<div>
+			!this.state.done ?  <Paper zDepth={5} >
+				<div className = "Login">
 					<Stepper activeStep={stepIndex}>
 						<Step>
 							<StepLabel>Sign Up</StepLabel>
