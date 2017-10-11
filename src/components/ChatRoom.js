@@ -33,7 +33,11 @@ class ChatRoom extends React.Component {
 	}
 
 	handleChange(e){
-		console.log('something', e.target.value)
+		let selectPlayer = e.target.value || 'All'
+		let players = this.props.players
+		let id = players.filter(player => player.name === selectPlayer)[0].id || 'All'
+		console.log('SUP ', selectPlayer)
+		// console.log('something', e.target.value)
 	}
 
 	render() {
@@ -103,5 +107,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default compose(firebaseConnect([{path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(ChatRoom)
-
-// onChange={this.handleChange}
