@@ -49,7 +49,7 @@ class App extends Component {
 				<div>
 					<AppBar
 						style={{backgroundColor: 'black', fontcolor: 'white' , backgroundImage: 'url(http://www.unixstickers.com/image/data/stickers/guyfawkes/guyfawkes.sh.png)',
-						backgroundSize: '50px', backgroundPosition: 'left', backgroundRepeat: 'no-repeat', backgroundPositionX: '10%',
+						backgroundSize: '50px', backgroundPosition: 'left', backgroundRepeat: 'no-repeat', backgroundPositionX: '33%',
 						}}
 						className='navBar'
 						titleStyle={{color: 'white', textAlign: 'center' , fontFamily: 'courier' }}
