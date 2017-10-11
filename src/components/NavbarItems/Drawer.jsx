@@ -47,6 +47,7 @@ class theDrawer extends React.Component {
 
                     <Divider/>
                     <h4 className='name'> Welcome, {this.props.profile.name} </h4>
+                    <img className='imgProf' src={isLoaded(this.props.profile) ? `${this.props.profile.image}`: '' }/>
                     <Divider/>
 
                     <h4> Account Balance : </h4> <h4 className='cash'>{this.props.profile.score}</h4>
