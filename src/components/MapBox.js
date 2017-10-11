@@ -147,7 +147,7 @@ class MapBox extends React.PureComponent {
 					guessPrompt && player.assassin && <GuessPrompt player={player} assassin={assassin} setStatus={this.props.setStatus}/>
 				}
 				{
-					(player.status === 'dead' || player.status === 'kill') && <BattleResult status={player.status}/>
+					(player.status === 'dead' || player.status === 'kill') && <BattleResult player={player} status={player.status} setStatus={this.props.setStatus}/>
 				}
 				{
 					player.status === 'dead' && <Revive revivePlayer={revivePlayer} player={player}/>

@@ -54,7 +54,7 @@ class GuessPrompt extends React.Component {
 			<div>
 				<form onSubmit={this.handleSubmit}>
 					<label>
-          Guess Who is trying to finish you, you have 60 seconds:
+          Reveal Assassin, you have 60 seconds:
 						<div ref="guessTimer">{this.state.counter}</div>
 						<input type="text" name="name" />
 					</label>
