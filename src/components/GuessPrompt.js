@@ -23,7 +23,7 @@ class GuessPrompt extends React.Component {
 	}
 
 	tick() {
-		const {player, setStatus} = this.props
+		const {player, setStatus, assassin} = this.props
 		if (this.refs.guessTimer) {
 			this.setState({
 				counter: this.state.counter - 1
@@ -32,6 +32,7 @@ class GuessPrompt extends React.Component {
 		// console.log('counter-->', this.state.counter)
 		if (this.state.counter === 0) {
 			// set player to dead
+			setStatus(assassin, 'assassin', 'kill')
 			setStatus(player, 'player', 'dead')
 		}
 	}

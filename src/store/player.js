@@ -30,7 +30,7 @@ const playerState = {
 
 export function currentPlayer  (player) {return {type: CURRENT_PLAYER, player}}
 export function allPlayers (players) {return {type: ALL_PLAYERS, players}}
-export function toggleSelectedPlayer (player) {return {type: TOGGLE_SELECTED_PLAYER, player}}
+// export function toggleSelectedPlayer (player) {return {type: TOGGLE_SELECTED_PLAYER, player}}
 // export function currentLocation (location) {return {type: CURRENT_LOCATION, location}}
 export function currentTarget (target) {return {type: CURRENT_TARGET, target}}
 export function currentAssassin (assassin) {return {type: CURRENT_ASSASSIN, assassin}}
@@ -56,6 +56,17 @@ export const fetchPlayers = () => {
 			.then(snapshot => {
 				dispatch(allPlayers(filterPlayers(snapshot.val())))
 			}, error => console.error(error))
+	}
+}
+
+export const toggleSelectedPlayer = (player) => {
+	return (dispatch) => {
+		let playerRef = firebase.database().ref(`/players/${player.uid}`)
+		playerRef.once('value')
+			.then(snapshot => {
+				let isInfoOpen = snapshot.val().openInfo || false
+				playerRef.update({openInfo: !isInfoOpen})
+			})
 	}
 }
 

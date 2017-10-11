@@ -19,6 +19,8 @@ import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, list
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
+	const playerIcon = {url: './images/markers/assassin-icon.png'}
+	const otherPlayersIcon = {url: './images/markers/players-icon.png'}
 	const {players, mapStyles, target} = props
 	const currPlayer = props.player
 	let myLocation
@@ -45,9 +47,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 								(player.Locations && player.status!=='dead') && //need to change this
 					<Marker
 						key={idx}
-						icon={{
-							url: './images/markers/assassin-icon.png'
-						}}
+						icon={player.uid === currPlayer.uid ? playerIcon : otherPlayersIcon}
 						position={{ lat: player.Locations.lat, lng: player.Locations.lon }}
 						onClick={()=> {
 							props.onToggleOpen(player)
@@ -158,7 +158,7 @@ class MapBox extends React.PureComponent {
 				<MapWithAMarkerClusterer
 					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
 					loadingElement={<div style={{ height: '100%' }} />}
-					containerElement={<div style={{ height: '100vh' }} />}
+					containerElement={<div style={{ height: '85vh' }} />}
 					mapElement={<div style={{ height: '100%' }} />}
 					{...this.props}
 					onToggleOpen={this.onToggleOpen}
