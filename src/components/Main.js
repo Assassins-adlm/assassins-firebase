@@ -4,6 +4,7 @@ import PlayerProfile from './PlayerProfile'
 import Setting from './Setting'
 import ChatRoom from './ChatRoom'
 import Target from './Target'
+import Game from './Game'
 import LandingPage from './LandingPage'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import {Router} from 'react-router'
@@ -21,6 +22,7 @@ export default class Main extends React.Component {
 					<Route path="/profile" component={PlayerProfile}/>
 					<Route path="/chat" component={ChatRoom}/>
 					<Route path="/setting" component={Setting}/>
+					<Route path = "/game"component={Game}/>
 					<Route path="/target" component={Target}/>
 					<Redirect to="/" component={LandingPage}/>
 				</Switch>
