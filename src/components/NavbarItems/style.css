@@ -1,0 +1,26 @@
+
+
+h4 {
+    text-align: center;
+    font-family: Courier;
+    font-size: small;
+
+}
+
+img {
+    size: 100px;
+}
+
+
+.cash{
+    font-size: large;
+    font-weight: 900;
+    color: limegreen;
+
+}
+.name {
+    font-size: large;
+    font-weight: 700;
+    color: red;
+
+}
