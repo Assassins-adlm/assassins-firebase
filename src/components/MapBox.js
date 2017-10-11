@@ -26,16 +26,17 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	let myLocation
 	if (currPlayer.Locations) {
 		myLocation = []
-		myLocation[0] = currPlayer.Locations.lat || 74
-		myLocation[1] = currPlayer.Locations.lon || -40
+		myLocation[0] = currPlayer.Locations.lat || 40
+		myLocation[1] = currPlayer.Locations.lon || -74
 	}
 	// let fakeLocation = props.fakeLocation
 	console.log('curr player location*****>>', myLocation)
+	console.log('target-->', target)
 	if (myLocation && !target.Locations) {
 		return (
 			<div>
 				<GoogleMap
-					zoom={50}
+					zoom={15}
 					defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
 					options={{ styles: mapStyles, mapTypeControl: false }}
 				>
@@ -72,7 +73,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	} else if (myLocation && target.Locations) {
 		return (
 			<GoogleMap
-				zoom={100}
+				zoom={15}
 				defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
 				options={{ styles: mapStyles, mapTypeControl: false }}
 			>
@@ -82,6 +83,27 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 					})}
 				>
 				</HeatmapLayer>
+				{
+					players.map(player => player.uid === currPlayer.uid ?
+						<Marker
+							key={player.uid}
+							icon={{
+								url: './images/markers/assassin-icon.png'
+							}}
+							position={{ lat: myLocation[0], lng: myLocation[1] }}
+							onClick={()=> {
+								props.onToggleOpen(player)
+							}}
+						>
+							{
+								player.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(player)}}>
+									<MyInfo {...player}/>
+								</InfoWindow>
+							}
+						</Marker> : null
+					)
+				}
+
 			</GoogleMap>
 		)
 	} else {
