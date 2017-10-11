@@ -7,6 +7,7 @@ import SideBar from './SideBar'
 import '../index.css'
 import {connect} from 'react-redux'
 import Login from './LoginSignup/Login'
+import Drawer from './NavbarItems/Drawer'
 import {compose} from 'redux'
 import {
 	firebaseConnect,
@@ -36,7 +37,7 @@ class App extends Component {
 	}
 	logout() {
 		this.props.firebase.set(`step`, 0)
-		isLoaded(this.props.firebase) ? this.props.firebase.logout() : null
+		isLoaded(this.props.firebase) ? this.props.firebase.logout() : this.props.firebase.set(`step`, 0)
 	}
 
 
@@ -55,9 +56,7 @@ class App extends Component {
 						title={`Assassins ${a}`}
 						iconElementLeft={ isEmpty(this.props.auth)? <IconButton tooltip='SignUp' iconStyle={{background: 'white'}} touch={true}   onClick={this.setIndex.bind(this)}>
 							<LogOut  />
-						</IconButton> : <IconButton iconStyle={{background: 'lightgrey'}} touch={true}  >
-							<Nav  />
-						</IconButton> }
+						</IconButton> : !isEmpty(this.props.auth) && (isLoaded(this.props.step) ? this.props.step === 4: false)   ? <Drawer/> : null}
 						iconElementRight={isEmpty(this.props.auth) ? <IconButton tooltip='Login' iconStyle={{background: 'white'}} touch={true}   onClick={this.showLogin.bind(this)}>
 							<LogOut  />
 						</IconButton> : <IconButton tooltip='Logout' iconStyle={{background: 'red'}} touch={true}   onClick={this.logout.bind(this)}>
@@ -68,8 +67,9 @@ class App extends Component {
 
 				</div>
 				{this.state.showLogin && isEmpty(this.props.auth) ? <Login/> : null}
-				{ this.props.step !== 4  ? <SignUp/> :  <div><Paper className='signInInfo'> { `${!isEmpty(this.props.profile) ? 'You\'re signed in, ' + this.props.profile.name : ``}` } </Paper> </div>}
+				{ this.props.step !== 4  ? <SignUp/> :  <div>  <Paper className='signInInfo'> { `${!isEmpty(this.props.profile) ? 'You\'re signed in, ' + this.props.profile.name : ``}` } </Paper> </div>}
 				{!isEmpty(this.props.auth) ? <MapBox auth={this.props.auth}/> : null}
+
 			</div>
 
 		)

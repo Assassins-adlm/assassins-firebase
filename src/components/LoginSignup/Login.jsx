@@ -25,6 +25,7 @@ class Login extends Component {
 			loading: true,
 			user: null,
 			newPlayer: true,
+			uid: ''
 		}
 		this.handleLogin = this.handleLogin.bind(this)
 		this.handleSignIn = this.handleSignIn.bind(this)
@@ -32,16 +33,17 @@ class Login extends Component {
 	}
 
 	componentDidMount() {
-
 	}
 
 	handleLogin = (evt) => {
 		evt.target.name === 'email' ? this.setState({email: evt.target.value}) : this.setState({password: evt.target.value})
-		console.log(this.state)
+
+        console.log(this.state)
 	}
 	handleSignIn = () => {
 		this.props.firebase.login({email: this.state.email, password: this.state.password}).then(()=>{
-			return this.props.firebase.set(`step`, 4)
+			 this.props.firebase.set(`step`, 4)
+			return this.props.firebase.set(`profile/${this.state.uid}`, `$500`)
 		}).catch(alert)
 	}
 
@@ -50,7 +52,7 @@ class Login extends Component {
 			display: 'inline-block',
 			margin: '16px 16px 16px 20px',
 			textAlign: 'center',
-			width: '75%',
+			width: '35%',
 			float: 'left',
 		}
 
@@ -96,11 +98,12 @@ const mapStateToProps = (state) => {
 		myProfile: dataToJS(state.firebase, 'players'),
 		step: dataToJS(state.firebase, '/step'),
 		profile: pathToJS(state.firebase, 'profile'), // pass profile data as this.props.profile
+		score: dataToJS(state.firebase, 'profile/score'), // pass profile data as this.props.profile
 
 	}
 }
 
-export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'} ,{path: 'profile'}, {path: 'step'}]), connect(mapStateToProps))(Login)
+export default compose(firebaseConnect([{path: 'players'}, {path: 'auth'} ,{path: 'profile'}, {path: 'step'}, {path: 'profile/score'}]), connect(mapStateToProps))(Login)
 
 
 
