@@ -41,8 +41,9 @@ class MyTarget extends React.Component {
 		return (
 			<div>
 				<h1>this is: {target.name}</h1>
+				<p>score: {target.kills || 0}</p>
 				{
-					!currPlayer.target && <button onClick={() => submitTarget(target)}>target</button>
+					!currPlayer.target && currPlayer.status!=='dead' && <button onClick={() => submitTarget(target)}>target</button>
 				}
 			</div>
 		)

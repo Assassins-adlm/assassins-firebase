@@ -9,16 +9,20 @@ class BattleResult extends React.Component {
 	}
 
 	componentDidMount() {
-		const {status} = this.props
+		const {status, setStatus, player} = this.props
 		const notificationSystem = this.refs.battleResultNotification
 		this._addNotification(notificationSystem, status)
+		// dispatch setstatus to alive
+		if (status === 'kill') {
+			setStatus(player, 'player', 'alive')
+		}
 	}
 
 	_addNotification(_notificationSystem, option) {
 		// const {player, target} = this.props
 		if (option === 'kill') {
 			_notificationSystem.addNotification({
-				message: 'You Got it, keep on targeting!',
+				message: 'You won!',
 				level: 'success',
 				autoDismiss: 0
 			})
