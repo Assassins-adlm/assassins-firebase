@@ -13,6 +13,10 @@ class ChatRoom extends React.Component {
 	componentDidMount() {
 		this.props.fetchAllMessages()
 		this.props.fetchPlayers()
+		//change chatbox view depending on selected player
+		//push message to the selected player
+		//attach an id to the message to the person I'm messaging
+		//attach an id to the message of the person who messaged me back
 	}
 	componentDidUpdate() {
 		let el = this.refs.chatbox
