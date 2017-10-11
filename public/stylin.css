@@ -395,4 +395,15 @@ section {
   height: 6em;
   border-radius: 1em 1em 0 0;
   background-color: #252525;
-  color: #fff; }
+  color: #fff;
+ }
+
+  .backgroundTextClock {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    overflow: hidden;
+ }
