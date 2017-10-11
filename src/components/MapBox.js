@@ -13,14 +13,11 @@ import {compose} from 'redux'
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
 import HeatmapLayer from 'react-google-maps/lib/components/visualization/HeatmapLayer'
 import Geofire from 'geofire'
-// import FightScene from './fightScene'
-// import {generateFakeLocation, getLocation} from './HelperFunc'
 import MapStyle from './MapStyle.json'
 import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, battle, setStatus} from '../store'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
-	// console.log('props***', props)
 	const {players, mapStyles, target} = props
 	const currPlayer = props.player
 	let myLocation
@@ -29,9 +26,6 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 		myLocation[0] = currPlayer.Locations.lat || 40
 		myLocation[1] = currPlayer.Locations.lon || -74
 	}
-	// let fakeLocation = props.fakeLocation
-	console.log('curr player location*****>>', myLocation)
-	console.log('target-->', target)
 	if (myLocation && !target.Locations) {
 		return (
 			<div>
@@ -122,7 +116,6 @@ class MapBox extends React.PureComponent {
 	}
 
 	submitTarget(target) {
-		console.log('target-->', target.id)
 		const {submitCurrTarget, player} = this.props
 		submitCurrTarget(player, target)
 	}
@@ -134,11 +127,8 @@ class MapBox extends React.PureComponent {
 
 	componentDidMount() {
 		const {auth, getCurrPlayer, getAllPlayer, listenAllPlayer, listenMyself, getCurrentToken} = this.props
-		console.log('map props-->', this.props)
 		getCurrPlayer(auth.uid)
 		getAllPlayer()
-		// getCurrTarget(auth.uid)
-		// getCurrAssassin(auth.uid)
 		listenAllPlayer()
 		listenMyself(auth.uid)
 		getCurrentToken(auth.uid)
@@ -146,11 +136,7 @@ class MapBox extends React.PureComponent {
 	}
 
 	render() {
-		console.log('redering!!')
-		// console.log('props****>>', this.props)
 		const {player, target, guessPrompt, assassin} = this.props
-		console.log('curr player-->', player)
-		console.log('being target-->', player.beingTargeted)
 		return (
 			<div>
 				{
@@ -179,9 +165,7 @@ class MapBox extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-	// console.log('state==>', state)
 	return {
-		// auth: pathToJS(state.firebase, 'auth'),
 		players: state.player.players,
 		player: state.player.player,
 		target: state.player.target,
@@ -202,12 +186,6 @@ const mapDispatchToProps = (dispatch) => {
 		getAllPlayer() {
 			dispatch(fetchPlayers())
 		},
-		// getCurrTarget(uid) {
-		// 	dispatch(fetchCurrTarget(uid))
-		// },
-		// getCurrAssassin(uid) {
-		// 	dispatch(fetchCurrAssassin(uid))
-		// },
 		togglePlayer(player) {
 			dispatch(toggleSelectedPlayer(player))
 		},

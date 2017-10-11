@@ -59,41 +59,6 @@ export const fetchPlayers = () => {
 	}
 }
 
-// export const fetchCurrTarget = (uid) => {
-// 	return (dispatch) => {
-// 		firebase.database().ref(`/players/${uid}`).once('value')
-// 			.then(snapshot => {
-// 				let player = filterPlayer(snapshot.val())
-// 				let targetId = snapshot.val().target
-// 				if (targetId) {
-// 					firebase.database().ref(`/players/${targetId}`).once('value')
-// 						.then(snapshot => {
-// 							let target = filterPlayer(snapshot.val())
-// 							dispatch(currentTarget(target))
-// 							dispatch(listeningTarget(target))
-// 						})
-// 				}
-// 			})
-// 	}
-// }
-
-// export const fetchCurrAssassin = (uid) => {
-// 	return (dispatch) => {
-// 		firebase.database().ref(`/players/${uid}`).once('value')
-// 			.then(snapshot => {
-// 				let player = filterPlayer(snapshot.val())
-// 				let assassinId = snapshot.val().assassin
-// 				if (assassinId) {
-// 					firebase.database().ref(`/players/${assassinId}`).once('value')
-// 						.then(snapshot => {
-// 							let assassin = filterPlayer(snapshot.val())
-// 							dispatch(currentAssassin(assassin))
-// 							dispatch(listeningAssassin(assassin.id))
-// 						})
-// 				}
-// 			})
-// 	}
-// }
 
 export const getCurrToken = (id) => {
 	return () => {
@@ -190,50 +155,6 @@ export const listeningTarget = (targetId) => {
 	}
 }
 
-// export const listeningAssassin = (assassinId) => {
-// 	return (dispatch) => {
-// 		firebase.database().ref(`/players/${assassinId}`)
-// 			.on('value', snapshot => {
-// 				dispatch(currentAssassin(filterPlayer(snapshot.val())))
-// 			})
-// 	}
-// }
-
-// export const determinWinner = (id) => {
-// 	return (dispatch) => {
-// 		const playerRef = firebase.database().ref(`/players/${id}`)
-// 		playerRef.once('value')
-// 			.then(snapshot => {
-// 				const player = filterPlayer(snapshot.val())
-// 				const targetId = player.target
-// 				const targetRef = firebase.database().ref(`/players/${targetId}`)
-// 				targetRef.once('value')
-// 					.then(snapshot => {
-// 						const target = filterPlayer(snapshot.val())
-// 						if (player.status === 'dead') {
-// 							// remove target from player in db
-// 							playerRef.update({target: ''})
-// 								.then(() => {
-// 									//lose view
-// 									// set player to a respawning timer
-// 									console.log('you lose!')
-// 								})
-// 						} else {
-// 							// set target status to dead
-// 							// remove assassin in target
-// 							targetRef.update({status: 'dead', assassin: ''})
-// 								.then(() => {
-// 									playerRef.update({target: ''})
-// 								})
-// 								.then(() => {
-// 									console.log('you win')
-// 								})
-// 						}
-// 					})
-// 			})
-// 	}
-// }
-
 export const battle = (player, target) => {
 	return (dispatch) => {
 		firebase.database().ref(`/players/${target.uid}`).update({assassin: player.uid, beingTargeted: false})
@@ -247,7 +168,8 @@ export const setStatus = (player, role, status) => {
 	console.log('player-->', player, 'status-->', status)
 	return (dispatch) => {
 		if (role==='assassin') {
-			firebase.database().ref(`/players/${player.uid}`).update({status: status, target: ''})
+			let playerRef = firebase.database().ref(`/players/${player.uid}`)
+			playerRef.update({status: status, target: ''})
 				.then(() => {
 					console.log('set assassin status!!!')
 					dispatch(currentTarget({}))
@@ -323,7 +245,7 @@ const filterPlayers = (players) => {
 }
 
 export const filterPlayer = (player) => {
-	if (player.Locations) {
+	if (player && player.Locations) {
 		let Locations = Object.values(player.Locations)
 		let Location = Locations[Locations.length-1]
 		player.Locations = Location
