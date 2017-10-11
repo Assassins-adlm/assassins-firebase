@@ -4,11 +4,36 @@ class GuessPrompt extends React.Component {
 
 	constructor(props) {
 		super(props)
+		this.state = {
+			timer: null,
+			counter: 60
+		}
 		this.handleSubmit = this.handleSubmit.bind(this)
+		this.tick = this.tick.bind(this)
 	}
 
 	componentDidMount() {
 		// const {player} = this.props
+		let timer = setInterval(this.tick, 1000)
+		this.setState({timer})
+	}
+
+	componentWillUnmount () {
+		clearInterval(this.state.timer)
+	}
+
+	tick() {
+		const {player, setStatus} = this.props
+		if (this.refs.guessTimer) {
+			this.setState({
+				counter: this.state.counter - 1
+			})
+		}
+		// console.log('counter-->', this.state.counter)
+		if (this.state.counter === 0) {
+			// set player to dead
+			setStatus(player, 'player', 'dead')
+		}
 	}
 
 	handleSubmit(evt) {
@@ -29,7 +54,8 @@ class GuessPrompt extends React.Component {
 			<div>
 				<form onSubmit={this.handleSubmit}>
 					<label>
-          Guess Who is trying to finish you:
+          Guess Who is trying to finish you, you have 60 seconds:
+						<div ref="guessTimer">{this.state.counter}</div>
 						<input type="text" name="name" />
 					</label>
 					<input type="submit" value="Submit" />

@@ -6,6 +6,7 @@ import EngagePrompt from './EngagePrompt'
 import GuessPrompt from './GuessPrompt'
 import BattleResult from './BattleResult'
 import TargetingWarning from './TargetingWarning'
+import Revive from './revive'
 import {withGoogleMap, GoogleMap, Marker, InfoWindow} from 'react-google-maps'
 import {firebaseConnect, dataToJS, pathToJS, isLoaded, isEmpty} from 'react-redux-firebase'
 import {connect} from 'react-redux'
@@ -14,7 +15,7 @@ import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClust
 import HeatmapLayer from 'react-google-maps/lib/components/visualization/HeatmapLayer'
 import Geofire from 'geofire'
 import MapStyle from './MapStyle.json'
-import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, battle, setStatus} from '../store'
+import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, battle, setStatus, revivePlayer} from '../store'
 const NotificationSystem = require('react-notification-system')
 
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
@@ -26,7 +27,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 		myLocation[0] = currPlayer.Locations.lat || 40
 		myLocation[1] = currPlayer.Locations.lon || -74
 	}
-	if (myLocation && !target.Locations) {
+	if (myLocation && !target) {
 		return (
 			<div>
 				<GoogleMap
@@ -64,7 +65,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 						})}
 					</MarkerClusterer>
 				</GoogleMap> </div>)
-	} else if (myLocation && target.Locations) {
+	} else if (myLocation && target) {
 		return (
 			<GoogleMap
 				zoom={15}
@@ -132,21 +133,24 @@ class MapBox extends React.PureComponent {
 		listenAllPlayer()
 		listenMyself(auth.uid)
 		getCurrentToken(auth.uid)
-
 	}
 
 	render() {
-		const {player, target, guessPrompt, assassin} = this.props
+		const {player, target, guessPrompt, assassin, revivePlayer} = this.props
+		console.log('target===>', target)
 		return (
 			<div>
 				{
-					player.Locations && target.Locations && player.status !== 'dead' && target.status !== 'dead' && !target.assassin && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
+					player.Locations && player.status !== 'dead' && target && target.status !== 'dead' && !target.assassin && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
 				}
 				{
 					guessPrompt && player.assassin && <GuessPrompt player={player} assassin={assassin} setStatus={this.props.setStatus}/>
 				}
 				{
 					(player.status === 'dead' || player.status === 'kill') && <BattleResult status={player.status}/>
+				}
+				{
+					player.status === 'dead' && <Revive revivePlayer={revivePlayer} player={player}/>
 				}
 				{
 					player.beingTargeted && <TargetingWarning />
@@ -203,6 +207,9 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		battle(player, target) {
 			dispatch(battle(player, target))
+		},
+		revivePlayer(player) {
+			dispatch(revivePlayer(player))
 		}
 	}
 }
