@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-dev": "react-scripts start && firebase serve",
+    "start-dev": "react-scripts start && firebase serve ",
     "build": "react-scripts build",
     "build-dev": "react-scripts build && firebase serve",
     "test": "react-scripts test --env=jsdom",
