@@ -12,10 +12,10 @@ export default class GameLogic extends React.Component {
 		this.init = this.init.bind(this)
 		this.startGryo = this.startGryo.bind(this)
 		this.update = this.update.bind(this)
+		this.handClick = this.handClick.bind(this)
 	}
 
-	init()
-	{
+	init(){
 		ball = document.getElementById('ball')
 		w = window.innerWidth
 		h = window.innerHeight
@@ -55,8 +55,7 @@ export default class GameLogic extends React.Component {
 	}
 
 
-	update()
-	{
+	update(){
 		ball.position.x += ball.velocity.x
 		ball.position.y += ball.velocity.y
 
@@ -99,6 +98,24 @@ export default class GameLogic extends React.Component {
 		this.update()
 	}
 
+	handClick(){
+		var rect1 = document.getElementById('ball').getBoundingClientRect()
+		var rect2 = document.getElementById('square').getBoundingClientRect()
+
+    var overlap = !(rect1.right < rect2.left || 
+                rect1.left > rect2.right || 
+                rect1.bottom < rect2.top || 
+                rect1.top > rect2.bottom)
+
+
+		if(overlap){
+			alert('fuck yea bitch')
+		}else{
+			alert('no bitch')
+		}
+
+	}
+
 	render(){
 		const style = {
 			'-webkit-transition': 'all',
@@ -111,18 +128,17 @@ export default class GameLogic extends React.Component {
 		}
 
 
-
-
 		return(
 			<div>
-        <p></p>
+ 
 				<div id='square'></div>
 
 				<Time />
-				<div id="ball" style = {style}></div>
+				<div id="ball" style = {style} onClick={this.handClick}></div>
 
 			</div>
 		)
 	}
 
 }
+
