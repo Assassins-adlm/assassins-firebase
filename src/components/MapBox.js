@@ -16,13 +16,16 @@ import HeatmapLayer from 'react-google-maps/lib/components/visualization/Heatmap
 import Geofire from 'geofire'
 import MapStyle from './MapStyle.json'
 import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, battle, setStatus, revivePlayer} from '../store'
+import {filterPlayers, filterPlayer} from './HelperFunc'
 const NotificationSystem = require('react-notification-system')
-
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	const playerIcon = {url: './images/markers/assassin-icon.png'}
 	const otherPlayersIcon = {url: './images/markers/players-icon.png'}
-	const {players, mapStyles, target} = props
-	const currPlayer = props.player
+	const {players, mapStyles, target, profile} = props
+	const currPlayer = filterPlayer(profile)
+	const allPlayers = filterPlayers(players)
+	console.log('current player==>', currPlayer)
+	console.log('all players==>', allPlayers)
 	let myLocation
 	if (currPlayer.Locations) {
 		myLocation = []
@@ -42,7 +45,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 						enableRetinaIcons
 						gridSize={10}
 					>
-						{players.map((player, idx) => {
+						{allPlayers.map((player, idx) => {
 							return (
 								(player.Locations && player.status!=='dead') && //need to change this
 					<Marker
@@ -79,7 +82,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 				>
 				</HeatmapLayer>
 				{
-					players.map(player => player.uid === currPlayer.uid ?
+					allPlayers.map(player => player.uid === currPlayer.uid ?
 						<Marker
 							key={player.uid}
 							icon={{
@@ -127,20 +130,22 @@ class MapBox extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		const {auth, getCurrPlayer, getAllPlayer, listenAllPlayer, listenMyself, getCurrentToken} = this.props
-		getCurrPlayer(auth.uid)
-		getAllPlayer()
-		listenAllPlayer()
-		listenMyself(auth.uid)
-		getCurrentToken(auth.uid)
+		// const {profile, listenAllPlayer, listenMyself, getCurrentToken} = this.props
+		// getCurrPlayer(profile.uid)
+		// getAllPlayer()
+		// listenAllPlayer()
+		// listenMyself(profile.uid)
+		// getCurrentToken(profile.uid)
 	}
 
 	render() {
-		const {player, target, guessPrompt, assassin, revivePlayer} = this.props
+		const {profile, target, guessPrompt, assassin, revivePlayer} = this.props
 		console.log('target===>', target)
+		const player = profile
 		return (
+			isLoaded(this.props.profile) && isLoaded(this.props.players) &&
 			<div>
-				{
+				{/* {
 					player.Locations && player.status !== 'dead' && target && target.status !== 'dead' && !target.assassin && <EngagePrompt key={JSON.stringify(player)} player={player} target={target} battle={this.props.battle}/>
 				}
 				{
@@ -154,7 +159,7 @@ class MapBox extends React.PureComponent {
 				}
 				{
 					player.beingTargeted && <TargetingWarning />
-				}
+				} */}
 				<MapWithAMarkerClusterer
 					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
 					loadingElement={<div style={{ height: '100%' }} />}
@@ -170,8 +175,8 @@ class MapBox extends React.PureComponent {
 
 const mapStateToProps = (state) => {
 	return {
-		players: state.player.players,
-		player: state.player.player,
+		profile: pathToJS(state.firebase, 'profile'),
+		players: dataToJS(state.firebase, 'players'),
 		target: state.player.target,
 		assassin: state.player.assassin,
 		guessPrompt: state.player.guessPrompt,
@@ -214,4 +219,4 @@ const mapDispatchToProps = (dispatch) => {
 	}
 }
 
-export default compose(firebaseConnect([{path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(MapBox)
+export default compose(firebaseConnect([{path: 'players'}, {path: 'profile'}, {path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(MapBox)

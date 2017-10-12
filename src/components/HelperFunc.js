@@ -57,3 +57,27 @@ export const parsePlayers = (players) => {
 		player.Locations = Object.values(player.Locations)
 	})
 }
+
+export const filterPlayers = (players) => {
+	let filteredPlayers = Object.values(players).filter(player => {
+		if (player.Locations) {
+			let Locations = Object.values(player.Locations)
+			let Location = Locations[Locations.length-1]
+			if (typeof Location === 'object') {
+				player.Locations = Location
+				return player
+			}
+		}
+	})
+	return filteredPlayers
+}
+
+export const filterPlayer = (player) => {
+	if (player && player.Locations) {
+		let Locations = Object.values(player.Locations)
+		let Location = Locations[Locations.length-1]
+		player.Locations = Location
+		return player
+	}
+	return {}
+}
