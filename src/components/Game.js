@@ -42,14 +42,14 @@ export default class GameLogic extends React.Component {
 		window.requestAnimationFrame = ( function() {
 
 			return window.webkitRequestAnimationFrame ||
-																			window.mozRequestAnimationFrame ||
-																			window.oRequestAnimationFrame ||
-																			window.msRequestAnimationFrame ||
-																			function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+												window.mozRequestAnimationFrame ||
+												window.oRequestAnimationFrame ||
+												window.msRequestAnimationFrame ||
+												function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
 
-																				window.setTimeout( callback, 1000 / 60 )
+													window.setTimeout( callback, 1000 / 60 )
 
-																			}
+												}
 
 		} )()
 	}
@@ -115,7 +115,7 @@ export default class GameLogic extends React.Component {
 
 		return(
 			<div>
-
+        <p></p>
 				<div id='square'></div>
 
 				<Time />
