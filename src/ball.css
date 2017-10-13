@@ -1,0 +1,9 @@
+#ball {
+    -webkit-transition: all;
+    transition : all;
+    position:absolute;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background: rgba(0,0,0,0) url('target.png') ;
+}

@@ -1,6 +1,7 @@
 import React from 'react'
 import Time from './time'
 import '../square.css'
+import '../ball.css'
 
 var ball, w, h
 export default class GameLogic extends React.Component {
@@ -87,9 +88,6 @@ export default class GameLogic extends React.Component {
 	}
 
 
-
-
-
 	componentDidMount(){
 		this.startGryo()
 		this.init()
@@ -103,6 +101,7 @@ export default class GameLogic extends React.Component {
 	}
 
 	handClick(){
+    
 		var rect1 = document.getElementById('ball').getBoundingClientRect()
 		var rect2 = document.getElementById('square').getBoundingClientRect()
 
@@ -110,27 +109,20 @@ export default class GameLogic extends React.Component {
 																rect1.left > rect2.right || 
 																rect1.bottom < rect2.top || 
 																rect1.top > rect2.bottom)
-
-
+    
+    
 		if(overlap){
+      navigator.vibrate(200)
 			alert('fuck yea bitch')
 		}else{
+      navigator.vibrate(200)
 			alert('no bitch')
 		}
-
+ 
+    
 	}
 
 	render(){
-		const style = {
-			'-webkit-transition': 'all',
-			'transition': 'all',
-			'position':'absolute',
-			'width':'100px',
-			'height':'100px',
-			'border-radius':'50%',
-			'background': 'white',
-		}
-
 
 		return(
 			<div>
@@ -138,7 +130,7 @@ export default class GameLogic extends React.Component {
 				<div id='square'></div>
 
 				<Time />
-				<div id="ball" style = {style} onClick={this.handClick}></div>
+				<div id="ball"  onClick={this.handClick}></div>
 
 			</div>
 		)

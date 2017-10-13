@@ -1,18 +1,27 @@
 #square {
     width:100px;
     height:100px;
-    background:red;
-    position: fixed;
-    /*position:absolute;
+    background:blue;
+    /*position: fixed;*/
+    position:absolute;
     animation-name: myMove;
-    animation-duration: 1s;
+    animation-duration: 2s;
     animation-iteration-count: infinite;
-    animation-direction: alternate;*/
+    animation-direction: alternate;
 
   
 }
 
+/*@keyframes myMove {
+    0% {left: 0px; top: }
+    100% {top: 90vw;}
+}*/
+
 @keyframes myMove {
-    0% {left: 0px;}
-    100% {left: 90vw;}
+    0%   { left:0px; top:0px;}
+    25%  { left:300px; top:0px;}
+    50%  { left:300px; top:300px;}
+    75%  { left:0px; top:300px;}
+    100% { left:0px; top:0px;}
 }
+
