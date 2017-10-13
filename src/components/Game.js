@@ -13,6 +13,9 @@ export default class GameLogic extends React.Component {
 		this.startGryo = this.startGryo.bind(this)
 		this.update = this.update.bind(this)
 		this.handClick = this.handClick.bind(this)
+
+		this.newPosition = this.newPosition.bind(this)
+		this.animateDiv = this.animateDiv.bind(this)
 	}
 
 	init(){
@@ -85,6 +88,25 @@ export default class GameLogic extends React.Component {
 		requestAnimationFrame( this.update )//KEEP ANIMATING
 	}
 
+	newPosition(){
+		var h = window.innerHeight - 50
+		var w = window.innerWidth - 50
+    
+		var nh = Math.floor(Math.random() * h)
+		var nw = Math.floor(Math.random() * w)
+    
+		return [nh, nw]
+	}
+
+
+	animateDiv(){
+		var square = document.getElementById('square')
+		var newq = this.newPosition()
+		// $('.a').animate({ top: newq[0], left: newq[1] }, function(){
+		// 	this.animateDiv()        
+		// })
+    
+	}
 
 	componentDidMount(){
 		this.startGryo()
@@ -102,10 +124,10 @@ export default class GameLogic extends React.Component {
 		var rect1 = document.getElementById('ball').getBoundingClientRect()
 		var rect2 = document.getElementById('square').getBoundingClientRect()
 
-    var overlap = !(rect1.right < rect2.left || 
-                rect1.left > rect2.right || 
-                rect1.bottom < rect2.top || 
-                rect1.top > rect2.bottom)
+		var overlap = !(rect1.right < rect2.left || 
+																rect1.left > rect2.right || 
+																rect1.bottom < rect2.top || 
+																rect1.top > rect2.bottom)
 
 
 		if(overlap){
