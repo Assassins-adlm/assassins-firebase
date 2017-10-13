@@ -15,7 +15,7 @@ import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClust
 import HeatmapLayer from 'react-google-maps/lib/components/visualization/HeatmapLayer'
 import Geofire from 'geofire'
 import MapStyle from './MapStyle.json'
-import {fetchCurrPlayer, fetchPlayers, toggleSelectedPlayer, addCurrTarget, listeningAllPlayer, listeningMyself, getCurrToken, battle, setStatus, revivePlayer} from '../store'
+import {addCurrTarget, getCurrToken, battle, setStatus, revivePlayer} from '../store'
 import {filterPlayers, filterPlayer} from './HelperFunc'
 const NotificationSystem = require('react-notification-system')
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
@@ -36,8 +36,8 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 		return (
 			<div>
 				<GoogleMap
-					zoom={15}
-					defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
+					zoom={18}
+					center={{ lat: myLocation[0], lng: myLocation[1]}}
 					options={{ styles: mapStyles, mapTypeControl: false }}
 				>
 					<MarkerClusterer
@@ -52,9 +52,6 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 						key={idx}
 						icon={player.uid === currPlayer.uid ? playerIcon : otherPlayersIcon}
 						position={{ lat: player.Locations.lat, lng: player.Locations.lon }}
-						onClick={()=> {
-							props.onToggleOpen(player)
-						}}
 					>
 						{
 							player.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(player)}}>
@@ -72,7 +69,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 		return (
 			<GoogleMap
 				zoom={15}
-				defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
+				center={{ lat: myLocation[0], lng: myLocation[1]}}
 				options={{ styles: mapStyles, mapTypeControl: false }}
 			>
 				<HeatmapLayer
@@ -89,9 +86,6 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 								url: './images/markers/assassin-icon.png'
 							}}
 							position={{ lat: myLocation[0], lng: myLocation[1] }}
-							onClick={()=> {
-								props.onToggleOpen(player)
-							}}
 						>
 							{
 								player.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(player)}}>
@@ -115,7 +109,7 @@ class MapBox extends React.PureComponent {
 
 	constructor(props){
 		super(props)
-		this.onToggleOpen = this.onToggleOpen.bind(this)
+		// this.onToggleOpen = this.onToggleOpen.bind(this)
 		this.submitTarget = this.submitTarget.bind(this)
 	}
 
@@ -124,10 +118,10 @@ class MapBox extends React.PureComponent {
 		submitCurrTarget(player, target)
 	}
 
-	onToggleOpen(player) {
-		const {togglePlayer} = this.props
-		togglePlayer(player)
-	}
+	// onToggleOpen(player) {
+	// 	const {togglePlayer} = this.props
+	// 	togglePlayer(player)
+	// }
 
 	componentDidMount() {
 		// const {profile, listenAllPlayer, listenMyself, getCurrentToken} = this.props

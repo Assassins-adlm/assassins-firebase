@@ -2,9 +2,9 @@ import firebase from '../fire'
 /**
  * ACTION TYPES
  */
-const CURRENT_PLAYER = 'CURRENT_PLAYER'
-const ALL_PLAYERS = 'ALL_PLAYERS'
-const TOGGLE_SELECTED_PLAYER = 'TOGGLE_SELECTED_PLAYER'
+// const CURRENT_PLAYER = 'CURRENT_PLAYER'
+// const ALL_PLAYERS = 'ALL_PLAYERS'
+// const TOGGLE_SELECTED_PLAYER = 'TOGGLE_SELECTED_PLAYER'
 // const CURRENT_LOCATION = 'CURRENT_LOCATION'
 const CURRENT_TARGET= 'CURRENT_TARGET'
 const GUESS_PROMPT = 'GUESS_PROMPT'
@@ -15,9 +15,9 @@ const NOTIFYTOKEN = 'NOTIFIYTOKEN'
  * INITIAL STATE
  */
 const playerState = {
-	player: {}, //player.tokenid
-	players: [],
-	location: {latitude: '' , longitude: ''},
+	// player: {}, //player.tokenid
+	// players: [],
+	// location: {latitude: '' , longitude: ''},
 	target: null,
 	token: '',
 	guessPrompt: false,
@@ -28,9 +28,9 @@ const playerState = {
  * ACTION CREATORS
  */
 
-export function currentPlayer  (player) {return {type: CURRENT_PLAYER, player}}
-export function allPlayers (players) {return {type: ALL_PLAYERS, players}}
-export function toggleSelectedPlayer (player) {return {type: TOGGLE_SELECTED_PLAYER, player}}
+// export function currentPlayer  (player) {return {type: CURRENT_PLAYER, player}}
+// export function allPlayers (players) {return {type: ALL_PLAYERS, players}}
+// export function toggleSelectedPlayer (player) {return {type: TOGGLE_SELECTED_PLAYER, player}}
 // export function currentLocation (location) {return {type: CURRENT_LOCATION, location}}
 export function currentTarget (target) {return {type: CURRENT_TARGET, target}}
 export function currentAssassin (assassin) {return {type: CURRENT_ASSASSIN, assassin}}
@@ -39,25 +39,25 @@ export function guessPrompt (bool) {return {type: GUESS_PROMPT, bool}}
 
 
 // thunk creators
-export const fetchCurrPlayer = (uid) => {
-	return (dispatch) => {
-		firebase.database().ref(`/players/${uid}`).once('value')
-			.then(snapshot => {
-				// let player = {...snapshot.val(), Locations:[]}
-				dispatch(currentPlayer(filterPlayer(snapshot.val())))
-			}, error => console.error(error))
-	}
-}
+// export const fetchCurrPlayer = (uid) => {
+// 	return (dispatch) => {
+// 		firebase.database().ref(`/players/${uid}`).once('value')
+// 			.then(snapshot => {
+// 				// let player = {...snapshot.val(), Locations:[]}
+// 				dispatch(currentPlayer(filterPlayer(snapshot.val())))
+// 			}, error => console.error(error))
+// 	}
+// }
 
 
-export const fetchPlayers = () => {
-	return (dispatch) => {
-		firebase.database().ref('/players').once('value')
-			.then(snapshot => {
-				dispatch(allPlayers(filterPlayers(snapshot.val())))
-			}, error => console.error(error))
-	}
-}
+// export const fetchPlayers = () => {
+// 	return (dispatch) => {
+// 		firebase.database().ref('/players').once('value')
+// 			.then(snapshot => {
+// 				dispatch(allPlayers(filterPlayers(snapshot.val())))
+// 			}, error => console.error(error))
+// 	}
+// }
 
 export const getCurrToken = (id) => {
 	return () => {
@@ -88,7 +88,7 @@ export const addCurrTarget = (player, target) => {
 				firebase.database().ref(`/players/${target.uid}`).once('value')
 					.then(snapshot => {
 						dispatch(currentTarget(snapshot.val()))
-						dispatch(currentPlayer({...player, target: target.uid}))
+						// dispatch(currentPlayer({...player, target: target.uid}))
 						fetch('https://fcm.googleapis.com/fcm/send', {
 							'method': 'POST',
 							'headers': {
@@ -113,47 +113,47 @@ export const addCurrTarget = (player, target) => {
 	}
 }
 
-export const listeningAllPlayer = () => {
-	return (dispatch) => {
-		firebase.database().ref('/players')
-			.on('value', snapshot => {
-				console.log('listening all players-->', snapshot.val())
-				dispatch(allPlayers(filterPlayers(snapshot.val())))
-			})
-	}
-}
+// export const listeningAllPlayer = () => {
+// 	return (dispatch) => {
+// 		firebase.database().ref('/players')
+// 			.on('value', snapshot => {
+// 				console.log('listening all players-->', snapshot.val())
+// 				dispatch(allPlayers(filterPlayers(snapshot.val())))
+// 			})
+// 	}
+// }
 
-export const listeningMyself = (uid) => {
-	return (dispatch) => {
-		const playerRef = firebase.database().ref(`/players/${uid}`)
-		playerRef
-			.on('value', snapshot => {
-				let player = filterPlayer(snapshot.val())
-				dispatch(currentPlayer(player))
-				if (player.assassin) {
-					firebase.database().ref(`/players/${player.assassin}`).once('value')
-						.then(snapshot => {
-							dispatch(currentAssassin(filterPlayer(snapshot.val())))
-							dispatch(guessPrompt('true'))
-						})
-				}
-				if (player.target) {
-					dispatch(listeningTarget(player.target))
-				}
-			})
-	}
-}
+// export const listeningMyself = (uid) => {
+// 	return (dispatch) => {
+// 		const playerRef = firebase.database().ref(`/players/${uid}`)
+// 		playerRef
+// 			.on('value', snapshot => {
+// 				let player = filterPlayer(snapshot.val())
+// 				dispatch(currentPlayer(player))
+// 				if (player.assassin) {
+// 					firebase.database().ref(`/players/${player.assassin}`).once('value')
+// 						.then(snapshot => {
+// 							dispatch(currentAssassin(filterPlayer(snapshot.val())))
+// 							dispatch(guessPrompt('true'))
+// 						})
+// 				}
+// 				if (player.target) {
+// 					dispatch(listeningTarget(player.target))
+// 				}
+// 			})
+// 	}
+// }
 
-var offTargetRef
+// var offTargetRef
 
-export const listeningTarget = (targetId) => {
-	return (dispatch) => {
-		offTargetRef = firebase.database().ref(`/players/${targetId}`)
-			.on('value', snapshot => {
-				dispatch(currentTarget(snapshot.val()))
-			})
-	}
-}
+// export const listeningTarget = (targetId) => {
+// 	return (dispatch) => {
+// 		offTargetRef = firebase.database().ref(`/players/${targetId}`)
+// 			.on('value', snapshot => {
+// 				dispatch(currentTarget(snapshot.val()))
+// 			})
+// 	}
+// }
 
 // export const offTarget = (targetId) => {
 // 	return (dispatch) => {
@@ -185,8 +185,8 @@ export const setStatus = (player, role, status) => {
 				.then(snapshot => {
 					let targetId = snapshot.val().target
 					let targetRef = firebase.database().ref(`/players/${targetId}`)
-					console.log('***===>', offTargetRef)
-					targetRef.off('value', offTargetRef)
+					// console.log('***===>', offTargetRef)
+					// targetRef.off('value', offTargetRef)
 				})
 				.then(() => {
 					playerRef.update({status: status, target: ''})
@@ -250,23 +250,23 @@ export const setStatus = (player, role, status) => {
 
 export default function (state = playerState, action) {
 	switch (action.type) {
-	case CURRENT_PLAYER:
-		return {
-			...state,
-			player: action.player
-		}
-	case ALL_PLAYERS:
-		return {
-			...state,
-			players: action.players.map(player => {
-				return {...player, openInfo: player.openInfo ? true : false}
-			})
-		}
-	case TOGGLE_SELECTED_PLAYER:
-		return {
-			...state,
-			players: state.players.map(player => player.uid === action.player.uid ? {...player, openInfo: !player.openInfo} : player)
-		}
+	// case CURRENT_PLAYER:
+	// 	return {
+	// 		...state,
+	// 		player: action.player
+	// 	}
+	// case ALL_PLAYERS:
+	// 	return {
+	// 		...state,
+	// 		players: action.players.map(player => {
+	// 			return {...player, openInfo: player.openInfo ? true : false}
+	// 		})
+	// 	}
+	// case TOGGLE_SELECTED_PLAYER:
+	// 	return {
+	// 		...state,
+	// 		players: state.players.map(player => player.uid === action.player.uid ? {...player, openInfo: !player.openInfo} : player)
+	// 	}
 	// case CURRENT_LOCATION:
 	// 	return Object.assign({}, state, { location: {latitude: action.location.latitude, longitude: action.location.longitude}})
 	case CURRENT_TARGET:
@@ -290,26 +290,26 @@ export default function (state = playerState, action) {
 }
 
 // helper funcs
-const filterPlayers = (players) => {
-	let filteredPlayers = Object.values(players).filter(player => {
-		if (player.Locations) {
-			let Locations = Object.values(player.Locations)
-			let Location = Locations[Locations.length-1]
-			if (typeof Location === 'object') {
-				player.Locations = Location
-				return player
-			}
-		}
-	})
-	return filteredPlayers
-}
+// const filterPlayers = (players) => {
+// 	let filteredPlayers = Object.values(players).filter(player => {
+// 		if (player.Locations) {
+// 			let Locations = Object.values(player.Locations)
+// 			let Location = Locations[Locations.length-1]
+// 			if (typeof Location === 'object') {
+// 				player.Locations = Location
+// 				return player
+// 			}
+// 		}
+// 	})
+// 	return filteredPlayers
+// }
 
-export const filterPlayer = (player) => {
-	if (player && player.Locations) {
-		let Locations = Object.values(player.Locations)
-		let Location = Locations[Locations.length-1]
-		player.Locations = Location
-		return player
-	}
-	return {}
-}
+// export const filterPlayer = (player) => {
+// 	if (player && player.Locations) {
+// 		let Locations = Object.values(player.Locations)
+// 		let Location = Locations[Locations.length-1]
+// 		player.Locations = Location
+// 		return player
+// 	}
+// 	return {}
+// }

@@ -6,6 +6,7 @@ import BadgeIcon from './Badge'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import RaisedButton from 'material-ui/RaisedButton';
+import {filterPlayers} from '../HelperFunc'
 import {
     firebaseConnect,
     isLoaded,
@@ -14,6 +15,7 @@ import {
     pathToJS,
 } from 'react-redux-firebase'
 import {connect} from 'react-redux'
+// import {filterPlayers} from '../HelperFunc'
 import './style.css'
 
 class theDrawer extends React.Component {
@@ -33,7 +35,9 @@ class theDrawer extends React.Component {
     render() {
         const style = {
             marginRight: 20,
-        };
+        }
+        const {players, profile} = this.props
+        const allTargets = filterPlayers(players).filter(player => player.uid !== profile.uid)
         return (
             <div>
                 {this.getAuth}
@@ -60,6 +64,9 @@ class theDrawer extends React.Component {
 
                     <Divider/>
                     <h4> Targets </h4>
+                    {
+                        isLoaded(this.props.players) ? filterPlayers(players).filter(player => player.uid !== profile.uid).map(target => <p>{target.name}</p>) : null
+                    }
                     <Divider/>
                     <h4> Settings </h4>
                 </Drawer>
@@ -71,13 +78,13 @@ class theDrawer extends React.Component {
 const fbWrapped = firebaseConnect((props) => [{path: 'players'}, {path: 'profile'}, {path: 'auth'}, {path: 'step'}, {path: `profile/score`}
 ])(theDrawer)
 
-export default connect(({firebase, props}) => ({
-    profile: pathToJS(firebase, 'profile'),
-    players: dataToJS(firebase, 'players'),
-    step: dataToJS(firebase, '/step'),
-    auth: pathToJS(firebase, 'auth'),
-    score: dataToJS(firebase, `profile/score`), // pass profile data as this.props.profile
-
+export default connect((state) => ({
+    profile: pathToJS(state.firebase, 'profile'),
+    players: dataToJS(state.firebase, 'players'),
+    // step: dataToJS(firebase, '/step'),
+    auth: pathToJS(state.firebase, 'auth'),
+    score: dataToJS(state.firebase, `profile/score`), // pass profile data as this.props.profile
+    target: state.player.target
 }))(fbWrapped)
 
 
