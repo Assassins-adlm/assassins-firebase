@@ -8,9 +8,11 @@
     animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-direction: alternate;*/
+
+  
 }
 
-/*@keyframes myMove {
+@keyframes myMove {
     0% {left: 0px;}
     100% {left: 90vw;}
-}*/
+}
