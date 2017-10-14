@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import React from 'react'
+import styled, {keyframes} from 'styled-components'
 import MyTarget from './TargetInfo'
 import MyInfo from './MyInfo'
 import EngagePrompt from './EngagePrompt'
@@ -27,6 +28,26 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	console.log('current player==>', currPlayer)
 	console.log('all players==>', allPlayers)
 	let myLocation
+
+	const pulseAnimation = keyframes`
+  0% {-webkit-transform: scale(0);opacity: 0.0;}
+  25% {-webkit-transform: scale(0);opacity: 0.1;}
+  50% {-webkit-transform: scale(0.1);opacity: 0.3;}
+  75% {-webkit-transform: scale(0.5);opacity: 0.5;}
+  100% {-webkit-transform: scale(1);opacity: 0.0;}
+`
+
+	const Pulse = styled.div`
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  z-index: 2;
+  opacity: 0;
+  border: 10px solid rgba(0,166,205,1);;
+  background: transparent;
+  border-radius: 60px;
+  animation: ${pulseAnimation} 2s ease-out infinite;
+`
 	if (currPlayer.Locations) {
 		myLocation = []
 		myLocation[0] = currPlayer.Locations.lat || 40
@@ -37,8 +58,8 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			<div>
 				<GoogleMap
 					zoom={18}
-					center={{ lat: myLocation[0], lng: myLocation[1]}}
-					options={{ styles: mapStyles, mapTypeControl: false }}
+					defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
+					options={{ styles: mapStyles, mapTypeControl: false, streetViewControl: false, fullscreenControl: false }}
 				>
 					<MarkerClusterer
 						averageCenter
@@ -52,7 +73,9 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 						key={idx}
 						icon={player.uid === currPlayer.uid ? playerIcon : otherPlayersIcon}
 						position={{ lat: player.Locations.lat, lng: player.Locations.lon }}
+						/* animation={google.maps.Animation.BOUNCE} */
 					>
+						<Pulse />
 						{
 							player.openInfo && <InfoWindow onCloseClick={() => {props.onToggleOpen(player)}}>
 								{

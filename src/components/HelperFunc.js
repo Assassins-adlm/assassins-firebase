@@ -62,7 +62,7 @@ export const filterPlayers = (players) => {
 	let filteredPlayers = Object.values(players).filter(player => {
 		if (player.Locations) {
 			let Locations = Object.values(player.Locations)
-			let Location = Locations[Locations.length-1]
+			let Location = Locations.sort((a, b) => a.tst-b.tst)[Locations.length-1]
 			if (typeof Location === 'object') {
 				player.Locations = Location
 				return player
@@ -75,7 +75,8 @@ export const filterPlayers = (players) => {
 export const filterPlayer = (player) => {
 	if (player && player.Locations) {
 		let Locations = Object.values(player.Locations)
-		let Location = Locations[Locations.length-1]
+		let Location = Locations.sort((a,b) => a.tst-b.tst)[Locations.length-1]
+		console.log('location-->', Location)
 		player.Locations = Location
 		return player
 	}

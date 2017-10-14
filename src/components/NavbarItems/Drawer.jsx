@@ -36,8 +36,8 @@ class theDrawer extends React.Component {
         const style = {
             marginRight: 20,
         }
-        const {players, profile} = this.props
-        const allTargets = filterPlayers(players).filter(player => player.uid !== profile.uid)
+        // const {players, profile} = this.props
+        // const allTargets = filterPlayers(players).filter(player => player.uid !== profile.uid)
         return (
             <div>
                 {this.getAuth}
@@ -65,7 +65,7 @@ class theDrawer extends React.Component {
                     <Divider/>
                     <h4> Targets </h4>
                     {
-                        isLoaded(this.props.players) ? filterPlayers(players).filter(player => player.uid !== profile.uid).map(target => <p>{target.name}</p>) : null
+                        isLoaded(this.props.players) ? filterPlayers(this.props.players).filter(player => player.uid !== this.props.profile.uid).map(target => <p>{target.name}</p>) : null
                     }
                     <Divider/>
                     <h4> Settings </h4>

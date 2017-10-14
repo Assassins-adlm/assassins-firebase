@@ -33,7 +33,8 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "shake.js": "^1.2.2"
+    "shake.js": "^1.2.2",
+    "styled-components": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
