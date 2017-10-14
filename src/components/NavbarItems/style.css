@@ -29,7 +29,12 @@ img {
     width: 100px;
     margin-left: 33%;
     margin-right: 33%;
-    background: bisque;
+    background: white;
 }
 
 
+
+.imgProf:hover {
+    background-color: black;
+
+}

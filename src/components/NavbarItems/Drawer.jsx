@@ -15,6 +15,7 @@ import {
 } from 'react-redux-firebase'
 import {connect} from 'react-redux'
 import './style.css'
+import TargetPicker from './TargetPicker'
 
 class theDrawer extends React.Component {
 
@@ -54,14 +55,13 @@ class theDrawer extends React.Component {
                     <BadgeIcon/>
                     <Divider/>
 
-                    <FloatingActionButton secondary={true} style={style}>
-                        <ContentAdd />
-                    </FloatingActionButton>
+
 
                     <Divider/>
                     <h4> Targets </h4>
                     <Divider/>
                     <h4> Settings </h4>
+                    <TargetPicker/>
                 </Drawer>
             </div>
         );
