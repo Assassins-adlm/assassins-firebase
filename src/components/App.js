@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react'
-import MapBox from './MapBox'
+import MapBox from './MapBox/MapBox'
 import AppBar from 'material-ui/AppBar';
 
 import SideBar from './SideBar'

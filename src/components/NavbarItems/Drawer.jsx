@@ -6,7 +6,7 @@ import BadgeIcon from './Badge'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import RaisedButton from 'material-ui/RaisedButton';
-import {filterPlayers} from '../HelperFunc'
+import Geofire from 'geofire'
 import {
     firebaseConnect,
     isLoaded,
@@ -15,8 +15,8 @@ import {
     pathToJS,
 } from 'react-redux-firebase'
 import {connect} from 'react-redux'
-// import {filterPlayers} from '../HelperFunc'
 import './style.css'
+import TargetPicker from './TargetPicker'
 
 class theDrawer extends React.Component {
 
@@ -36,8 +36,6 @@ class theDrawer extends React.Component {
         const style = {
             marginRight: 20,
         }
-        // const {players, profile} = this.props
-        // const allTargets = filterPlayers(players).filter(player => player.uid !== profile.uid)
         return (
             <div>
                 {this.getAuth}
@@ -58,15 +56,17 @@ class theDrawer extends React.Component {
                     <BadgeIcon/>
                     <Divider/>
 
-                    <FloatingActionButton secondary={true} style={style}>
-                        <ContentAdd />
-                    </FloatingActionButton>
-
+                    <h4>Current Target</h4>
+                    {
+                        isLoaded(this.props.profile) && !isEmpty(this.props.profile.targets) ? (
+                            <div>
+                                <p>{this.props.profile.targets[0][0]}</p>
+                            </div>
+                        ): null
+                    }
                     <Divider/>
                     <h4> Targets </h4>
-                    {
-                        isLoaded(this.props.players) ? filterPlayers(this.props.players).filter(player => player.uid !== this.props.profile.uid).map(target => <p>{target.name}</p>) : null
-                    }
+                    <TargetPicker />
                     <Divider/>
                     <h4> Settings </h4>
                 </Drawer>
@@ -84,7 +84,7 @@ export default connect((state) => ({
     // step: dataToJS(firebase, '/step'),
     auth: pathToJS(state.firebase, 'auth'),
     score: dataToJS(state.firebase, `profile/score`), // pass profile data as this.props.profile
-    target: state.player.target
+    // target: state.player.target
 }))(fbWrapped)
 
 

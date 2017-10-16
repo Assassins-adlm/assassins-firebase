@@ -1,10 +1,14 @@
 
 
-h4 {
+h4, p{
     text-align: center;
     font-family: Courier;
     font-size: small;
+    color: white;
+}
 
+p:hover {
+    background-color: green;
 }
 
 img {

@@ -46,6 +46,11 @@ export const parseTargetLocation = (locations) => {
 
 export const parseMostRecentLocation = (Locations) => {
 	let locations = Object.values(Locations)
+	if (locations.length < 2) {
+		return [locations.lat, locations.lon]
+	} else{
+		locations = locations.sort((a, b) => a.tst - b.tst)
+	}
 	return [locations[locations.length-1].lat, locations[locations.length-1].lon]
 }
 

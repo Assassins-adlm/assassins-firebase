@@ -22,9 +22,18 @@ class TargetingWarning extends React.Component {
 	}
 
 	render() {
+		const style = {
+			NotificationItem: {
+				DefaultStyle: {
+					margin: '10px 5px 2px 1px',
+					fontSize: '30px',
+					top: '50px'
+				}
+			}
+		}
 		return (
 			<div>
-				<NotificationSystem ref="warningNotification" />
+				<NotificationSystem ref="warningNotification" style={style} />
 			</div>
 		)
 	}

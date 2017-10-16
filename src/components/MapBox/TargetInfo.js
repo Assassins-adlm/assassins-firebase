@@ -1,5 +1,5 @@
 import React from 'react'
-import firebase from '../fire'
+// import firebase from '../fire'
 import {
 	firebaseConnect,
 	dataToJS,
