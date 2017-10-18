@@ -86,7 +86,7 @@ class LandingPage extends React.Component{
 					<div className="col-lg-3 col-md-6 col-sm-12 staff-profile">
 						<i className="em em-blush headshot"></i>
 						<h4 className="staff-name">Leslie Chiu</h4>
-						<p className="staff-bio">CLAMP THOSE CHEEKS
+						<p className="staff-bio">DID YOU SEEE
 						</p>
 					</div>
 

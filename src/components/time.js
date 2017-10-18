@@ -42,7 +42,7 @@ export default class time extends React.Component{
 
     return (
       this.state.timeRunning ?
-      <div> <h1 style = {{"textAlign": "center"}}>{this.state.time}</h1></div> :
+      <div> <h1 style = {{"textAlign": "center"}} >{this.state.time}</h1></div> :
       <div><h1>GAME OVER</h1></div>
     )
   }
