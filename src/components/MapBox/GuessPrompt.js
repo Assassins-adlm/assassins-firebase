@@ -33,7 +33,6 @@ class GuessPrompt extends React.Component {
 	}
 
 	tick() {
-		// const {currPlayer} = this.props
 		if (this.refs.guessTimer) {
 			this.setState({
 				counter: this.state.counter - 1
@@ -44,9 +43,6 @@ class GuessPrompt extends React.Component {
 		const currPlayer = isLoaded(this.props.profile) ? Object.values(this.props.profile.Locations).sort((a, b) => b.tst-a.tst)[0] : null
 		const currPlayerLocation = [currPlayer.lat, currPlayer.lon]
 		const distance = Geofire.distance(currPlayerLocation, assassinLocation)
-		console.log('distance==>', distance)
-		// isLoaded(this.props.profile) && console.log('curr player==>', this.props.profile)
-		// console.log('counter-->', this.state.counter)
 		if (distance < 0.01) {
 			isLoaded(this.props.firebase) && isLoaded(this.props.profile) &&
 			this.reveal(this.props.firebase, this.props.profile)
@@ -58,7 +54,6 @@ class GuessPrompt extends React.Component {
 	}
 
 	reveal(firebase, currPlayer) {
-		// console.log('curr player', currPlayer)
 		firebase.set(`players/${currPlayer.uid}/status`, 'reveal')
 			.then(() => {
 				firebase.set(`players/${currPlayer.assassins[0]}/status`, 'fail')
@@ -72,7 +67,6 @@ class GuessPrompt extends React.Component {
 	}
 
 	timeOut(firebase, currPlayer) {
-		// console.log('curr player', currPlayer)
 		firebase.set(`players/${currPlayer.uid}/status`, 'dead')
 			.then(() => {
 				firebase.set(`players/${currPlayer.assassins[0]}/status`, 'kill')

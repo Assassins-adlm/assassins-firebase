@@ -1,8 +1,6 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import styled, {keyframes} from 'styled-components'
-import MyTarget from './TargetInfo'
-import MyInfo from './MyInfo'
 import EngagePrompt from './EngagePrompt'
 import GuessPrompt from './GuessPrompt'
 import BattleResult from './BattleResult'
@@ -13,23 +11,16 @@ import {withGoogleMap, GoogleMap, Marker, InfoWindow, OverlayView} from 'react-g
 import {firebaseConnect, dataToJS, pathToJS, isLoaded, isEmpty} from 'react-redux-firebase'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer'
 import HeatmapLayer from 'react-google-maps/lib/components/visualization/HeatmapLayer'
-import Geofire from 'geofire'
 import MapStyle from './MapStyle.json'
-import {addCurrTarget, getCurrToken, battle, setStatus, revivePlayer} from '../../store'
-import {filterPlayers, filterPlayer} from './HelperFunc'
-const NotificationSystem = require('react-notification-system')
+import {filterPlayer} from './HelperFunc'
+
 const MapWithAMarkerClusterer = withGoogleMap(props =>{
 	const playerIcon = {url: './images/markers/assassin-icon.png'}
-	const otherPlayersIcon = {url: './images/markers/players-icon.png'}
 	const {mapStyles, currPlayer, players} = props
 	const targets = Object.values(players).filter(player => {
 		return player.uid === (currPlayer.targets ? currPlayer.targets[0][1] : null)
 	})[0]
-	console.log('current player==>', currPlayer)
-	console.log('all targets==>', targets)
-	// console.log('all players==>', allPlayers)
 	let myLocation
 
 	if (currPlayer.Locations) {
@@ -38,7 +29,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 		myLocation[1] = currPlayer.Locations.lon || -74
 	}
 
-	let color = props.profile.beingTargeted ? 'yellow' : (props.profile.assassins ? 'red' : 'green'), duration = 0.5
+	let color = props.profile.beingTargeted ? 'yellow' : (props.profile.assassins ? 'red' : 'green'), duration = 2
 
 	const pulseAnimation = keyframes`
   0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
@@ -62,7 +53,6 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 		y: -(height / 2),
 	})
 
-	console.log('my location==>', myLocation)
 	if (myLocation) {
 		return (
 			<div>
@@ -111,10 +101,6 @@ class MapBox extends React.PureComponent {
 	}
 
 	render() {
-		// const {profile, target} = this.props
-		// console.log('target===>', target)
-		// const player = profile
-		console.log(this.props.profile)
 		const currPlayer = isLoaded(this.props.profile) ? filterPlayer(this.props.profile) : null
 		return (
 			currPlayer && isLoaded(this.props.players) &&
@@ -159,46 +145,7 @@ const mapStateToProps = (state) => {
 	return {
 		profile: pathToJS(state.firebase, 'profile'),
 		players: dataToJS(state.firebase, 'players'),
-		// target: state.player.target,
-		assassin: state.player.assassin,
-		guessPrompt: state.player.guessPrompt,
-		token: state.player.token
 	}
 }
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		getCurrentToken(id) {
-			dispatch(getCurrToken(id))
-		},
-		getCurrPlayer(uid) {
-			dispatch(fetchCurrPlayer(uid))
-		},
-		getAllPlayer() {
-			dispatch(fetchPlayers())
-		},
-		togglePlayer(player) {
-			dispatch(toggleSelectedPlayer(player))
-		},
-		submitCurrTarget(player, target) {
-			dispatch(addCurrTarget(player, target))
-		},
-		setStatus(player, role, status) {
-			dispatch(setStatus(player, role, status))
-		},
-		listenAllPlayer() {
-			dispatch(listeningAllPlayer())
-		},
-		listenMyself(uid) {
-			dispatch(listeningMyself(uid))
-		},
-		battle(player, target) {
-			dispatch(battle(player, target))
-		},
-		revivePlayer(player) {
-			dispatch(revivePlayer(player))
-		}
-	}
-}
-
-export default compose(firebaseConnect([{path: 'players'}, {path: 'profile'}, {path: 'auth'}]), connect(mapStateToProps, mapDispatchToProps))(MapBox)
+export default compose(firebaseConnect([{path: 'players'}, {path: 'profile'}, {path: 'auth'}]), connect(mapStateToProps))(MapBox)

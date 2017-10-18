@@ -38,7 +38,6 @@ export const parseLocation = (location) => {
 }
 
 export const parseTargetLocation = (locations) => {
-	console.log('target locations-->', locations)
 	let Locations = Object.values(locations)
 	let length = Locations.length
 	return [Locations[length-1].lat, Locations[length-1].lon]
@@ -53,8 +52,6 @@ export const parseMostRecentLocation = (Locations) => {
 	}
 	return [locations[locations.length-1].lat, locations[locations.length-1].lon]
 }
-
-// export const parseAllLocations = ()
 
 export const parsePlayers = (players) => {
 	let Players = Object.values(players)
@@ -81,7 +78,6 @@ export const filterPlayer = (player) => {
 	if (player && player.Locations) {
 		let Locations = Object.values(player.Locations)
 		let Location = Locations.sort((a,b) => a.tst-b.tst)[Locations.length-1]
-		console.log('location-->', Location)
 		player.Locations = Location
 		return player
 	}

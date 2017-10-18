@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-// import {filterPlayer} from './HelperFunc'
 import {
 	firebaseConnect,
 	isLoaded,
@@ -21,14 +20,9 @@ class BattleResult extends React.Component {
 		const notificationSystem = this.refs.battleResultNotification
 		const {currPlayer} = this.props
 		this._addNotification(notificationSystem, currPlayer.status)
-		// dispatch setstatus to alive
-		// if (status === 'kill') {
-		// 	setStatus(player, 'player', 'alive')
-		// }
 	}
 
 	_addNotification(_notificationSystem, status) {
-		// const {player, target} = this.props
 		if (status === 'kill') {
 			_notificationSystem.addNotification({
 				message: 'Woohoo! Successfully eliminate your target!',

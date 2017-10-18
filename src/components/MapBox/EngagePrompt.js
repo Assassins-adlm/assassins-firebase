@@ -21,13 +21,9 @@ class EngagePrompt extends React.Component {
 	componentDidMount() {
 		const {currPlayer, players} = this.props
 		const notificationSystem = this.refs.notificationSystem
-		// console.log('player==>', profile)
 		const myLocation = [currPlayer.Locations.lat, currPlayer.Locations.lon]
 		const targetLocation = parseMostRecentLocation(Object.values(players).filter(target => currPlayer.targets[0][1] === target.uid)[0].Locations)
-		// console.log('my location=>', profile, 'target location==>', players)
 		const distance = Geofire.distance(myLocation, targetLocation)
-		console.log('target location==>', targetLocation)
-		console.log('distance-->', distance)
 		if (distance < 0.1) {
 			isLoaded(this.props.firebase) &&
 			this._addNotification(notificationSystem, this.props.firebase)
@@ -41,7 +37,7 @@ class EngagePrompt extends React.Component {
 			level: 'info',
 			autoDismiss: 0,
 			action: {
-				label: '殺!',
+				label: 'Assassinate!',
 				callback: function() {
 					firebase.set(`players/${currPlayer.targets[0][1]}/assassins`, [currPlayer.uid, currPlayer.Locations])
 						.then(() => {
