@@ -42,7 +42,6 @@ class App extends Component {
 
 	render() {
 		let a = isLoaded(this.state.profile) ? this.state.profile.name : ''
-			console.log(this.props)
 		return (
 			<div  style={{width: '100%'}}>
 				<div>
