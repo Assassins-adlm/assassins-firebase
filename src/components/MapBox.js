@@ -34,7 +34,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 			<div>
 				<GoogleMap
 					zoom={15}
-					defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
+					center={{ lat: myLocation[0], lng: myLocation[1]}}
 					options={{ styles: mapStyles, mapTypeControl: false }}
 				>
 					<MarkerClusterer
@@ -69,7 +69,7 @@ const MapWithAMarkerClusterer = withGoogleMap(props =>{
 		return (
 			<GoogleMap
 				zoom={15}
-				defaultCenter={{ lat: myLocation[0], lng: myLocation[1]}}
+				center={{ lat: myLocation[0], lng: myLocation[1]}}
 				options={{ styles: mapStyles, mapTypeControl: false }}
 			>
 				<HeatmapLayer

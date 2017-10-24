@@ -33,19 +33,31 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "shake.js": "^1.2.2"
+    "shake.js": "^1.2.2",
+    "styled-components": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "start-dev": "react-scripts start && firebase serve",
     "build": "react-scripts build",
     "build-dev": "react-scripts build && firebase serve",
-    "test": "react-scripts test --env=jsdom",
+    "test": "mocha ./test/*.spec.js --watch --compilers js:babel-register",
     "eject": "react-scripts eject",
     "deploy": "firebase deploy"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "enzyme": "^2.6.0",
     "eslint": "^4.8.0",
-    "eslint-plugin-react": "^7.4.0"
+    "eslint-plugin-react": "^7.4.0",
+    "mocha": "^3.5.3",
+    "sinon": "^1.17.6",
+    "node-sass": "^3.13.0",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-register": "^6.18.0",
+    "react-addons-test-utils": "^15.4.0"
   }
 }

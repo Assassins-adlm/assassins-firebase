@@ -1,9 +1,8 @@
 
 import React, {Component} from 'react'
-import MapBox from './MapBox'
+import MapBox from './MapBox/MapBox'
 import AppBar from 'material-ui/AppBar';
 
-import SideBar from './SideBar'
 import '../index.css'
 import {connect} from 'react-redux'
 import Login from './LoginSignup/Login'
@@ -43,7 +42,6 @@ class App extends Component {
 
 	render() {
 		let a = isLoaded(this.state.profile) ? this.state.profile.name : ''
-			console.log(this.props)
 		return (
 			<div  style={{width: '100%'}}>
 				<div>
@@ -68,7 +66,7 @@ class App extends Component {
 				</div>
 				{this.state.showLogin && isEmpty(this.props.auth) ? <Login/> : null}
 				{ this.props.step !== 4  ? <SignUp/> :  <div>  <Paper className='signInInfo'> { `${!isEmpty(this.props.profile) ? 'You\'re signed in, ' + this.props.profile.name : ``}` } </Paper> </div>}
-				{!isEmpty(this.props.auth) ? <MapBox auth={this.props.auth}/> : null}
+				{!isEmpty(this.props.auth) ? <MapBox /> : null}
 
 			</div>
 

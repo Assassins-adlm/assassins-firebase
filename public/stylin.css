@@ -1,28 +1,11 @@
 
-/* body {
-  background-image: url('http://content.pulse.ea.com/content/legacy/battlefield-portal/en_US/news/battlefield-1/battlefield-1-weather/_jcr_content/featuredImage/renditions/rendition1.img.jpg');
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-} */
-/* html {
-
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-
-} */
  .Login {
-  /* border: 3px solid #000000; */
   display: block;
   margin-left: auto;
   margin-right: auto;
-  /* background-color: #F0E0E0; */
-   background: rgba(187, 187, 224, 0.29);
-   text-align: center;
-   color:#fff
+  background: rgba(187, 187, 224, 0.29);
+  text-align: center;
+  color:#fff
  }
  .clickButton {
   display: block;

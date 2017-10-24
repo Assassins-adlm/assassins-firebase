@@ -25,7 +25,6 @@ import {
 
 // dumb component
 const BadgeExampleSimple = (props) => {
-  console.log(props)
   return  (  <div>
       <Badge
           badgeContent={props.profile.score}

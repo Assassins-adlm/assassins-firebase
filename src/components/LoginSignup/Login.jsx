@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import MapBox from '../MapBox'
 import TextField from 'material-ui/TextField';
 import LinearProgress from 'material-ui/LinearProgress'
 import RaisedButton from 'material-ui/RaisedButton'
