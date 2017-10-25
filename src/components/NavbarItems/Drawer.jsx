@@ -15,7 +15,7 @@ import {
     pathToJS,
 } from 'react-redux-firebase'
 import {connect} from 'react-redux'
-import './style.css'
+// import './style.css'
 import TargetPicker from './TargetPicker'
 
 class theDrawer extends React.Component {
